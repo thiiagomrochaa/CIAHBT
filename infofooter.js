@@ -1,48 +1,37 @@
-(function () {
-  'use strict';
+<div id="block-online" class="rounded-2xl bg-white shadow-sm border border-gray-100 p-6">
 
-  var HABBLET_API = 'https://api.habblet.city';
-  var HABBLET_IMAGING = 'https://imaging.habblet.city/avatarimage';
+    <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-gray-900 text-white flex items-center justify-center shrink-0">
+            <i class="material-icons text-xl">assessment</i>
+        </div>
+        <!-- BEGIN switch_viewonline_link -->
+        <a href="{U_VIEWONLINE}" class="text-lg font-extrabold text-gray-800 hover:text-gray-600 transition-colors" rel="nofollow">{L_WHO_IS_ONLINE}</a>
+        <!-- END switch_viewonline_link -->
+        <!-- BEGIN switch_viewonline_nolink -->
+        <span class="text-lg font-extrabold text-gray-800">{L_WHO_IS_ONLINE}</span>
+        <!-- END switch_viewonline_nolink -->
+    </div>
 
-  function pronto(fn) {
-    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', fn); } else { fn(); }
-  }
+    <div class="space-y-3">
 
-  function encurtarParaNumero(elId) {
-    var el = document.getElementById(elId);
-    if (!el) { return; }
-    var strongEl = el.querySelector('strong');
-    var valor = (strongEl ? strongEl.textContent : el.textContent).trim();
-    el.textContent = valor;
-  }
+        <div class="bg-gray-50 rounded-xl p-3 text-sm text-gray-600">{TOTAL_USERS_ONLINE}</div>
 
-  pronto(function () {
-    encurtarParaNumero('crh_footer_posts');
-    encurtarParaNumero('crh_footer_users');
-    encurtarParaNumero('crh_footer_record');
+        <div class="bg-gray-50 rounded-xl p-3 text-sm text-gray-600">{RECORD_USERS}</div>
 
-    var nickEl = document.getElementById('crh_footer_nick');
-    if (!nickEl) { return; }
+        <div class="bg-gray-50 rounded-xl p-3 text-sm text-gray-600">
+            <p id="crh_online_list">{LOGGED_IN_USER_LIST}</p>
+            <p class="mt-2 text-xs text-gray-400">{L_ONLINE_USERS} {L_CONNECTED_MEMBERS}</p>
+        </div>
 
-    var linkEl = nickEl.querySelector('a');
-    var nick = (linkEl ? linkEl.textContent : nickEl.textContent).trim();
+        <div class="bg-gray-50 rounded-xl p-3 text-sm text-gray-600">{L_WHOSBIRTHDAY_TODAY}{L_WHOSBIRTHDAY_WEEK}</div>
 
-    if (linkEl) { nickEl.textContent = nick; }
-    if (!nick) { return; }
+        <!-- BEGIN switch_group_legend -->
+        <div class="bg-gray-50 rounded-xl p-3 text-xs">
+            <p id="crh_group_legend">{GROUP_LEGEND}</p>
+        </div>
+        <!-- END switch_group_legend -->
 
-    fetch(HABBLET_API + '/player/' + encodeURIComponent(nick))
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (dados) {
-        var figura = dados && dados.figure;
-        if (!figura) { return; }
+    </div>
+</div>
 
-        var img = document.getElementById('crh_footer_avatar_img');
-        var fallback = document.getElementById('crh_footer_avatar_fallback');
-
-        img.src = HABBLET_IMAGING + '?figure=' + encodeURIComponent(figura) + '&direction=2&head_direction=2&gesture=sml&size=m&headonly=1&img_format=png';
-        img.classList.remove('hidden');
-        fallback.classList.add('hidden');
-      })
-      .catch(function () {});
-  });
-})();
+<script src="https://thiiagomrochaa.github.io/CIAHBT/consultacrhbadges.js"></script>

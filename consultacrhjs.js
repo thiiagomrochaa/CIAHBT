@@ -39,7 +39,8 @@
 
   // Formato da célula: "Nickname [TAG] data" — ex: "Letking [Supr] 17 Jul 2026"
   // A TAG entre colchetes e a data logo depois pertencem ao próprio registro
-  // de patente, e têm prioridade sobre a aba "TAG" separada.
+  // de patente, e são usadas na Identificação. O campo TAG exibido no
+  // perfil, porém, vem da aba "TAG" separada (ver buscarUsuario).
   function parsePatente(valor, patente) {
     if (!valor) return null;
     var m = valor.match(/^(.*)\s\[([^\]]+)\]\s+(.+)$/);
@@ -241,14 +242,15 @@
     var registro = patentePorNickname[nick.toLowerCase()];
     if (!registro) { abrirModalComEstado('crh_modal_nao_encontrado'); return; }
 
-    // Prioriza a TAG que veio junto do nome na própria planilha de patente;
-    // só cai pra aba "TAG" separada se o registro não tiver TAG embutida.
-    var tag = registro.tag || tagPorNickname[registro.nickname.toLowerCase()] || '';
+    // tagPatente: TAG embutida no registro de patente (usada na Identificação)
+    // tagLista: TAG da aba "TAG" separada (usada no campo TAG exibido)
+    var tagPatente = registro.tag || '';
+    var tagLista = tagPorNickname[registro.nickname.toLowerCase()] || '';
 
     document.getElementById('crh_perfil_nick').textContent = registro.nickname;
     document.getElementById('crh_perfil_patente_badge').textContent = registro.patente;
-    document.getElementById('crh_perfil_tag').textContent = tag || '---';
-    document.getElementById('crh_perfil_identificacao').textContent = montarIdentificacao(registro, tag);
+    document.getElementById('crh_perfil_tag').textContent = tagLista || '---';
+    document.getElementById('crh_perfil_identificacao').textContent = montarIdentificacao(registro, tagPatente);
     document.getElementById('crh_perfil_data').textContent = registro.data || '---';
     definirAvatar(document.getElementById('crh_perfil_avatar'), registro.nickname);
 

@@ -29,7 +29,7 @@
         return;
       }
       var badge = document.createElement('span');
-      badge.className = 'inline-flex items-center align-middle gap-1 bg-white border border-gray-200 rounded-full px-2.5 py-0.5 mr-1 mb-1 text-xs';
+      badge.className = 'inline-flex items-center align-middle gap-1 bg-white border border-gray-200 rounded-full px-2.5 py-0.5 mr-1 mb-1 ml-1 text-xs';
       badge.appendChild(no);
       novosFilhos.push(badge);
     });

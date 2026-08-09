@@ -25,7 +25,7 @@
         var img = document.getElementById('crh_footer_avatar_img');
         var fallback = document.getElementById('crh_footer_avatar_fallback');
 
-        img.src = HABBLET_IMAGING + '?figure=' + encodeURIComponent(figura) + '&direction=2&head_direction=2&gesture=sml&size=s&img_format=png';
+        img.src = HABBLET_IMAGING + '?figure=' + encodeURIComponent(figura) + '&direction=2&head_direction=2&gesture=sml&size=m&headonly=1&img_format=png';
         img.classList.remove('hidden');
         fallback.classList.add('hidden');
       })

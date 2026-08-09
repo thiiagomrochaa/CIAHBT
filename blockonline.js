@@ -70,7 +70,7 @@
     transformarEmBadges('crh_group_legend', acharColchete);
   });
 
-  function transformarEmBadges(elId, opcoes) {
+function transformarEmBadges(elId, opcoes) {
   opcoes = opcoes || {};
   var el = document.getElementById(elId);
   if (!el) { return; }
@@ -87,18 +87,19 @@
       if (opcoes.removerColchetes) {
         texto = texto.replace(/[\[\]]/g, '');
       }
+      texto = texto.replace(/,/g, ' ');
       if (texto.trim() === '') { return; }
       novosFilhos.push(document.createTextNode(texto));
       return;
     }
     var badge = document.createElement('span');
-    badge.className = 'inline-flex items-center align-middle gap-1 bg-white border border-gray-200 rounded-full px-2.5 py-0.5 mr-1 mb-1 text-xs';
+    badge.className = 'inline-flex items-center align-middle mr-2 mb-1';
     badge.appendChild(no);
     novosFilhos.push(badge);
   });
 
   el.textContent = '';
-  el.className = el.className + ' flex flex-wrap items-center gap-x-1';
+  el.className = el.className + ' flex flex-wrap items-center';
   novosFilhos.forEach(function (f) { el.appendChild(f); });
 }
 

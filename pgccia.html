@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protocolo de Gerenciamento de Crises — CIA</title>
+    <link rel="icon" href="https://2img.net/i.imgur.com/ZCU8GJC.png">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+
+        body {
+            background-color: #f3f4f6;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #1f2937;
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .glass-card {
+            background: #ffffff;
+            border-radius: 24px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+        }
+
+        ol{margin:0;padding:0}
+        table td,table th{padding:0}
+        .cpm-c4{color:#000000;font-weight:700;text-decoration:none;vertical-align:baseline;font-size:11pt;font-family:"Open Sans";font-style:normal}
+        .cpm-c1{color:#000000;font-weight:400;text-decoration:none;vertical-align:baseline;font-size:11pt;font-family:"Open Sans";font-style:normal}
+        .cpm-c10{padding-top:0pt;padding-bottom:0pt;line-height:1.0;orphans:2;widows:2;text-align:left}
+        .cpm-c6{padding-top:0pt;padding-bottom:0pt;line-height:1.0;orphans:2;widows:2;text-align:center}
+        .cpm-c3{padding-top:0pt;padding-bottom:0pt;line-height:1.0;orphans:2;widows:2;text-align:justify}
+        .cpm-c9{color:#000000;text-decoration:none;vertical-align:baseline;font-style:normal}
+        .cpm-c8{font-size:14pt;font-weight:700;font-family:"Poppins"}
+        .cpm-c0{font-size:14pt;font-weight:400;font-family:"Poppins"}
+        .cpm-c13{font-weight:700;font-size:16pt;font-family:"Poppins"}
+        .cpm-c2{font-weight:400;font-family:"Open Sans"}
+        .cpm-c7{font-weight:700;font-family:"Open Sans"}
+        .cpm-c5{height:11pt}
+        .cpm-c11{font-size:14pt}
+        .title{padding-top:0pt;color:#000000;font-size:26pt;padding-bottom:3pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}
+        .subtitle{padding-top:0pt;color:#666666;font-size:15pt;padding-bottom:16pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}
+        li{color:#000000;font-size:11pt;font-family:"Arial"}
+        p{margin:0;color:#000000;font-size:11pt;font-family:"Arial"}
+        h1{padding-top:20pt;color:#000000;font-size:20pt;padding-bottom:6pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}
+        h2{padding-top:18pt;color:#000000;font-size:16pt;padding-bottom:6pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}
+        h3{padding-top:16pt;color:#434343;font-size:14pt;padding-bottom:4pt;font-family:"Arial";line-height:1.15;page-break-after:avoid;orphans:2;widows:2;text-align:left}
+        .c10 { background-color:#ffffff; padding:72pt 72pt 72pt 72pt; width: 98%; justify-self: anchor-center; margin: 22px; border-radius: 20px; }
+        ul.protocol-list { margin: 0 0 12px 0; padding-left: 36px; }
+        ul.protocol-list li { padding: 3px 0; }
+    </style>
+</head>
+
+<body>
+    <a id="top"></a>
+
+    <header id="site-header" class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto flex items-center gap-4 h-16 px-5 h-20">
+            <div class="bg-blue-600 p-2 rounded-xl shadow-lg shadow-blue-200">
+                <img src="https://imaging.habblet.city/badge/b2013s98244s164244s43244s19114" />
+            </div>
+            <a href="#top" class="leading-none">
+                <span class="text-xl font-black tracking-tighter text-gray-900 uppercase block">Central Intelligence Agency</span>
+                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Comando de Segurança Institucional</span>
+            </a>
+
+            <nav id="desktop-nav" class="hidden gap-1 overflow-x-auto ml-auto">
+                <div class="relative group shrink-0">
+                    <a href="#cap-i" class="flex flex-col justify-center px-3 py-2 rounded-md leading-tight whitespace-nowrap hover:bg-white/10 border border-transparent hover:border-white/15 transition-colors">
+                        <span class="text-[12.5px] font-bold text-stone-50">CAPÍTULO I</span>
+                        <span class="text-[10.5px] font-normal text-amber-200/80 whitespace-nowrap">Disposições Gerais</span>
+                    </a>
+                </div>
+                <div class="relative group shrink-0">
+                    <a href="#cap-ii" class="flex flex-col justify-center px-3 py-2 rounded-md leading-tight whitespace-nowrap hover:bg-white/10 border border-transparent hover:border-white/15 transition-colors">
+                        <span class="text-[12.5px] font-bold text-stone-50">CAPÍTULO II</span>
+                        <span class="text-[10.5px] font-normal text-amber-200/80 whitespace-nowrap">Categorias de Crises</span>
+                    </a>
+                    <div class="hidden group-hover:flex group-focus-within:flex flex-col gap-0.5 absolute left-0 top-full mt-1.5 min-w-[280px] bg-white rounded-lg shadow-2xl border border-stone-200 p-1.5 z-50">
+                        <a href="#sec-i" class="block px-3 py-2 rounded-md text-sm text-stone-700 hover:bg-amber-50 hover:text-red-800 transition-colors">
+                            <span class="font-semibold">SEÇÃO I</span> — Das crises leves
+                        </a><a href="#sec-ii" class="block px-3 py-2 rounded-md text-sm text-stone-700 hover:bg-amber-50 hover:text-red-800 transition-colors">
+                            <span class="font-semibold">SEÇÃO II</span> — Crises médias
+                        </a><a href="#sec-iii" class="block px-3 py-2 rounded-md text-sm text-stone-700 hover:bg-amber-50 hover:text-red-800 transition-colors">
+                            <span class="font-semibold">SEÇÃO III</span> — Crises graves
+                        </a>
+                    </div>
+                </div>
+                <div class="relative group shrink-0">
+                    <a href="#cap-iii" class="flex flex-col justify-center px-3 py-2 rounded-md leading-tight whitespace-nowrap hover:bg-white/10 border border-transparent hover:border-white/15 transition-colors">
+                        <span class="text-[12.5px] font-bold text-stone-50">CAPÍTULO III</span>
+                        <span class="text-[10.5px] font-normal text-amber-200/80 whitespace-nowrap">Disposições Finais</span>
+                    </a>
+                </div>
+            </nav>
+
+            <button id="mobile-menu-btn" class="ml-auto shrink-0 w-10 h-10 rounded-md bg-blue-600 flex items-center justify-center text-white text-xl">
+                &#9776;
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="hidden max-w-6xl max-h-[75vh] overflow-y-auto bg-blue-600 border-t border-white/10 rounded-xl px-3 absolute right-[60px] top-[65px]">
+            <div class="border-b border-white/10">
+                <a href="#cap-i" class="mobile-link flex flex-col px-2 py-3 items-center">
+                    <span class="text-sm font-bold text-stone-50">CAPÍTULO I</span>
+                    <span class="text-xs text-amber-200/80">Disposições Gerais</span>
+                </a>
+            </div>
+            <div class="border-b border-white/10">
+                <a href="#cap-ii" class="mobile-link flex flex-col px-2 py-3 items-center">
+                    <span class="text-sm font-bold text-stone-50">CAPÍTULO II</span>
+                    <span class="text-xs text-amber-200/80">Categorias de Crises</span>
+                </a>
+                <div class="flex flex-col pb-2">
+                    <a href="#sec-i" class="mobile-link block pl-4 pr-3 py-2 text-[13px] text-stone-300 hover:text-white">
+                        <span class="font-semibold">SEÇÃO I</span> — Das crises leves
+                    </a><a href="#sec-ii" class="mobile-link block pl-4 pr-3 py-2 text-[13px] text-stone-300 hover:text-white">
+                        <span class="font-semibold">SEÇÃO II</span> — Crises médias
+                    </a><a href="#sec-iii" class="mobile-link block pl-4 pr-3 py-2 text-[13px] text-stone-300 hover:text-white">
+                        <span class="font-semibold">SEÇÃO III</span> — Crises graves
+                    </a>
+                </div>
+            </div>
+            <div class="border-b border-white/10">
+                <a href="#cap-iii" class="mobile-link flex flex-col px-2 py-3 items-center">
+                    <span class="text-sm font-bold text-stone-50">CAPÍTULO III</span>
+                    <span class="text-xs text-amber-200/80">Disposições Finais</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="c10 doc-content glass-card py-16 flex-col flex" id="doc-content-root">
+        <img src="https://2img.net/i.imgur.com/ZWBGg99.png" style="width: 100px;align-self: center;" class="logo">
+        <p class="cpm-c6"><span class="cpm-c9 cpm-c13">Protocolo de Gerenciamento de Crises</span></p>
+        <p class="cpm-c6"><span class="cpm-c9 cpm-c0">Central Intelligence Agency</span></p>
+        <p class="cpm-c6 cpm-c5"><span class="cpm-c9 cpm-c2 cpm-c11"></span></p>
+        <p class="cpm-c6"><span class="cpm-c9 cpm-c8">Preâmbulo</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c1"></span></p>
+        <p class="cpm-c3"><span class="cpm-c1">O Protocolo de Gerenciamento de Crises estabelece os procedimentos destinados à atuação dos policiais diante de situações capazes de comprometer o funcionamento de atividades institucionais e a segurança dos policiais. A atuação durante uma crise deverá priorizar a preservação da ordem, a contenção da ameaça, a proteção dos policiais e a continuidade das atividades.</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c1"></span></p>
+
+        <p class="cpm-c6" id="cap-i"><span class="cpm-c9 cpm-c8">CAPÍTULO I</span></p>
+        <p class="cpm-c6"><span class="cpm-c9 cpm-c0">Disposições Gerais</span></p>
+        <p class="cpm-c6 cpm-c5"><span class="cpm-c9 cpm-c0"></span></p>
+
+        <p class="cpm-c3"><span class="cpm-c7">Art. 1º &mdash; </span><span class="cpm-c1">O Protocolo de Gerenciamento de Crises deve ser utilizado em qualquer dependência física ou virtual da Central Intelligence Agency (CIA).</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c1"></span></p>
+        <p class="cpm-c3"><span class="cpm-c7">Art. 2º &mdash; </span><span class="cpm-c1">A presença de uma ameaça não significa que as atividades precisam ser interrompidas. As medidas tomadas devem depender da gravidade da situação e de quanto ela está afetando o funcionamento do batalhão.</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c1"></span></p>
+        <p class="cpm-c3"><span class="cpm-c7">Art. 3º &mdash; </span><span class="cpm-c1">Durante uma situação de crise, os policiais deverão:</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c1"></span></p>
+        <p class="cpm-c3"><span class="cpm-c7">I &ndash;</span><span class="cpm-c1">&nbsp;Manter a calma e seguir as ordens do Oficial da Guarda presente;</span></p>
+        <p class="cpm-c3"><span class="cpm-c7">II &ndash;</span><span class="cpm-c1">&nbsp;Evitar discussões ou atitudes que possam agravar a crise;</span></p>
+        <p class="cpm-c3"><span class="cpm-c7">III &ndash;</span><span class="cpm-c1">&nbsp;Comunicar imediatamente a situação ao Batalhão de Operações Policiais Especiais (BOPE);</span></p>
+        <p class="cpm-c3"><span class="cpm-c7">IV &ndash;</span><span class="cpm-c1">&nbsp;Cumprir as ordens de deslocamento de função ou evacuação do batalhão;</span></p>
+        <p class="cpm-c3"><span class="cpm-c7">V &ndash;</span><span class="cpm-c1">&nbsp;Preservar informações relevantes sobre a ocorrência.</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c1"></span></p>
+        <p class="cpm-c3"><span class="cpm-c7">Art. 4º &mdash; </span><span class="cpm-c1">Compete ao Oficial da Guarda avaliar a gravidade da ocorrência, determinar as medidas iniciais e solicitar apoio sempre que necessário.</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c1"></span></p>
+
+        <p class="cpm-c6" id="cap-ii"><span class="cpm-c9 cpm-c8">CAPÍTULO II</span></p>
+        <p class="cpm-c6"><span class="cpm-c9 cpm-c0">Das Categorias de Crises e Procedimentos</span></p>
+        <p class="cpm-c6 cpm-c5"><span class="cpm-c9 cpm-c0"></span></p>
+
+        <p class="cpm-c3"><span class="cpm-c7">Art. 5º &mdash; </span><span class="cpm-c1">As emergências contempladas por este Protocolo dividem-se nas seguintes categorias:</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c1"></span></p>
+        <p class="cpm-c3"><span class="cpm-c7">I &ndash;</span><span class="cpm-c1">&nbsp;Crises leves;</span></p>
+        <p class="cpm-c3"><span class="cpm-c7">II &ndash;</span><span class="cpm-c1">&nbsp;Crises médias;</span></p>
+        <p class="cpm-c3"><span class="cpm-c7">III &ndash;</span><span class="cpm-c1">&nbsp;Crises graves.</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c1"></span></p>
+
+        <p class="cpm-c6" id="sec-i"><span class="cpm-c8">SEÇÃO I</span></p>
+        <p class="cpm-c6"><span class="cpm-c0">Das crises leves</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c4"></span></p>
+
+        <p class="cpm-c3"><span class="cpm-c7">Art. 6º &mdash; </span><span class="cpm-c2">Consideram-se </span><span class="cpm-c7">crise leve</span><span class="cpm-c1">&nbsp;as condutas praticadas com o intuito de prejudicar a jogabilidade ou o andamento regular das atividades no Batalhão, sem oferecer risco direto à estrutura física do quarto ou à segurança institucional.</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c1"></span></p>
+        <p class="cpm-c3"><span class="cpm-c7">Exemplos de Ocorrências:</span></p>
+        <p class="cpm-c3"><span class="cpm-c7">I &ndash;</span><span class="cpm-c1">&nbsp;Envio massivo de solicitações de negociação (Ataque de Negociação);</span></p>
+        <p class="cpm-c3"><span class="cpm-c7">II &ndash;</span><span class="cpm-c1">&nbsp;Prática de flood (envio contínuo de mensagens com excesso de caracteres).</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c1"></span></p>
+        <p class="cpm-c3"><span class="cpm-c7">Procedimentos do Oficial da Guarda (OG) / Auxiliar do Oficial da Guarda (AOG):</span></p>
+        <p class="cpm-c3"><span class="cpm-c2">1 &ndash; </span><span class="cpm-c1">Aplicar a sanção imediata de silenciamento (mute) ou expulsão (kick) ao infrator, proporcionalmente à gravidade do ato;</span></p>
+        <p class="cpm-c3"><span class="cpm-c2">2 &ndash; </span><span class="cpm-c1">Registrar o nickname do infrator para agilizar a aplicação do comando :kick [nick];</span></p>
+        <p class="cpm-c3"><span class="cpm-c2">3 &ndash; </span><span class="cpm-c1">Acionar os membros do Batalhão de Operações Policiais Especiais (BOPE) caso haja necessidade de contenção reforçada da situação;</span></p>
+        <p class="cpm-c3"><span class="cpm-c2">4 &ndash; </span><span class="cpm-c1">Em episódios de spam de negociação, silenciar o infrator, orientar os policiais a adotar o mesmo procedimento e instruir os policiais a manterem uma janela de negociação aberta no canto da tela para bloquear novas investidas.</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c1"></span></p>
+
+        <p class="cpm-c6" id="sec-ii"><span class="cpm-c8">SEÇÃO II</span></p>
+        <p class="cpm-c6"><span class="cpm-c0">Crises médias</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c4"></span></p>
+
+        <p class="cpm-c3"><span class="cpm-c7">Art. 7º &mdash; </span><span class="cpm-c2">Consideram-se </span><span class="cpm-c7">crises médias</span><span class="cpm-c1">&nbsp;as instabilidades, falhas técnicas ou indisponibilidades registradas nos sistemas externos operados pela CIA (Fórum ou System), inviabilizando o acesso aos dados institucionais.</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c1"></span></p>
+        <p class="cpm-c3"><span class="cpm-c7">Exemplos de Ocorrências:</span></p>
+        <p class="cpm-c3"><span class="cpm-c7">I &ndash;</span><span class="cpm-c1">&nbsp;Indisponibilidade do Fórum.</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c1"></span></p>
+        <p class="cpm-c3"><span class="cpm-c7">Procedimentos do Oficial da Guarda (OG) / Auxiliar do Oficial da Guarda (AOG):</span></p>
+        <p class="cpm-c3"><span class="cpm-c1">1 &ndash; Acionar a equipe do CRH/responsável para disponibilização do backup das listagens do Fórum;</span></p>
+        <p class="cpm-c3"><span class="cpm-c1">2 &ndash; Acesso ao Batalhão: Permitir a entrada de Praças mediante confirmação do grupo oficial do Corpo de Praças;</span></p>
+        <p class="cpm-c3"><span class="cpm-c1">3 &ndash; Entrada de Recrutas e Soldados: Ficam sob inteira responsabilidade e supervisão do OG/AOG, que responderá disciplinarmente por eventuais infiltrações ou acesso de exonerados;</span></p>
+        <p class="cpm-c3"><span class="cpm-c1">4 &ndash; Manter registro manual detalhado de todas as sanções aplicadas durante a queda (promoções, advertência, rebaixamentos, desligamentos desonrosos e exonerações) e transmiti-lo ao oficial sucessor no turno, garantindo o devido lançamento no Fórum assim que o serviço for restabelecido.</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c1"></span></p>
+
+        <p class="cpm-c6" id="sec-iii"><span class="cpm-c8">SEÇÃO III</span></p>
+        <p class="cpm-c6"><span class="cpm-c0">Crises graves</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c4"></span></p>
+
+        <p class="cpm-c3"><span class="cpm-c7">Art. 8º &mdash; </span><span class="cpm-c2">Consideram-se </span><span class="cpm-c7">crises graves</span><span class="cpm-c1">&nbsp;as condutas direcionadas a perturbar a comunicação, desorganizar os serviços, alterar a configuração original do Batalhão ou comprometer as dependências físicas e a segurança da CIA.</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c1"></span></p>
+        <p class="cpm-c3"><span class="cpm-c7">Exemplos de Ocorrências:</span></p>
+        <p class="cpm-c3"><span class="cpm-c7">I &ndash;</span><span class="cpm-c1">&nbsp;Silenciamento (mute) ou expulsão (kick) indevidos de policiais;</span></p>
+        <p class="cpm-c3"><span class="cpm-c7">II &ndash;</span><span class="cpm-c1">&nbsp;Alteração ou movimentação não autorizada de mobílias;</span></p>
+        <p class="cpm-c3"><span class="cpm-c7">III &ndash;</span><span class="cpm-c1">&nbsp;Ataque coordenado ou invasão total ao Batalhão.</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c1"></span></p>
+        <p class="cpm-c3"><span class="cpm-c7">Procedimentos do Oficial da Guarda (OG) / Auxiliar do Oficial da Guarda (AOG):</span></p>
+        <p class="cpm-c3"><span class="cpm-c2">1 &ndash; </span><span class="cpm-c1">Gerar imediatamente o registro da lista de usuários presentes no quarto através do comando :chooser;</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c1"></span></p>
+        <p class="cpm-c3"><span class="cpm-c7">2 &ndash; Em situações sob controle:</span></p>
+        <ul class="protocol-list">
+            <li><span class="cpm-c1">Anunciar o comando de Sentido a todos os portadores de direitos presentes;</span></li>
+            <li><span class="cpm-c1">Encaminhar os portadores de direitos ao Corredor Principal;</span></li>
+            <li><span class="cpm-c1">Notificar imediatamente o BOPE, repassando o relato dos fatos e a listagem de usuários (:chooser).</span></li>
+        </ul>
+        <p class="cpm-c3"><span class="cpm-c7">3 &ndash; Em situações fora de controle:</span></p>
+        <ul class="protocol-list">
+            <li><span class="cpm-c1">Anunciar o comando de Sentido a todo o Batalhão;</span></li>
+            <li><span class="cpm-c1">Deslocar a tropa para o Corredor Principal e mantê-la em posição até segunda ordem;</span></li>
+            <li><span class="cpm-c1">Notificar imediatamente o BOPE, repassando o relato dos fatos e a listagem de usuários (:chooser).</span></li>
+        </ul>
+        <p class="cpm-c3"><span class="cpm-c7">4 &ndash; Em ataques totais ao Batalhão:</span></p>
+        <ul class="protocol-list">
+            <li><span class="cpm-c1">Anunciar o comando de Sentido a todo o Batalhão;</span></li>
+            <li><span class="cpm-c1">Esvaziar o quarto imediatamente através do navegador de quartos;</span></li>
+            <li><span class="cpm-c1">Notificar o BOPE em caráter de urgência;</span></li>
+            <li><span class="cpm-c1">Expulsar eventuais usuários remanescentes e manter o Batalhão trancado/fechado até posterior liberação.</span></li>
+        </ul>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c1"></span></p>
+
+        <p class="cpm-c6" id="cap-iii"><span class="cpm-c9 cpm-c8">CAPÍTULO III</span></p>
+        <p class="cpm-c6"><span class="cpm-c9 cpm-c0">Disposições Finais</span></p>
+        <p class="cpm-c6 cpm-c5"><span class="cpm-c9 cpm-c0"></span></p>
+
+        <p class="cpm-c3"><span class="cpm-c7">Art. 9º &mdash; </span><span class="cpm-c1">O presente Protocolo possui caráter operacional e deverá ser utilizado como instrumento de orientação durante situações de crise, não substituindo as demais normas institucionais da Polícia CIA.</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c1"></span></p>
+        <p class="cpm-c3"><span class="cpm-c7">Art. 10 &mdash; </span><span class="cpm-c1">Cabe aos policiais Portadores de Direitos cumprir o protocolo deste documento enquanto permanecerem vigentes.</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c1"></span></p>
+        <p class="cpm-c3"><span class="cpm-c7">Art. 11 &mdash; </span><span class="cpm-c1">Situações não previstas neste protocolo deverão ser avaliadas pelo BOPE e Supremacia, adotando-se medidas necessárias para manter a ordem na Central Intelligence Agency.</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c1"></span></p>
+        <p class="cpm-c3"><span class="cpm-c7">Art. 12 &mdash; </span><span class="cpm-c1">O presente Protocolo poderá ser atualizado sempre que novas ferramentas, ameaças ou procedimentos forem incorporados à rotina da Polícia CIA.</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c1"></span></p>
+        <p class="cpm-c3"><span class="cpm-c7">Art. 13 &mdash; </span><span class="cpm-c1">Este Protocolo entra em vigor na data de sua publicação.</span></p>
+        <p class="cpm-c3 cpm-c5"><span class="cpm-c1"></span></p>
+        <p class="cpm-c6"><span class="cpm-c7">Comando de Segurança Institucional — POLÍCIA CIA</span></p>
+    </div>
+
+    <a href="#top" id="back-to-top" title="Voltar ao topo" class="fixed right-5 bottom-5 w-11 h-11 rounded-full bg-blue-600 text-white flex items-center justify-center no-underline text-lg shadow-lg transition-opacity opacity-100">&#8593;</a>
+
+    <script>
+        var btn = document.getElementById('mobile-menu-btn');
+        var menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', function() {
+            menu.classList.toggle('hidden');
+        });
+        document.querySelectorAll('.mobile-link').forEach(function(link) {
+            link.addEventListener('click', function() {
+                menu.classList.add('hidden');
+            });
+        });
+        var backBtn = document.getElementById('back-to-top');
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 400) {
+                backBtn.classList.remove('opacity-0', 'pointer-events-none');
+                backBtn.classList.add('opacity-100');
+            } else {
+                backBtn.classList.add('opacity-0', 'pointer-events-none');
+                backBtn.classList.remove('opacity-100');
+            }
+        });
+    </script>
+
+</body>
+
+</html>

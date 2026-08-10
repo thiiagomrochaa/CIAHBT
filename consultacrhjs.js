@@ -370,11 +370,17 @@
 
         // Cursos com STATUS "Cancelado" não entram na listagem — o registro
         // continua existindo na planilha (histórico interno), só não aparece
-        // publicamente aqui pro usuário
+        // publicamente aqui pro usuário. Também só entra registro do curso
+        // "Curso de Formação de Oficiais" — qualquer outro CURSO é ignorado
+        // aqui (comparação sem diferenciar maiúscula/minúscula ou espaços
+        // nas pontas, pra não quebrar por um espaço extra na planilha).
+        var CURSO_PERMITIDO = 'curso de formação de oficiais';
         var doUsuario = linhas.filter(function (r) {
           return r['NICK ALUNO']
             && r['NICK ALUNO'].trim().toLowerCase() === nick.toLowerCase()
-            && r['STATUS'] !== 'Cancelado';
+            && r['STATUS'] !== 'Cancelado'
+            && r['CURSO']
+            && r['CURSO'].trim().toLowerCase() === CURSO_PERMITIDO;
         });
 
         // Mais recente primeiro. Ordena pela DATA (não pelo ID) porque as

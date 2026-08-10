@@ -16,6 +16,13 @@
   var SHEET_ID_REGISTROS = '1-lTpEe-GRgKRkf_YD25NDxWWfyIyi1zS-F6R80j6W2s';
   var URL_REGISTROS = 'https://opensheet.elk.sh/' + SHEET_ID_REGISTROS + '/Registros';
 
+  // Segunda fonte de Registros ([APM] Administração) — mesma estrutura de
+  // colunas da planilha acima (ID, CURSO, NICK INSTRUTOR, NICK ALUNO, DATA,
+  // RESULTADO, COMENTÁRIOS, STATUS). Também precisa estar compartilhada como
+  // "qualquer pessoa com o link pode visualizar".
+  var SHEET_ID_REGISTROS_2 = '1VnAFOGCmK-V_5L6C3uwHT9HNxlJ8CjbY0cd8Fk1frto';
+  var URL_REGISTROS_2 = 'https://opensheet.elk.sh/' + SHEET_ID_REGISTROS_2 + '/Registros';
+
   var HABBLET_API     = 'https://api.habblet.city';
   var HABBLET_IMAGING = 'https://imaging.habblet.city/avatarimage';
 
@@ -271,6 +278,29 @@
     return div.innerHTML;
   }
 
+  // Converte datas em pt-BR tipo "09 ago. 2026", "17 Jul 2026" ou
+  // "06 Ago 2026" (com ou sem ponto, maiúscula ou minúscula) num objeto
+  // Date, pra dar pra ordenar registros vindos de fontes diferentes (cujos
+  // IDs não têm relação entre si). Se não conseguir entender o formato,
+  // devolve null e quem chamar decide o que fazer.
+  var MESES_PT = {
+    jan: 0, fev: 1, mar: 2, abr: 3, mai: 4, jun: 5,
+    jul: 6, ago: 7, set: 8, out: 9, nov: 10, dez: 11
+  };
+
+  function parseDataPtBr(texto) {
+    if (!texto) return null;
+    var m = String(texto).trim().toLowerCase().replace(/\./g, '')
+      .match(/^(\d{1,2})\s+([a-zç]{3,})\s+(\d{4})$/);
+    if (!m) return null;
+    var dia = Number(m[1]);
+    var mesChave = m[2].slice(0, 3);
+    var mes = MESES_PT.hasOwnProperty(mesChave) ? MESES_PT[mesChave] : null;
+    var ano = Number(m[3]);
+    if (mes === null || !dia || !ano) return null;
+    return new Date(ano, mes, dia);
+  }
+
   function renderizarCursos(registros) {
     var lista = document.getElementById('crh_cursos_lista');
     lista.innerHTML = '';
@@ -308,12 +338,24 @@
     document.getElementById('crh_cursos_vazio').classList.add('hidden');
     document.getElementById('crh_cursos_lista').classList.add('hidden');
 
-    fetchComTimeout(URL_REGISTROS)
-      .then(function (r) {
-        if (!r.ok) throw new Error('Falha HTTP ao ler Registros');
+    Promise.all([
+      fetchComTimeout(URL_REGISTROS).then(function (r) {
+        if (!r.ok) throw new Error('Falha HTTP ao ler Registros (fonte 1)');
         return r.json();
+      }),
+      // Segunda fonte é tratada separadamente: se ela falhar, ainda
+      // mostramos os registros da primeira fonte em vez de quebrar tudo.
+      fetchComTimeout(URL_REGISTROS_2).then(function (r) {
+        if (!r.ok) throw new Error('Falha HTTP ao ler Registros (fonte 2)');
+        return r.json();
+      }).catch(function (err) {
+        console.error('[cursos] falha ao carregar fonte 2', err);
+        return [];
       })
-      .then(function (linhas) {
+    ])
+      .then(function (resultados) {
+        var linhas = resultados[0].concat(resultados[1]);
+
         // Cursos com STATUS "Cancelado" não entram na listagem — o registro
         // continua existindo na planilha (histórico interno), só não aparece
         // publicamente aqui pro usuário
@@ -323,8 +365,18 @@
             && r['STATUS'] !== 'Cancelado';
         });
 
-        // mais recente primeiro (ID é sequencial e crescente)
-        doUsuario.sort(function (a, b) { return Number(b['ID']) - Number(a['ID']); });
+        // Mais recente primeiro. Ordena pela DATA (não pelo ID) porque as
+        // duas planilhas têm sequências de ID independentes, então misturar
+        // por ID bagunçaria a ordem cronológica real. Registros com data em
+        // formato não reconhecido caem pro fim da lista.
+        doUsuario.sort(function (a, b) {
+          var dataA = parseDataPtBr(a['DATA']);
+          var dataB = parseDataPtBr(b['DATA']);
+          if (dataA && dataB) return dataB - dataA;
+          if (dataA && !dataB) return -1;
+          if (!dataA && dataB) return 1;
+          return Number(b['ID']) - Number(a['ID']);
+        });
 
         document.getElementById('crh_cursos_carregando').classList.add('hidden');
 

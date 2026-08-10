@@ -30,7 +30,12 @@
     ms = ms || 10000;
     var controller = new AbortController();
     var timer = setTimeout(function () { controller.abort(); }, ms);
-    opcoes = Object.assign({}, opcoes, { signal: controller.signal });
+    // cache: 'no-store' evita que o navegador sirva uma resposta antiga em
+    // cache local — sem isso, uma mudança na planilha podia não aparecer
+    // até o usuário forçar um refresh (Ctrl+Shift+R). O cache de 30s do
+    // próprio opensheet.elk.sh continua existindo do lado do servidor, mas
+    // esse é bem mais curto e é esperado.
+    opcoes = Object.assign({ cache: 'no-store' }, opcoes, { signal: controller.signal });
     return fetch(url, opcoes).finally(function () { clearTimeout(timer); });
   }
 
@@ -309,7 +314,10 @@
       var card = document.createElement('div');
       card.className = 'border border-gray-100 rounded-xl p-4';
 
-      var comentarioHtml = r['COMENTÁRIOS']
+      // Comentários só aparecem pra registros da fonte 1 — registros vindos
+      // da segunda planilha (Registros 2) são marcados com _fonte2 mais
+      // abaixo e nunca mostram COMENTÁRIOS, mesmo que a célula tenha algo.
+      var comentarioHtml = (r['COMENTÁRIOS'] && !r._fonte2)
         ? '<p class="text-xs text-gray-500 mt-2 italic">&ldquo;' + escaparHtml(r['COMENTÁRIOS']) + '&rdquo;</p>'
         : '';
 
@@ -354,6 +362,10 @@
       })
     ])
       .then(function (resultados) {
+        // Marca cada linha vinda da segunda planilha (Registros 2) antes de
+        // juntar tudo — é essa marca que faz o comentário não aparecer pra
+        // esses registros em renderizarCursos.
+        resultados[1].forEach(function (r) { r._fonte2 = true; });
         var linhas = resultados[0].concat(resultados[1]);
 
         // Cursos com STATUS "Cancelado" não entram na listagem — o registro

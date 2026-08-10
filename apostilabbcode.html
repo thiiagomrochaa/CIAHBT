@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Apostila de BBCode para Fóruns</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            navy: "#17365D",
+                            brand: "#2F75B5",
+                            light: "#D9EAF7",
+                            muted: "#667085",
+                            canvas: "#eef2f7",
+                            edge: "#d8dee8",
+                        },
+                    },
+                },
+            };
+        </script>
+        <style>
+            /* Tipografia e blocos ricos do conteúdo das páginas (injetado via JS) */
+            .page h1 {
+                color: #17365d;
+                font-size: 1.9rem;
+                margin-top: 0;
+                border-bottom: 2px solid #d9eaf7;
+                padding-bottom: 0.75rem;
+                font-weight: 700;
+            }
+            .page h2 {
+                color: #2f75b5;
+                font-size: 1.3rem;
+                margin-top: 1.9rem;
+                font-weight: 700;
+            }
+            .page h3 {
+                color: #c55a11;
+                font-size: 1.05rem;
+                font-weight: 700;
+            }
+            .page p,
+            .page li {
+                line-height: 1.7;
+            }
+            .page p {
+                margin: 0.75rem 0;
+            }
+            .page ul,
+            .page ol {
+                padding-left: 1.4rem;
+            }
+            .page code {
+                background: #eef0f2;
+                border: 1px solid #d7dadd;
+                border-radius: 0.3rem;
+                padding: 0.1rem 0.35rem;
+                font:
+                    13px/1.5 Consolas,
+                    monospace;
+            }
+            .code {
+                background: #eef0f2;
+                border: 1px solid #d7dadd;
+                border-radius: 0.5rem;
+                padding: 0.9rem 1.05rem;
+                font:
+                    14px/1.6 Consolas,
+                    monospace;
+                white-space: pre-wrap;
+                overflow: auto;
+                margin: 0.9rem 0;
+            }
+            .result {
+                border-left: 4px solid #548235;
+                background: #e2f0d9;
+                padding: 0.7rem 0.9rem;
+                margin: 0.75rem 0;
+                border-radius: 0 0.45rem 0.45rem 0;
+            }
+            .tip {
+                border-left: 4px solid #2f75b5;
+                background: #d9eaf7;
+                padding: 0.7rem 0.9rem;
+                margin: 0.9rem 0;
+                border-radius: 0 0.45rem 0.45rem 0;
+            }
+            .warn {
+                border-left: 4px solid #c55a11;
+                background: #fce4d6;
+                padding: 0.7rem 0.9rem;
+                margin: 0.9rem 0;
+                border-radius: 0 0.45rem 0.45rem 0;
+            }
+            .page table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 1.1rem 0;
+                font-size: 14px;
+            }
+            .page th {
+                background: #17365d;
+                color: #fff;
+                text-align: left;
+                padding: 0.6rem;
+            }
+            .page td {
+                border: 1px solid #d8dee8;
+                padding: 0.6rem;
+                vertical-align: top;
+            }
+            .page tr:nth-child(even) td {
+                background: #fafbfc;
+            }
+            .cover {
+                text-align: center;
+                padding: 4.5rem 1rem;
+            }
+            .cover h1 {
+                border: 0;
+                font-size: 2.6rem;
+                margin: 1.2rem 0 0.6rem;
+            }
+            .cover .badge {
+                display: inline-block;
+                background: #d9eaf7;
+                color: #17365d;
+                padding: 0.45rem 0.9rem;
+                border-radius: 999px;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+
+    <body class="min-h-screen bg-canvas text-slate-800 font-sans">
+        <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-center h-20 items-center">
+
+            <div class="flex items-center gap-8">
+                <div class="flex items-center gap-2">
+                    <div class="leading-none">
+                        <span class="text-xl font-black tracking-tighter text-gray-900 uppercase block">Apostila de BBCode</span>
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Guia interativo e explicativo</span>
+                    </div>
+                </div>
+            </div>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class="flex flex-col md:flex-row max-w-[1250px] mx-auto min-h-[calc(100vh-92px)]">
+            <aside
+                class="w-full md:w-[285px] bg-white border-b md:border-b-0 md:border-r border-edge rounded-2xl p-4 md:sticky md:top-[92px] md:h-[calc(100vh-92px)] overflow-auto shrink-0"
+            >
+                <strong class="block px-3 pb-2.5 text-navy">Conteúdo</strong>
+                <div id="menu" class="flex flex-col"></div>
+            </aside>
+
+            <main class="flex-1 p-4 md:p-8">
+                <section
+                    id="content"
+                    class="max-w-[880px] mx-auto bg-white border border-edge rounded-2xl shadow-md p-6 md:p-10 min-h-[650px] page"
+                >
+                    <div class="text-center py-24 text-muted">Carregando...</div>
+                </section>
+
+                <div class="flex justify-between gap-3 max-w-[880px] mx-auto mt-4">
+                    <button
+                        id="prev"
+                        class="border border-edge bg-white text-navy px-5 py-3 rounded-lg font-bold enabled:hover:bg-light disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                    >
+                        ← Página anterior
+                    </button>
+                    <button
+                        id="next"
+                        class="border border-edge bg-white text-navy px-5 py-3 rounded-lg font-bold enabled:hover:bg-light disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                    >
+                        Próxima página →
+                    </button>
+                </div>
+
+                <div id="counter" class="text-center text-muted text-xs mt-2.5"></div>
+                <div class="max-w-[880px] mx-auto mt-2 text-muted text-xs text-center">
+                    Apostila de BBCode • Guia para fóruns de discussão
+                </div>
+            </main>
+        </div>
+
+        <script>
+          
+            /*
+  APOSTILA 100% AUTÔNOMA
+  --------------------------------
+  Todo o conteúdo está neste único HTML.
+  Não existem arquivos externos de páginas, CSS ou JavaScript.
+
+  A navegação funciona como um carregamento AJAX interno:
+  a página atual é substituída dinamicamente no DOM sem recarregar
+  o documento principal.
+*/
+
+            const pages = [
+                {
+                    title: "Capa",
+                    html: '<div class="cover">\n  <span class="badge">GUIA COMPLETO</span>\n  <h1>BBCode</h1>\n  <p>Aprenda, passo a passo, a escrever códigos, formatar textos, organizar tópicos e criar posts com aparência profissional.</p>\n  <p><strong>Do básico ao avançado, com explicações e exemplos comentados.</strong></p>\n</div>',
+                },
+                {
+                    title: "1. Introdução",
+                    html: '<h1>1. Introdução</h1>\n<p>BBCode (abreviação de <strong>Bulletin Board Code</strong>) é uma linguagem de marcação simplificada, criada para ser usada em fóruns de discussão. Ela existe porque permitir que qualquer usuário digite HTML puro dentro de uma mensagem seria arriscado: alguém poderia quebrar o layout da página inteira, ou até inserir código malicioso. O BBCode resolve isso oferecendo um conjunto limitado e seguro de comandos, que o fórum depois converte internamente em HTML antes de exibir o post.</p>\n<p>Em vez de escrever tags como <code>&lt;b&gt;</code> e <code>&lt;/b&gt;</code>, o usuário escreve comandos entre colchetes, chamados de <strong>tags BBCode</strong>. O fórum lê esse texto, entende os comandos e desenha a formatação correspondente na tela.</p>\n<h2>1.1 Estrutura básica</h2>\n<p>A maioria das tags funciona em pares: uma tag de <strong>abertura</strong> liga a formatação, e uma tag de <strong>fechamento</strong> (com uma barra "/" antes do nome) a desliga. Tudo o que estiver entre as duas recebe o efeito.</p>\n<div class="code">[tag]conteúdo[/tag]</div>\n<p>Um exemplo prático: para deixar uma palavra em negrito, usa-se a tag <code>b</code> (de "bold"):</p>\n<div class="code">[b]Este texto ficará em negrito.[/b]</div>\n<div class="result">Resultado: <strong>Este texto ficará em negrito.</strong></div>\n<p>Repare que a tag de abertura <code>[b]</code> e a de fechamento <code>[/b]</code> "envolvem" o texto, como se fossem um par de parênteses especiais.</p>\n<h2>1.2 Tags com parâmetros</h2>\n<p>Algumas tags precisam de uma informação extra para saber <em>como</em> aplicar o efeito — por exemplo, qual cor usar, ou para qual endereço um link deve apontar. Essa informação vem logo depois de um sinal de igual (<b>=</b>), ainda dentro dos colchetes de abertura.</p>\n<div class="code">[color=red]Texto vermelho[/color]\n[url=https://exemplo.com]Clique aqui[/url]</div>\n<p>No primeiro exemplo, <code>color</code> é o nome da tag e <code>red</code> é o parâmetro que diz qual cor aplicar. No segundo, <code>url</code> recebe o endereço do site como parâmetro, e o texto entre as tags ("Clique aqui") é o que aparece clicável para quem lê o post.</p>',
+                },
+                {
+                    title: "2. Como pensar em BBCode",
+                    html: '<h1>2. Como pensar em BBCode</h1>\n<p>Antes de decorar tags específicas, vale entender a lógica por trás de todas elas. Existem três ideias centrais que se repetem em praticamente qualquer BBCode: <strong>abertura e fechamento</strong>, <strong>parâmetros</strong> e <strong>aninhamento</strong>. Dominando esses três conceitos, fica muito mais fácil aprender (e até adivinhar) novas tags no futuro.</p>\n<table><tr><th>Conceito</th><th>Significado</th><th>Exemplo</th></tr>\n<tr><td>Abertura</td><td>Marca onde uma formatação começa a valer.</td><td>[b]</td></tr>\n<tr><td>Fechamento</td><td>Marca onde essa formatação termina. Sempre leva uma barra "/".</td><td>[/b]</td></tr>\n<tr><td>Parâmetro</td><td>Informação extra passada à tag depois do sinal de igual.</td><td>[color=blue]</td></tr>\n<tr><td>Aninhamento</td><td>Colocar uma tag dentro de outra, para combinar efeitos.</td><td>[b][i]texto[/i][/b]</td></tr></table>\n<h2>Regra de ouro</h2>\n<p>Quando várias tags são abertas em sequência, elas precisam ser fechadas na <strong>ordem inversa</strong> — como uma pilha de caixas: a última caixa colocada em cima é a primeira a ser retirada. Isso evita que uma formatação "vaze" para fora da outra e cause um resultado inesperado.</p>\n<div class="code">[b][i]Texto[/i][/b]\n\n[b][i]Texto[/b][/i]  ← incorreto</div>\n<p>No exemplo correto, <code>[i]</code> foi aberta por último, então é fechada primeiro; <code>[b]</code> foi aberta primeiro, então é fechada por último. No exemplo incorreto essa ordem foi invertida, o que costuma fazer o fórum exibir a formatação quebrada ou tags sobrando como texto puro na tela.</p>\n<div class="tip"><strong>Dica:</strong> sempre que aninhar tags, feche-as na ordem inversa em que foram abertas — é o mesmo princípio de fechar parênteses (( )) aninhados em matemática.</div>',
+                },
+                {
+                    title: "3. Formatação de texto",
+                    html: '<h1>3. Formatação de texto</h1>\n<p>Estas são as tags mais usadas no dia a dia, voltadas a mudar a aparência de um trecho de texto: peso da fonte, inclinação, cor, tamanho e até a família tipográfica.</p>\n<table><tr><th>Função</th><th>Código</th><th>O que faz</th></tr>\n<tr><td>Negrito</td><td>[b]texto[/b]</td><td>Aumenta o peso visual da fonte, dando destaque.</td></tr>\n<tr><td>Itálico</td><td>[i]texto[/i]</td><td>Inclina o texto — útil para títulos de obras ou ênfase suave.</td></tr>\n<tr><td>Sublinhado</td><td>[u]texto[/u]</td><td>Desenha uma linha embaixo do texto.</td></tr>\n<tr><td>Tachado</td><td>[strike]texto[/strike]</td><td>Risca o texto, indicando algo cancelado ou desatualizado.</td></tr>\n<tr><td>Cor</td><td>[color=red]texto[/color]</td><td>Aplica uma cor ao texto (nome da cor ou código hexadecimal).</td></tr>\n<tr><td>Tamanho</td><td>[size=150]texto[/size]</td><td>Muda o tamanho da fonte, geralmente em porcentagem.</td></tr>\n<tr><td>Fonte</td><td>[font=Arial]texto[/font]</td><td>Troca a família tipográfica do texto.</td></tr></table>\n<h2>Combinações</h2>\n<p>Como vimos na página anterior, tags podem ser aninhadas para somar efeitos. O exemplo abaixo deixa o texto em negrito, com uma cor específica e em tamanho maior — uma combinação comum para títulos de aviso:</p>\n<div class="code">[b][color=#17365D][size=140]Aviso importante[/size][/color][/b]</div>\n<div class="tip"><strong>Dica:</strong> usar um código hexadecimal (como <code>#17365D</code>) em vez de um nome de cor genérico ajuda a manter a mesma tonalidade exata sempre que você repetir aquele elemento visual, criando uma identidade consistente nos seus posts.</div>',
+                },
+                {
+                    title: "4. Alinhamento e organização",
+                    html: '<h1>4. Alinhamento e organização</h1>\n<p>Além de formatar o próprio texto, também é possível controlar como um bloco inteiro se posiciona na largura da página. Essas tags envolvem parágrafos completos, não apenas palavras soltas.</p>\n<table><tr><th>Função</th><th>Código</th><th>Quando usar</th></tr>\n<tr><td>Esquerda</td><td>[left]texto[/left]</td><td>Alinhamento padrão da maioria dos fóruns; raramente precisa ser declarado.</td></tr>\n<tr><td>Centro</td><td>[center]texto[/center]</td><td>Ótimo para títulos, avisos e imagens de destaque.</td></tr>\n<tr><td>Direita</td><td>[right]texto[/right]</td><td>Usado com menos frequência, por exemplo em assinaturas.</td></tr>\n<tr><td>Justificado</td><td>[justify]texto[/justify]</td><td>Alinha as duas margens do parágrafo, como em jornais e livros.</td></tr></table>\n<div class="code">[center][b]COMUNICADO[/b][/center]</div>\n<p>No exemplo acima, o texto "COMUNICADO" fica em negrito e centralizado na página — uma combinação típica de cabeçalhos de aviso em tópicos oficiais.</p>\n<p>Sobre quebras de linha: na maioria dos editores, basta pressionar Enter para pular para a linha seguinte, sem precisar de nenhuma tag. Alguns fóruns também oferecem uma tag específica como <code>[br]</code> para forçar uma quebra de linha dentro de um mesmo parágrafo, mas isso depende da configuração de cada instalação.</p>',
+                },
+                {
+                    title: "5. Listas",
+                    html: '<h1>5. Listas</h1>\n<p>Listas ajudam a organizar informações em itens separados, tornando a leitura mais rápida do que um parágrafo corrido. Existem três formatos principais: com marcadores, numeradas e aninhadas (listas dentro de listas).</p>\n<h2>5.1 Lista com marcadores</h2>\n<p>Cada item começa com <code>[*]</code> e não precisa de uma tag de fechamento individual — o fechamento acontece apenas uma vez, no final de toda a lista, com <code>[/list]</code>.</p>\n<div class="code">[list]\n[*]Primeiro item\n[*]Segundo item\n[*]Terceiro item\n[/list]</div>\n<h2>5.2 Lista numerada</h2>\n<p>Basta acrescentar <code>=1</code> à tag de abertura para que o fórum numere os itens automaticamente, em vez de usar marcadores.</p>\n<div class="code">[list=1]\n[*]Primeiro passo\n[*]Segundo passo\n[*]Terceiro passo\n[/list]</div>\n<h2>5.3 Listas aninhadas</h2>\n<p>É possível colocar uma lista inteira dentro de um item de outra lista, criando subcategorias. Isso é útil para organizar tópicos com hierarquia, como um índice de regras com subitens.</p>\n<div class="code">[list]\n[*]Categoria A\n[list]\n[*]Subitem A1\n[*]Subitem A2\n[/list]\n[*]Categoria B\n[/list]</div>\n<div class="tip"><strong>Dica:</strong> ao aninhar listas, cuidado para não esquecer nenhum <code>[/list]</code> — cada abertura precisa do seu fechamento correspondente, senão o restante do post pode aparecer formatado como lista por engano.</div>',
+                },
+                {
+                    title: "6. Citações e código",
+                    html: '<h1>6. Citações e blocos de código</h1>\n<p>Estas tags servem para diferenciar visualmente um trecho de texto do restante da mensagem — seja porque ele foi dito por outra pessoa (citação), seja porque precisa manter formatação exata, como um trecho de código de programação.</p>\n<h2>Citação simples</h2>\n<p>Usada para destacar uma frase ou trecho de outra mensagem, geralmente com uma borda lateral e fundo diferenciado.</p>\n<div class="code">[quote]Este é um texto citado.[/quote]</div>\n<h2>Citação com autor</h2>\n<p>Adicionar um parâmetro à tag <code>quote</code> permite indicar quem disse o texto citado, o que é comum ao responder a outro membro do fórum.</p>\n<div class="code">[quote="Nome do usuário"]Este texto foi dito por alguém.[/quote]</div>\n<h2>Bloco de código</h2>\n<p>Diferente de um texto comum, um bloco de código preserva espaços, quebras de linha e geralmente usa uma fonte monoespaçada — essencial para mostrar trechos de programação ou qualquer conteúdo em que o espaçamento importa.</p>\n<div class="code">[code]Texto que deve manter espaçamento e aparência de código[/code]</div>\n<div class="tip"><strong>Dica:</strong> a sintaxe exata de citações e blocos de código pode variar de um editor para outro — alguns oferecem até destaque de sintaxe (cores para palavras-chave de programação) dentro do bloco de código.</div>',
+                },
+                {
+                    title: "7. Links",
+                    html: '<h1>7. Links</h1>\n<p>Links permitem levar o leitor a outra página, dentro ou fora do fórum. Existem algumas variações da tag, dependendo de quanto controle você quer sobre o texto exibido.</p>\n<table><tr><th>Tipo</th><th>Código</th><th>Resultado</th></tr>\n<tr><td>URL simples</td><td>[url]https://exemplo.com[/url]</td><td>Mostra o próprio endereço como texto clicável.</td></tr>\n<tr><td>URL com texto</td><td>[url=https://exemplo.com]Clique aqui[/url]</td><td>Mostra um texto personalizado, escondendo o endereço real.</td></tr>\n<tr><td>E-mail</td><td>[email]nome@exemplo.com[/email]</td><td>Cria um link que abre o programa de e-mail padrão do visitante.</td></tr></table>\n<div class="code">[url=https://www.exemplo.com]Acessar o site[/url]</div>\n<div class="tip"><strong>Dica:</strong> prefira sempre um texto descritivo (como "Acessar o site" ou "Ver regras completas") em vez de colar uma URL enorme e ilegível diretamente no post — isso deixa a leitura mais limpa e profissional.</div>',
+                },
+                {
+                    title: "8. Imagens",
+                    html: '<h1>8. Imagens</h1>\n<p>A tag <code>[img]</code> exibe uma imagem diretamente dentro do post, a partir de uma URL. Para funcionar, essa URL precisa apontar diretamente para o arquivo de imagem (terminando em algo como <code>.png</code>, <code>.jpg</code> ou <code>.gif</code>), e não para uma página comum que apenas contenha a imagem.</p>\n<div class="code">[img]https://exemplo.com/imagem.png[/img]</div>\n<h2>Dimensões</h2>\n<p>Alguns editores permitem controlar a largura e a altura da imagem exibida, sem precisar editar o arquivo original.</p>\n<div class="code">[img(width=500px,height=300px)]https://exemplo.com/imagem.png[/img]</div>\n<div class="warn"><strong>Atenção:</strong> a sintaxe para definir dimensões varia bastante entre fóruns — alguns usam parênteses como no exemplo acima, outros usam parâmetros diferentes. Quando possível, prefira usar o botão de imagem do editor visual, que já monta o código correto para aquela instalação específica.</div>',
+                },
+                {
+                    title: "9. Vídeos e mídias",
+                    html: '<h1>9. Vídeos e mídias</h1>\n<p>Muitos fóruns permitem incorporar vídeos de plataformas externas diretamente na mensagem, em vez de apenas deixar um link. O suporte a isso depende de o administrador ter habilitado a integração com o serviço de vídeo em questão.</p>\n<div class="code">[youtube]ID_OU_URL[/youtube]</div>\n<p>Nesse exemplo, o conteúdo entre as tags pode ser o identificador do vídeo ou a URL completa, dependendo de como aquele fórum específico processa a tag.</p>\n<div class="tip"><strong>Dica:</strong> se uma tag de vídeo não funcionar como esperado — por exemplo, mostrando apenas um link em vez do player incorporado — use o botão de vídeo/mídia do próprio editor do fórum. Ele já sabe gerar o código certo para os serviços habilitados naquela comunidade.</div>',
+                },
+                {
+                    title: "10. Spoilers e ocultação",
+                    html: '<h1>10. Spoilers, ocultação e conteúdo especial</h1>\n<p>Às vezes é útil esconder um trecho de texto até que o leitor decida clicar para revelá-lo — por exemplo, para não estragar a surpresa de um filme, ou para restringir conteúdo a usuários que atendam a algum critério. Tags como <code>[spoiler]</code> ou <code>[hide]</code> cumprem esse papel, mas não fazem parte do BBCode "padrão": são extensões que cada fórum pode escolher instalar ou não.</p>\n<div class="code">[spoiler]Conteúdo oculto[/spoiler]</div>\n<div class="code">[hide]Conteúdo restrito[/hide]</div>\n<div class="warn"><strong>Atenção:</strong> os exemplos acima só funcionam se essas tags estiverem disponíveis na configuração do fórum em que você está postando. Se não estiverem, o texto aparecerá cru, com os colchetes visíveis, em vez de ocultado.</div>',
+                },
+                {
+                    title: "11. Tabelas",
+                    html: '<h1>11. Tabelas</h1>\n<p>Tabelas organizam informação em linhas e colunas, o que é especialmente útil para listar cargos, preços, funções, requisitos ou qualquer comparação entre itens. A estrutura de uma tabela em BBCode segue de perto a lógica de uma tabela em HTML: uma tag externa para a tabela inteira, uma tag para cada linha, e uma tag para cada célula dentro da linha.</p>\n<div class="code">[table]\n[tr]\n[th]Cargo[/th][th]Função[/th]\n[/tr]\n[tr]\n[td]Administrador[/td][td]Gerencia o fórum[/td]\n[/tr]\n[/table]</div>\n<p>Nesse exemplo, <code>[table]</code> delimita a tabela toda, cada <code>[tr]</code> ("table row") representa uma linha, <code>[th]</code> ("table header") é usada para células de cabeçalho — geralmente destacadas — e <code>[td]</code> ("table data") para as células comuns de conteúdo.</p>\n<div class="tip"><strong>Dica:</strong> se o editor do seu fórum tiver um botão específico para inserir tabelas, prefira usá-lo: além de ser mais rápido, ele revela exatamente a sintaxe aceita naquela instalação, evitando erros de digitação nas tags.</div>',
+                },
+                {
+                    title: "12. Recursos avançados",
+                    html: '<h1>12. Recursos avançados e BBCode personalizado</h1>\n<p>Além do conjunto "clássico" de tags (negrito, itálico, links, etc.), administradores de fórum costumam ter a opção de criar <strong>BBCodes personalizados</strong>: comandos extras, exclusivos daquela comunidade, que geram algum elemento visual específico — um selo de cargo, uma caixa de aviso colorida, um efeito decorativo, e assim por diante.</p>\n<p>Por causa disso, é normal que dois fóruns diferentes, mesmo usando o mesmo software de base, aceitem conjuntos de tags bem diferentes entre si.</p>\n<div class="code">[cargo=Administrador]Nome do usuário[/cargo]\n[alerta]Mensagem importante[/alerta]\n[box=azul]Conteúdo[/box]</div>\n<div class="warn"><strong>Atenção:</strong> os três exemplos acima são apenas ilustrativos, para mostrar como uma tag personalizada normalmente se parece. Eles não são um padrão universal — só funcionarão se um administrador tiver criado exatamente essas tags naquele fórum específico.</div>',
+                },
+                {
+                    title: "13. Aninhamento",
+                    html: '<h1>13. Aninhamento</h1>\n<p>Aninhamento é a técnica de colocar uma tag dentro de outra para combinar múltiplos efeitos de uma vez — já apresentada na página 2, mas vale aprofundar aqui, porque é a base de praticamente todo layout mais elaborado em um post.</p>\n<div class="code">[center]\n[b][size=150][color=#17365D]TÍTULO[/color][/size][/b]\n\n[i]Descrição do tópico[/i]\n[/center]</div>\n<p>Nesse exemplo, o bloco inteiro está centralizado; dentro dele, a primeira linha combina negrito, tamanho maior e uma cor específica para formar um título de destaque, enquanto a segunda linha usa apenas itálico para um texto de apoio mais discreto.</p>\n<h2>Ordem de fechamento</h2>\n<p>Como reforçado na página 2, cada tag precisa ser fechada na ordem inversa à que foi aberta. Isso importa ainda mais quando há três ou quatro tags aninhadas ao mesmo tempo, porque um erro de ordem pode fazer apenas parte do texto ficar formatada corretamente.</p>\n<div class="code">[color=red][b]Texto[/b][/color]   ← correto\n[color=red][b]Texto[/color][/b]   ← incorreto</div>',
+                },
+                {
+                    title: "14. Exemplos práticos",
+                    html: '<h1>14. Exemplos práticos</h1>\n<p>Depois de conhecer as tags individualmente, o próximo passo é ver como elas se combinam em situações reais de um fórum. Os dois exemplos abaixo mostram como montar, do zero, peças completas de conteúdo.</p>\n<h2>Comunicado</h2>\n<p>Um aviso oficial costuma combinar centralização, negrito e cor para o título, seguido de informações estruturadas e uma lista de instruções:</p>\n<div class="code">[center]\n[b][size=160][color=#17365D]COMUNICADO OFICIAL[/color][/size][/b]\n\n[i]Informamos aos membros que haverá manutenção no fórum.[/i]\n[/center]\n\n[b]Data:[/b] 15/08/2026\n[b]Horário:[/b] 22h00\n\n[list]\n[*]Salve seu trabalho antes do horário.\n[*]Evite criar novos tópicos durante a manutenção.\n[*]Aguarde a conclusão.\n[/list]</div>\n<h2>Regra</h2>\n<p>Um tópico de regras costuma seguir um padrão parecido: título chamativo, seguido de uma explicação e uma lista do que é proibido ou obrigatório:</p>\n<div class="code">[center][b][color=#C00000]REGRA Nº 01 — RESPEITO[/color][/b][/center]\n\n[b]É proibido:[/b]\n\n[list]\n[*]Ofender outros membros;\n[*]Utilizar linguagem discriminatória;\n[*]Provocar conflitos intencionalmente.\n[/list]</div>',
+                },
+                {
+                    title: "15. Erros comuns",
+                    html: "<h1>15. Erros comuns</h1>\n<p>Ao aprender BBCode, é normal esbarrar em alguns problemas repetidos. Conhecer as causas mais prováveis ajuda a resolver rapidamente, sem precisar refazer o post inteiro.</p>\n<table><tr><th>Problema</th><th>Causa provável</th><th>Solução</th></tr>\n<tr><td>A tag aparece escrita, em vez de aplicada.</td><td>Tag inexistente naquele fórum, ou desativada pelo administrador.</td><td>Confira a lista de tags disponíveis no editor ou na ajuda do fórum.</td></tr>\n<tr><td>A formatação não termina onde deveria.</td><td>Falta a tag de fechamento correspondente.</td><td>Adicione o [/tag] que está faltando.</td></tr>\n<tr><td>O layout aparece deformado.</td><td>Tamanho de fonte ou imagem excessivo.</td><td>Simplifique o post e reduza os tamanhos usados.</td></tr>\n<tr><td>O link não funciona.</td><td>Sintaxe da tag ou URL digitada incorretamente.</td><td>Use exatamente [url=URL]texto[/url], conferindo o endereço.</td></tr>\n<tr><td>A imagem não aparece.</td><td>A URL usada não é um link direto e público para o arquivo.</td><td>Use uma URL que termine no próprio arquivo de imagem e esteja acessível publicamente.</td></tr>\n<tr><td>O vídeo não incorpora.</td><td>O serviço de vídeo, ou a tag correspondente, não está habilitado naquele fórum.</td><td>Use o botão de mídia do editor em vez de digitar a tag manualmente.</td></tr></table>\n<h2>Método de diagnóstico</h2>\n<p>Quando um post complexo não sai como esperado, em vez de tentar adivinhar o erro olhando tudo de uma vez, é mais eficiente isolar o problema:</p>\n<ol><li>Teste uma única tag isolada, para confirmar que ela funciona sozinha.</li><li>Adicione outra tag ao redor dela.</li><li>Continue acrescentando uma tag por vez.</li><li>No momento em que o resultado quebrar, a última alteração feita é a provável culpada.</li><li>Revise especificamente os fechamentos dessa última tag adicionada.</li></ol>",
+                },
+                {
+                    title: "16. Referência rápida",
+                    html: "<h1>16. Referência rápida</h1>\n<p>Uma tabela resumo com as tags mais usadas no dia a dia, para consulta rápida sem precisar reler as explicações completas de cada seção.</p>\n<table><tr><th>Objetivo</th><th>BBCode</th></tr>\n<tr><td><strong>Negrito</strong></td><td>[b]texto[/b]</td></tr><tr><td><i>Itálico</i></td><td>[i]texto[/i]</td></tr>\n<tr><td><u>Sublinhado</u></td><td>[u]texto[/u]</td></tr><tr><td><s>Tachado</s></td><td>[strike]texto[/strike]</td></tr>\n<tr><td style='color: red;''>Cor</td><td>[color=red]texto[/color]</td></tr><tr><td style='font-size:20px;'>Tamanho</td><td>[size=20]texto[/size]</td></tr>\n<tr><td style='font-family: serif'>Fonte</td><td>[font=Arial]texto[/font]</td></tr><tr><td style='text-align:center;'>Centro</td><td>[center]texto[/center]</td></tr>\n<tr><td style='text-align:right;'>Direita</td><td>[right]texto[/right]</td></tr><tr><td>Citação</td><td>[quote]texto[/quote]</td></tr>\n<tr><td>Código</td><td>[code]texto[/code]</td></tr><tr><td>Link</td><td>[url=URL]texto[/url]</td></tr>\n<tr><td>Imagem</td><td>[img]URL[/img]</td></tr><tr><td>Lista</td><td>[list][*]item[/list]</td></tr></table>",
+                },
+            ];
+
+            let current = 0;
+
+            const content = document.getElementById("content");
+            const counter = document.getElementById("counter");
+            const prev = document.getElementById("prev");
+            const next = document.getElementById("next");
+            const menu = document.getElementById("menu");
+
+            const MENU_BASE =
+                "w-full text-left border-0 bg-transparent px-3 py-2.5 rounded-lg my-0.5 cursor-pointer text-slate-700 text-sm hover:bg-blue-50 transition-colors";
+            const MENU_ACTIVE = "bg-light text-navy font-bold";
+
+            pages.forEach((page, index) => {
+                const button = document.createElement("button");
+                button.textContent = page.title;
+                button.className = MENU_BASE;
+                button.onclick = () => loadPage(index);
+                menu.appendChild(button);
+            });
+
+            function loadPage(index, updateHistory = true) {
+                if (index < 0 || index >= pages.length) return;
+
+                current = index;
+
+                // Efeito de carregamento semelhante a uma navegação AJAX.
+                content.innerHTML = '<div class="text-center py-24 text-muted">Carregando página...</div>';
+
+                setTimeout(() => {
+                    content.innerHTML = pages[index].html;
+
+                    document.querySelectorAll("#menu button").forEach((button, i) => {
+                        button.className = i === index ? MENU_BASE + " " + MENU_ACTIVE : MENU_BASE;
+                    });
+
+                    prev.disabled = index === 0;
+                    next.disabled = index === pages.length - 1;
+
+                    counter.textContent = `Página ${index + 1} de ${pages.length}`;
+
+                    if (updateHistory) {
+                        history.pushState({ page: index }, "", "#pagina-" + (index + 1));
+                    }
+
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                }, 80);
+            }
+
+            prev.onclick = () => loadPage(current - 1);
+            next.onclick = () => loadPage(current + 1);
+
+            window.addEventListener("popstate", (event) => {
+                const hashNumber = Number(location.hash.replace("#pagina-", ""));
+                const index = event.state?.page ?? hashNumber - 1;
+
+                loadPage(Number.isFinite(index) && index >= 0 ? index : 0, false);
+            });
+
+            document.addEventListener("keydown", (event) => {
+                // Seta esquerda/direita para trocar de página.
+                if (event.key === "ArrowLeft" && current > 0) {
+                    loadPage(current - 1);
+                }
+
+                if (event.key === "ArrowRight" && current < pages.length - 1) {
+                    loadPage(current + 1);
+                }
+            });
+
+            // Abre na página indicada pela URL, caso exista.
+            const initialHash = Number(location.hash.replace("#pagina-", ""));
+            const initialPage = Number.isFinite(initialHash) && initialHash > 0 ? initialHash - 1 : 0;
+
+            loadPage(initialPage, false);
+        </script>
+    </body>
+</html>

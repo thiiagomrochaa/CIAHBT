@@ -5,8 +5,8 @@
   var SHEET_ID = '1eiyugYk_lTFAIAQW4Zgm9TDZg5m3f5chLX8Zmlqa76U';
   var URL_SOLDADOS  = 'https://opensheet.elk.sh/' + SHEET_ID + '/Soldados';
   var URL_PRACAS    = 'https://opensheet.elk.sh/' + SHEET_ID + '/' + encodeURIComponent('Corpo de Praças');
-  var URL_OFICIAIS  = 'https://opensheet.elk.sh/' + SHEET_ID + '/Corpo+de+Oficiais';
-  var URL_EXECUTIVO = 'https://opensheet.elk.sh/' + SHEET_ID + '/Corpo+Executivo';
+  var URL_OFICIAIS  = 'https://opensheet.elk.sh/' + SHEET_ID + '/' + encodeURIComponent('Corpo de Oficiais');
+  var URL_EXECUTIVO = 'https://opensheet.elk.sh/' + SHEET_ID + '/' + encodeURIComponent('Corpo Executivo');
   var URL_TAGS      = 'https://opensheet.elk.sh/' + SHEET_ID + '/TAG';
 
   // Planilha "Registros" (a mesma que o Apps Script grava) — precisa estar

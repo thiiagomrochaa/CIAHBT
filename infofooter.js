@@ -33,6 +33,9 @@
     function encodeNickParaApi(nick) {
       return encodeURIComponent(nick).replace(/%3A/g, ':');
     }
+    function encodeNickParaApi(nick) {
+      return encodeURIComponent(nick).replace(/%40/g, '@');
+    }
     
     fetch(HABBLET_API + '/player/' + encodeURIComponent(nick))
       .then(function (r) { return r.ok ? r.json() : null; })

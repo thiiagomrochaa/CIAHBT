@@ -31,34 +31,12 @@
     if (!nick) { return; }
 
     function encodeNickParaApi(nick) {
-      return encodeURIComponent(nick).replace(/%3A/g, ':');
-    }
-    function encodeNickParaApi(nick) {
-      return encodeURIComponent(nick).replace(/%40/g, '@');
-    }
-
-
-    function buscarFigura(nick) {
-      var chave = nick.toLowerCase();
-      if (cacheFiguras.hasOwnProperty(chave)) return Promise.resolve(cacheFiguras[chave]);
-      return fetchComTimeout(HABBLET_API + '/player/' + encodeNickParaApi(nick), 6000)
-        .then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (dados) {
-          var figura = (dados && dados.figure) ? dados.figure : null;
-          cacheFiguras[chave] = figura;
-          return figura;
-    
-          var img = document.getElementById('crh_footer_avatar_img');
-            var fallback = document.getElementById('crh_footer_avatar_fallback');
-    
-            img.src = HABBLET_IMAGING + '?figure=' + encodeURIComponent(figura) + '&direction=2&head_direction=2&gesture=sml&size=m&headonly=1&img_format=png';
-            img.classList.remove('hidden');
-            fallback.classList.add('hidden');
-        })
-        .catch(function () { cacheFiguras[chave] = null; return null; });
+    return encodeURIComponent(nick)
+        .replace(/%40/g, '@')
+        .replace(/%3A/g, ':');
     }
     
-    /*fetch(HABBLET_API + '/player/' + encodeURIComponent(nick))
+    fetch(HABBLET_API + '/player/' + encodeNickParaApi(nick))
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (dados) {
         var figura = dados && dados.figure;
@@ -72,5 +50,5 @@
         fallback.classList.add('hidden');
       })
       .catch(function () {});
-  });*/
+  });
 })();

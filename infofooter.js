@@ -30,6 +30,10 @@
     if (linkEl) { nickEl.textContent = nick; }
     if (!nick) { return; }
 
+    function encodeNickParaApi(nick) {
+      return encodeURIComponent(nick).replace(/%3A/g, ':');
+    }
+    
     fetch(HABBLET_API + '/player/' + encodeURIComponent(nick))
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (dados) {

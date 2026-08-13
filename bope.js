@@ -40,7 +40,7 @@
 
   // TODO: cole aqui a URL do Web App do Apps Script (faz a LEITURA/checagem).
   // Ver apps-script-bope-check.gs pra instruções de como publicar.
-  var URL_APPS_SCRIPT_CHECK = 'COLE_AQUI_A_URL_DO_APPS_SCRIPT';
+  var URL_APPS_SCRIPT_CHECK = 'https://script.google.com/macros/s/AKfycbwV5kuxKP-MLVjcd24KVQyLqzkSkHfM0-oHGLoRndE8VBWtbp03U7ptF5W4lRf_CmOU/exec';
 
   // Nomes das colunas na planilha — ajuste para bater com os
   // cabeçalhos reais da sua aba (A-D).

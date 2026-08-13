@@ -14,6 +14,15 @@
  *          .then(function () { ... }); // opcional: aguardar a conclusão
  *   Não é preciso criar nenhum HTML extra (form/iframe) — este script
  *   cria tudo sozinho, na primeira vez que for usado na página.
+ *
+ * MUDANÇAS NESTA VERSÃO:
+ *   - Envio via navigator.sendBeacon (com fallback fetch keepalive),
+ *     em vez de form+iframe. Isso garante que o registro saia mesmo
+ *     que a página navegue/feche logo em seguida da chamada.
+ *   - Captura de IP não bloqueia mais o envio: se api.ipify.org
+ *     estiver bloqueado (ad-blocker, modo anônimo com proteção de
+ *     rastreamento) ou demorar, o registro sai do mesmo jeito, só
+ *     que com o campo "ip" vazio.
  * ================================================================
  */
 (function (global) {
@@ -21,17 +30,12 @@
 
   var URL_LOG_BOPE = 'https://script.google.com/macros/s/AKfycbwV5kuxKP-MLVjcd24KVQyLqzkSkHfM0-oHGLoRndE8VBWtbp03U7ptF5W4lRf_CmOU/exec';
 
-  var FORM_ID    = '_bope_log_form';
-  var FRAME_NAME = '_bope_log_frame';
-  var CAMPO_ID   = '_bope_log_payload';
-
-  function fetchComTimeout(url, opcoes, ms) {
-    ms = ms || 10000;
-    var controller = new AbortController();
-    var timer = setTimeout(function () { controller.abort(); }, ms);
-    opcoes = Object.assign({}, opcoes, { signal: controller.signal });
-    return fetch(url, opcoes).finally(function () { clearTimeout(timer); });
-  }
+  // Tempo máximo que aceitamos esperar pelo IP antes de enviar sem ele.
+  // Curto de propósito: em modo anônimo/ad-blocker o fetch pode nem
+  // ser tentado de verdade (é bloqueado na hora), mas em alguns casos
+  // fica "pendurado" até o timeout interno de 5s — não vale a pena
+  // esperar tanto e arriscar perder o registro por causa de navegação.
+  var TIMEOUT_ESPERA_IP_MS = 1200;
 
   function dataHoraAgora() {
     var d = new Date();
@@ -41,84 +45,78 @@
   }
 
   // Busca o IP público de quem está acessando, via ipify (API pública,
-  // sem chave, com CORS liberado). Se falhar, retorna string vazia —
-  // não trava o registro por causa disso.
+  // sem chave, com CORS liberado). Se falhar OU demorar mais que
+  // TIMEOUT_ESPERA_IP_MS, resolve com string vazia — nunca deixa quem
+  // chamou travado, e nunca atrasa o envio do registro em si.
   var cacheIP = null;
   function buscarIP() {
     if (cacheIP) return Promise.resolve(cacheIP);
-    return fetchComTimeout('https://api.ipify.org?format=json', null, 5000)
+
+    var buscaReal = fetch('https://api.ipify.org?format=json')
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (dados) {
         cacheIP = (dados && dados.ip) ? dados.ip : '';
         return cacheIP;
       })
       .catch(function () { return ''; });
+
+    var limiteDeTempo = new Promise(function (resolve) {
+      setTimeout(function () { resolve(''); }, TIMEOUT_ESPERA_IP_MS);
+    });
+
+    // Quem responder primeiro (IP real ou o timeout) decide — mas se
+    // a busca real terminar depois, ainda guardamos em cache pra
+    // próxima chamada de registrar() nesta mesma página não esperar de novo.
+    return Promise.race([buscaReal, limiteDeTempo]);
   }
 
-  // Cria (uma única vez por página) o par form + iframe ocultos usados
-  // pro envio — a mesma técnica usada nos outros formulários: uma
-  // navegação de página normal dentro de um iframe, que nunca passa
-  // por checagem de CORS (diferente de um fetch comum).
-  function garantirFormularioOculto() {
-    if (document.getElementById(FORM_ID)) return;
+  function enviar(payload) {
+    var corpo = JSON.stringify(payload);
 
-    var iframe = document.createElement('iframe');
-    iframe.name = FRAME_NAME;
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
+    // sendBeacon é feito exatamente pra isso: garante a entrega mesmo
+    // que a página navegue ou feche logo em seguida, sem precisar de
+    // iframe/form escondido nem de esperar resposta.
+    if (navigator.sendBeacon) {
+      // Content-Type text/plain evita que o navegador dispare um
+      // preflight OPTIONS (o Apps Script não responde OPTIONS).
+      var blob = new Blob([corpo], { type: 'text/plain;charset=UTF-8' });
+      var enviado = navigator.sendBeacon(URL_LOG_BOPE, blob);
+      if (enviado) return Promise.resolve();
+      // se sendBeacon recusar (ex: payload muito grande — não é o caso
+      // aqui, mas por segurança), cai pro fallback abaixo
+    }
 
-    var form = document.createElement('form');
-    form.id = FORM_ID;
-    form.method = 'POST';
-    form.target = FRAME_NAME;
-    form.style.display = 'none';
-
-    var campo = document.createElement('input');
-    campo.type = 'hidden';
-    campo.name = 'payload';
-    campo.id = CAMPO_ID;
-    form.appendChild(campo);
-
-    document.body.appendChild(form);
+    // Fallback para navegadores sem sendBeacon: fetch com keepalive
+    // mantém a requisição viva mesmo que a página esteja navegando.
+    return fetch(URL_LOG_BOPE, {
+      method: 'POST',
+      mode: 'no-cors', // Apps Script não manda header CORS pra POST simples;
+                        // no-cors evita erro no console (a resposta fica opaca,
+                        // mas o envio acontece normalmente do lado do servidor)
+      keepalive: true,
+      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+      body: corpo
+    }).then(function () {}).catch(function () {
+      // mesmo se der erro de rede aqui, não travar quem chamou
+    });
   }
 
   /**
    * Registra o acesso/protocolo na planilha BOPE.
    * @param {Object} dadosAutor - { nickname, patente }
-   * @returns {Promise} resolve quando o envio terminar (ou após 6s de timeout)
+   * @returns {Promise} resolve quando o envio for disparado
    */
   function registrar(dadosAutor) {
     dadosAutor = dadosAutor || {};
-    garantirFormularioOculto();
 
     return buscarIP().then(function (ip) {
-      return new Promise(function (resolve) {
-        var payload = {
-          dataHora: dataHoraAgora(),
-          ip: ip,
-          nickname: dadosAutor.nickname || dadosAutor.nick || '',
-          patente: dadosAutor.patente || ''
-        };
-
-        var form = document.getElementById(FORM_ID);
-        form.action = URL_LOG_BOPE;
-        document.getElementById(CAMPO_ID).value = JSON.stringify(payload);
-
-        var frame = document.querySelector('iframe[name="' + FRAME_NAME + '"]');
-        var resolvido = false;
-        var resolverUmaVez = function () {
-          if (resolvido) return;
-          resolvido = true;
-          resolve();
-        };
-
-        frame.onload = resolverUmaVez;
-        form.submit();
-
-        // fallback: se o onload do iframe não disparar por algum motivo,
-        // não deixa quem chamou travado pra sempre
-        setTimeout(resolverUmaVez, 6000);
-      });
+      var payload = {
+        dataHora: dataHoraAgora(),
+        ip: ip,
+        nickname: dadosAutor.nickname || dadosAutor.nick || '',
+        patente: dadosAutor.patente || ''
+      };
+      return enviar(payload);
     });
   }
 

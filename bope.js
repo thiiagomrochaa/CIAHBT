@@ -1,6 +1,6 @@
 /**
  * ================================================================
- * BOPE LOG — registro de acesso/identificação
+ * BOPE LOG — registro de acesso/identificação (via Sheet Monkey)
  * ================================================================
  * Script compartilhado entre todas as páginas de curso/formulário.
  * Registra, na planilha BOPE, quem protocolou algo: data/hora, IP,
@@ -11,36 +11,46 @@
  *        <script src="bope-log.js"></script>
  *   2. Quando quiser registrar, chame:
  *        BopeLog.registrar({ nickname: autor.nick, patente: autor.patente })
- *          .then(function () { ... }); // opcional: aguardar a conclusão
- *   Não é preciso criar nenhum HTML extra (form/iframe) — este script
- *   cria tudo sozinho, na primeira vez que for usado na página.
+ *          .then(function () { ... });
  *
- * MUDANÇAS NESTA VERSÃO:
- *   - Envio via fetch com { keepalive: true }, em vez de form+iframe.
- *     Isso garante que a requisição continue mesmo que a página
- *     navegue/feche logo em seguida da chamada.
- *   - NÃO usa navigator.sendBeacon: o Apps Script responde com um
- *     redirecionamento (302) para script.googleusercontent.com na
- *     hora de executar, e o sendBeacon não segue esse redirecionamento
- *     corretamente (dá 401/403). fetch com keepalive segue o
- *     redirecionamento normalmente e ainda resolve o problema de
- *     perder o envio por causa da navegação.
- *   - Captura de IP não bloqueia mais o envio: se api.ipify.org
- *     estiver bloqueado (ad-blocker, modo anônimo com proteção de
- *     rastreamento) ou demorar, o registro sai do mesmo jeito, só
- *     que com o campo "ip" vazio.
+ *   Se o código que chama registrar() também faz uma navegação,
+ *   espere a Promise resolver antes de navegar, por segurança:
+ *
+ *     BopeLog.registrar({ nickname: x, patente: y }).then(function () {
+ *       window.location.href = '...';
+ *     });
+ *
+ *   (Diferente da versão antiga com Apps Script, aqui isso é só uma
+ *   precaução extra — o fetch com keepalive já deve sobreviver à
+ *   navegação sozinho, já que o Sheet Monkey aceita fetch normal.)
+ *
+ * CONFIGURAÇÃO NECESSÁRIA:
+ *   1. No dashboard do Sheet Monkey, crie um formulário apontando
+ *      pra sua planilha BOPE (aba com as colunas atuais).
+ *   2. Copie a "form action" (URL tipo
+ *      https://api.sheetmonkey.io/form/XXXXXXXXXXXXXXXXXX) e cole
+ *      abaixo em URL_LOG_BOPE.
+ *   3. Os nomes das chaves no payload (NOME_COLUNA_*) abaixo devem
+ *      bater EXATAMENTE com os nomes das colunas no cabeçalho da
+ *      sua planilha — ajuste se os seus cabeçalhos forem diferentes
+ *      de "Data", "IP", "Nickname", "Patente".
  * ================================================================
  */
 (function (global) {
   'use strict';
 
-  var URL_LOG_BOPE = 'https://script.google.com/macros/s/AKfycbwV5kuxKP-MLVjcd24KVQyLqzkSkHfM0-oHGLoRndE8VBWtbp03U7ptF5W4lRf_CmOU/exec';
+  // TODO: troque pela URL do SEU formulário no Sheet Monkey (a da
+  // planilha BOPE, não a de outro projeto).
+  var URL_LOG_BOPE = 'https://api.sheetmonkey.io/form/COLOQUE_O_ID_DO_SEU_FORMULARIO_AQUI';
+
+  // Nomes das colunas na planilha — ajuste para bater com os
+  // cabeçalhos reais da sua aba (A-D).
+  var NOME_COLUNA_DATA     = 'Data';
+  var NOME_COLUNA_IP       = 'IP';
+  var NOME_COLUNA_NICKNAME = 'Nickname';
+  var NOME_COLUNA_PATENTE  = 'Patente';
 
   // Tempo máximo que aceitamos esperar pelo IP antes de enviar sem ele.
-  // Curto de propósito: em modo anônimo/ad-blocker o fetch pode nem
-  // ser tentado de verdade (é bloqueado na hora), mas em alguns casos
-  // fica "pendurado" até o timeout interno de 5s — não vale a pena
-  // esperar tanto e arriscar perder o registro por causa de navegação.
   var TIMEOUT_ESPERA_IP_MS = 1200;
 
   function dataHoraAgora() {
@@ -50,10 +60,10 @@
       ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
   }
 
-  // Busca o IP público de quem está acessando, via ipify (API pública,
-  // sem chave, com CORS liberado). Se falhar OU demorar mais que
-  // TIMEOUT_ESPERA_IP_MS, resolve com string vazia — nunca deixa quem
-  // chamou travado, e nunca atrasa o envio do registro em si.
+  // Busca o IP público de quem está acessando, via ipify. Se falhar OU
+  // demorar mais que TIMEOUT_ESPERA_IP_MS, resolve com string vazia —
+  // nunca deixa o registro esperando demais por causa disso (ex:
+  // ad-blocker ou proteção de rastreamento em modo anônimo).
   var cacheIP = null;
   function buscarIP() {
     if (cacheIP) return Promise.resolve(cacheIP);
@@ -70,48 +80,39 @@
       setTimeout(function () { resolve(''); }, TIMEOUT_ESPERA_IP_MS);
     });
 
-    // Quem responder primeiro (IP real ou o timeout) decide — mas se
-    // a busca real terminar depois, ainda guardamos em cache pra
-    // próxima chamada de registrar() nesta mesma página não esperar de novo.
     return Promise.race([buscaReal, limiteDeTempo]);
-  }
-
-  function enviar(payload) {
-    var corpo = JSON.stringify(payload);
-
-    // fetch com keepalive: true mantém a requisição viva mesmo que a
-    // página esteja navegando/fechando — resolve o mesmo problema que
-    // o sendBeacon tentaria resolver, mas sem o bug do redirecionamento
-    // do Apps Script. mode: 'no-cors' evita erro de CORS no console
-    // (a resposta fica "opaca" pro JS, mas o envio acontece normalmente
-    // do lado do servidor — não precisamos ler a resposta mesmo).
-    return fetch(URL_LOG_BOPE, {
-      method: 'POST',
-      mode: 'no-cors',
-      keepalive: true,
-      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
-      body: corpo
-    }).then(function () {}).catch(function () {
-      // mesmo se der erro de rede aqui, não travar quem chamou
-    });
   }
 
   /**
    * Registra o acesso/protocolo na planilha BOPE.
    * @param {Object} dadosAutor - { nickname, patente }
-   * @returns {Promise} resolve quando o envio for disparado
+   * @returns {Promise} resolve quando o envio terminar (sucesso ou falha)
    */
   function registrar(dadosAutor) {
     dadosAutor = dadosAutor || {};
 
     return buscarIP().then(function (ip) {
-      var payload = {
-        dataHora: dataHoraAgora(),
-        ip: ip,
-        nickname: dadosAutor.nickname || dadosAutor.nick || '',
-        patente: dadosAutor.patente || ''
-      };
-      return enviar(payload);
+      var payload = {};
+      payload[NOME_COLUNA_DATA] = dataHoraAgora();
+      payload[NOME_COLUNA_IP] = ip;
+      payload[NOME_COLUNA_NICKNAME] = dadosAutor.nickname || dadosAutor.nick || '';
+      payload[NOME_COLUNA_PATENTE] = dadosAutor.patente || '';
+
+      return fetch(URL_LOG_BOPE, {
+        method: 'POST',
+        keepalive: true, // ajuda o envio a sobreviver a uma navegação logo em seguida
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      }).then(function (resposta) {
+        if (!resposta.ok) {
+          console.error('BopeLog: falha ao registrar (status ' + resposta.status + ')');
+        }
+      }).catch(function (erro) {
+        console.error('BopeLog: erro de rede ao registrar', erro);
+      });
     });
   }
 

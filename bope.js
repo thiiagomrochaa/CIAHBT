@@ -40,7 +40,7 @@
 
   // TODO: cole aqui a URL do Web App do Apps Script (faz a LEITURA/checagem).
   // Ver apps-script-bope-check.gs pra instruções de como publicar.
-  var URL_APPS_SCRIPT_CHECK = 'https://script.google.com/macros/s/AKfycbwV5kuxKP-MLVjcd24KVQyLqzkSkHfM0-oHGLoRndE8VBWtbp03U7ptF5W4lRf_CmOU/exec';
+  var URL_APPS_SCRIPT_CHECK = 'COLE_AQUI_A_URL_DO_APPS_SCRIPT';
 
   // Nomes das colunas na planilha — ajuste para bater com os
   // cabeçalhos reais da sua aba (A-D).
@@ -84,6 +84,50 @@
     return Promise.race([buscaReal, limiteDeTempo]);
   }
 
+  // Contador só pra garantir um nome de callback único por chamada,
+  // caso duas checagens aconteçam em paralelo.
+  var contadorJSONP = 0;
+
+  // Faz uma requisição JSONP (via tag <script>, não via fetch). É
+  // necessário porque o redirect que o Apps Script faz ao servir
+  // /exec não inclui os headers de CORS que o fetch() exige — então
+  // fetch() pra URLs do Apps Script quebra com "CORS error" mesmo
+  // quando o Apps Script está funcionando perfeitamente. Tags
+  // <script> não passam por checagem de CORS, então contornam isso.
+  function requisicaoJSONP(urlBase, timeoutMs) {
+    return new Promise(function (resolve) {
+      var nomeCallback = 'bopeLogCallback_' + (++contadorJSONP) + '_' + Date.now();
+      var scriptEl = document.createElement('script');
+      var finalizado = false;
+
+      function limpar() {
+        if (finalizado) return;
+        finalizado = true;
+        delete window[nomeCallback];
+        if (scriptEl.parentNode) scriptEl.parentNode.removeChild(scriptEl);
+        clearTimeout(timer);
+      }
+
+      window[nomeCallback] = function (dados) {
+        limpar();
+        resolve(dados);
+      };
+
+      scriptEl.onerror = function () {
+        limpar();
+        resolve(null);
+      };
+
+      var timer = setTimeout(function () {
+        limpar();
+        resolve(null);
+      }, timeoutMs);
+
+      scriptEl.src = urlBase + '&callback=' + nomeCallback;
+      document.head.appendChild(scriptEl);
+    });
+  }
+
   /**
    * Pergunta ao Apps Script se o IP já existe na planilha.
    * Retorna { statusConhecido, jaExiste, nicknameConflitante }.
@@ -97,28 +141,17 @@
 
     var url = URL_APPS_SCRIPT_CHECK + '?ip=' + encodeURIComponent(ip) + '&t=' + Date.now();
 
-    var buscaReal = fetch(url)
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (dados) {
-        if (!dados) return { statusConhecido: false, jaExiste: false };
-        return {
-          statusConhecido: true,
-          jaExiste: !!dados.existe,
-          nicknameConflitante: dados.nickname || ''
-        };
-      })
-      .catch(function (erro) {
-        console.error('BopeLog: erro ao consultar Apps Script', erro);
+    return requisicaoJSONP(url, TIMEOUT_ESPERA_CHECAGEM_MS).then(function (dados) {
+      if (!dados) {
+        console.error('BopeLog: falha ou timeout ao consultar Apps Script (JSONP)');
         return { statusConhecido: false, jaExiste: false };
-      });
-
-    var limiteDeTempo = new Promise(function (resolve) {
-      setTimeout(function () {
-        resolve({ statusConhecido: false, jaExiste: false });
-      }, TIMEOUT_ESPERA_CHECAGEM_MS);
+      }
+      return {
+        statusConhecido: true,
+        jaExiste: !!dados.existe,
+        nicknameConflitante: dados.nickname || ''
+      };
     });
-
-    return Promise.race([buscaReal, limiteDeTempo]);
   }
 
   /**

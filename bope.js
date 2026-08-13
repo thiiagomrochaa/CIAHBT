@@ -16,9 +16,15 @@
  *   cria tudo sozinho, na primeira vez que for usado na página.
  *
  * MUDANÇAS NESTA VERSÃO:
- *   - Envio via navigator.sendBeacon (com fallback fetch keepalive),
- *     em vez de form+iframe. Isso garante que o registro saia mesmo
- *     que a página navegue/feche logo em seguida da chamada.
+ *   - Envio via fetch com { keepalive: true }, em vez de form+iframe.
+ *     Isso garante que a requisição continue mesmo que a página
+ *     navegue/feche logo em seguida da chamada.
+ *   - NÃO usa navigator.sendBeacon: o Apps Script responde com um
+ *     redirecionamento (302) para script.googleusercontent.com na
+ *     hora de executar, e o sendBeacon não segue esse redirecionamento
+ *     corretamente (dá 401/403). fetch com keepalive segue o
+ *     redirecionamento normalmente e ainda resolve o problema de
+ *     perder o envio por causa da navegação.
  *   - Captura de IP não bloqueia mais o envio: se api.ipify.org
  *     estiver bloqueado (ad-blocker, modo anônimo com proteção de
  *     rastreamento) ou demorar, o registro sai do mesmo jeito, só
@@ -73,26 +79,15 @@
   function enviar(payload) {
     var corpo = JSON.stringify(payload);
 
-    // sendBeacon é feito exatamente pra isso: garante a entrega mesmo
-    // que a página navegue ou feche logo em seguida, sem precisar de
-    // iframe/form escondido nem de esperar resposta.
-    if (navigator.sendBeacon) {
-      // Content-Type text/plain evita que o navegador dispare um
-      // preflight OPTIONS (o Apps Script não responde OPTIONS).
-      var blob = new Blob([corpo], { type: 'text/plain;charset=UTF-8' });
-      var enviado = navigator.sendBeacon(URL_LOG_BOPE, blob);
-      if (enviado) return Promise.resolve();
-      // se sendBeacon recusar (ex: payload muito grande — não é o caso
-      // aqui, mas por segurança), cai pro fallback abaixo
-    }
-
-    // Fallback para navegadores sem sendBeacon: fetch com keepalive
-    // mantém a requisição viva mesmo que a página esteja navegando.
+    // fetch com keepalive: true mantém a requisição viva mesmo que a
+    // página esteja navegando/fechando — resolve o mesmo problema que
+    // o sendBeacon tentaria resolver, mas sem o bug do redirecionamento
+    // do Apps Script. mode: 'no-cors' evita erro de CORS no console
+    // (a resposta fica "opaca" pro JS, mas o envio acontece normalmente
+    // do lado do servidor — não precisamos ler a resposta mesmo).
     return fetch(URL_LOG_BOPE, {
       method: 'POST',
-      mode: 'no-cors', // Apps Script não manda header CORS pra POST simples;
-                        // no-cors evita erro no console (a resposta fica opaca,
-                        // mas o envio acontece normalmente do lado do servidor)
+      mode: 'no-cors',
       keepalive: true,
       headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
       body: corpo

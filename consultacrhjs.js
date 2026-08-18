@@ -8,18 +8,41 @@
   var URL_OFICIAIS  = 'https://opensheet.elk.sh/' + SHEET_ID + '/' + encodeURIComponent('Corpo de Oficiais');
   var URL_EXECUTIVO = 'https://opensheet.elk.sh/' + SHEET_ID + '/' + encodeURIComponent('Corpo Executivo');
   var URL_TAGS      = 'https://opensheet.elk.sh/' + SHEET_ID + '/TAG';
+
+  // Aba "Turnos e Tarefas" — mesma planilha principal (SHEET_ID). É daqui
+  // que vem o campo FUNÇÕES. Formato da célula: "Nickname [TAG] {FUNÇÕES}",
+  // ex: "MrThiiagoM [Ltk] {BOPE/INS}".
   var URL_TURNOS = 'https://opensheet.elk.sh/' + SHEET_ID + '/' + encodeURIComponent('Turnos e Tarefas');
 
-  // Planilha "Registros" dos Instrutores
+  // Planilha "Registros" (a mesma que o Apps Script grava) — precisa estar
+  // compartilhada como "qualquer pessoa com o link pode visualizar" pro
+  // OpenSheets conseguir ler. TROCAR pelo ID dessa planilha (não é a mesma
+  // SHEET_ID acima).
   var SHEET_ID_REGISTROS = '1-lTpEe-GRgKRkf_YD25NDxWWfyIyi1zS-F6R80j6W2s';
   var URL_REGISTROS = 'https://opensheet.elk.sh/' + SHEET_ID_REGISTROS + '/Registros';
 
-  // Planilha "Registros" da Academia Policial Militar
+  // Segunda fonte de Registros ([APM] Administração) — mesma estrutura de
+  // colunas da planilha acima (ID, CURSO, NICK INSTRUTOR, NICK ALUNO, DATA,
+  // RESULTADO, COMENTÁRIOS, STATUS). Também precisa estar compartilhada como
+  // "qualquer pessoa com o link pode visualizar".
   var SHEET_ID_REGISTROS_2 = '1VnAFOGCmK-V_5L6C3uwHT9HNxlJ8CjbY0cd8Fk1frto';
   var URL_REGISTROS_2 = 'https://opensheet.elk.sh/' + SHEET_ID_REGISTROS_2 + '/Registros';
 
   var HABBLET_API     = 'https://api.habblet.city';
   var HABBLET_IMAGING = 'https://imaging.habblet.city/avatarimage';
+
+  // Emblema por sigla-base de função (ver siglaBase mais abaixo). Chave
+  // sempre em MAIÚSCULO. Uma sigla sem entrada aqui simplesmente cai pra
+  // exibição em texto no campo Funções.
+  var EMBLEMAS_FUNCAO = {
+    'BOPE': 'https://imaging.habblet.city/badge/b0813s98244s164134s43244s06114',
+    'COR':  'https://imaging.habblet.city/badge/b2013s98244s164244s43244s19114',
+    'DC':   'https://imaging.habblet.city/badge/b0713s98074s164154s19114s17118',
+    'CRH':  'https://imaging.habblet.city/badge/b0713s98184s164154s19114s17118',
+    'APM':  'https://imaging.habblet.city/badge/b2511s36134s164124s19114s17118',
+    'INS':  'https://imaging.habblet.city/badge/b0706s98064s164064s19114s17118',
+    'COG':  'https://imaging.habblet.city/badge/b0613s36044s164154s169014s19114'
+  };
 
   function fetchComTimeout(url, opcoes, ms) {
     ms = ms || 10000;
@@ -78,6 +101,14 @@
     return { nickname: m[1].trim(), tag: m[2].trim(), funcoes: m[3].trim() };
   }
 
+  // Pega a sigla-base de um token de função pra decidir qual emblema usar:
+  // tudo que vem depois do último ponto (se tiver), senão o token inteiro.
+  // Ex: "Min.INS" -> "INS", "Sub.APM" -> "APM", "BOPE" -> "BOPE".
+  function siglaBase(token) {
+    var partes = token.split('.');
+    return partes[partes.length - 1].trim().toUpperCase();
+  }
+
   function registrar(u) {
     if (!u) return;
     listaUsuarios.push(u);
@@ -97,7 +128,8 @@
       .catch(function (err) { console.error('[dados] falha ao ler ' + url, err); });
   }
 
-  // Aba "Soldados"
+  // Aba "Soldados" é uma coluna única chamada "SOLDADOS" — a patente de
+  // todo mundo ali é sempre "Soldado", não o nome da coluna
   function carregarSoldados() {
     return fetchComTimeout(URL_SOLDADOS)
       .then(function (r) { return r.json(); })
@@ -271,6 +303,32 @@
     return registro.nickname + ' [' + (registro.tag || '---') + '] ' + (registro.data || '---');
   }
 
+  // Monta o HTML do campo Funções: cada função vira um emblema (com
+  // tooltip mostrando o nome original completo, ex: "Min.INS") quando
+  // existe emblema cadastrado pra sua sigla-base; senão cai pra um badge
+  // de texto normal, pra nunca sumir com a informação.
+  function renderizarFuncoes(funcoesTexto) {
+    if (!funcoesTexto) {
+      return '<span class="text-sm font-bold text-gray-600">---</span>';
+    }
+
+    var tokens = funcoesTexto.split('/').map(function (t) { return t.trim(); }).filter(Boolean);
+    if (tokens.length === 0) {
+      return '<span class="text-sm font-bold text-gray-600">---</span>';
+    }
+
+    return tokens.map(function (token) {
+      var sigla = siglaBase(token);
+      var emblema = EMBLEMAS_FUNCAO[sigla];
+      if (emblema) {
+        return '<span class="crh-funcao-badge" data-tooltip="' + escaparHtml(token) + '">' +
+                 '<img src="' + emblema + '" alt="' + escaparHtml(sigla) + '" loading="lazy">' +
+               '</span>';
+      }
+      return '<span class="crh-badge crh-badge-cinza" title="' + escaparHtml(token) + '">' + escaparHtml(token) + '</span>';
+    }).join('');
+  }
+
   function buscarUsuario(nickDigitado) {
     var nick = (nickDigitado || '').trim();
     if (!nick) { mostrarToast('Digite um nickname pra buscar.', 'red'); return; }
@@ -286,7 +344,7 @@
     document.getElementById('crh_perfil_tag').textContent = tagLista || '---';
     document.getElementById('crh_perfil_identificacao').textContent = montarListagem(registro);
     document.getElementById('crh_perfil_data').textContent = registro.data || '---';
-    document.getElementById('crh_perfil_funcoes').textContent = funcoes ? ('{' + funcoes + '}') : '---';
+    document.getElementById('crh_perfil_funcoes').innerHTML = renderizarFuncoes(funcoes);
     definirAvatar(document.getElementById('crh_perfil_avatar'), registro.nickname);
 
     abrirModalComEstado('crh_modal_perfil');

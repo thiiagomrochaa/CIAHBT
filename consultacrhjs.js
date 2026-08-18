@@ -9,6 +9,11 @@
   var URL_EXECUTIVO = 'https://opensheet.elk.sh/' + SHEET_ID + '/' + encodeURIComponent('Corpo Executivo');
   var URL_TAGS      = 'https://opensheet.elk.sh/' + SHEET_ID + '/TAG';
 
+  // Aba "Turnos e Tarefas" — mesma planilha principal (SHEET_ID). É daqui
+  // que vem o campo FUNÇÕES. Formato da célula: "Nickname [TAG] {FUNÇÕES}",
+  // ex: "MrThiiagoM [Ltk] {BOPE/INS}".
+  var URL_TURNOS = 'https://opensheet.elk.sh/' + SHEET_ID + '/' + encodeURIComponent('Turnos e Tarefas');
+
   // Planilha "Registros" (a mesma que o Apps Script grava) — precisa estar
   // compartilhada como "qualquer pessoa com o link pode visualizar" pro
   // OpenSheets conseguir ler. TROCAR pelo ID dessa planilha (não é a mesma
@@ -48,11 +53,12 @@
   var listaUsuarios = [];
   var patentePorNickname = {};
   var tagPorNickname = {};
+  var funcaoPorNickname = {};
 
   // Formato da célula: "Nickname [TAG] data" — ex: "Letking [Supr] 17 Jul 2026"
   // A TAG entre colchetes e a data logo depois pertencem ao próprio registro
-  // de patente, e são usadas na Identificação. O campo TAG exibido no
-  // perfil, porém, vem da aba "TAG" separada (ver buscarUsuario).
+  // de patente, e são usadas na Listagem. O campo TAG exibido no perfil,
+  // porém, vem da aba "TAG" separada (ver buscarUsuario).
   function parsePatente(valor, patente) {
     if (!valor) return null;
     var m = valor.match(/^(.*)\s\[([^\]]+)\]\s+(.+)$/);
@@ -70,6 +76,16 @@
     var m = valor.match(/^(.*)\s\[([^\]]+)\]\s*$/);
     if (!m) return null;
     return { nickname: m[1].trim(), tag: m[2].trim() };
+  }
+
+  // Formato da célula: "Nickname [TAG] {FUNÇÕES}" — ex:
+  // "MrThiiagoM [Ltk] {BOPE/INS}". Só o conteúdo entre chaves interessa
+  // pro campo Funções (a TAG aqui é ignorada, o perfil já usa a da aba TAG).
+  function parseFuncao(valor) {
+    if (!valor) return null;
+    var m = valor.match(/^(.*)\s\[([^\]]+)\]\s*\{([^}]*)\}\s*$/);
+    if (!m) return null;
+    return { nickname: m[1].trim(), tag: m[2].trim(), funcoes: m[3].trim() };
   }
 
   function registrar(u) {
@@ -120,13 +136,30 @@
       .catch(function (err) { console.error('[dados] falha ao ler TAG', err); });
   }
 
+  // Percorre a aba "Turnos e Tarefas" (colunas MANHÃ / TARDE / NOITE) e
+  // guarda só o conteúdo entre chaves ({BOPE/INS}) por nickname.
+  function carregarTurnos() {
+    return fetchComTimeout(URL_TURNOS)
+      .then(function (r) { return r.json(); })
+      .then(function (linhas) {
+        linhas.forEach(function (linha) {
+          Object.keys(linha).forEach(function (chave) {
+            var f = parseFuncao(linha[chave]);
+            if (f) funcaoPorNickname[f.nickname.toLowerCase()] = f.funcoes;
+          });
+        });
+      })
+      .catch(function (err) { console.error('[dados] falha ao ler Turnos e Tarefas', err); });
+  }
+
   function carregarTudo() {
     return Promise.all([
       carregarSoldados(),
       carregarPatentes(URL_PRACAS),
       carregarPatentes(URL_OFICIAIS),
       carregarPatentes(URL_EXECUTIVO),
-      carregarTags()
+      carregarTags(),
+      carregarTurnos()
     ]);
   }
 
@@ -243,8 +276,10 @@
     });
   });
 
-  function montarIdentificacao(registro, tag) {
-    return ' [CIA] ' + registro.patente + ' [' + (tag || '---') + ']';
+  // Reconstrói o texto de "Listagem" no mesmo formato que já vem pronto da
+  // planilha: "Nickname [TAG] Data" — ex: "MrThiiagoM [Lok] 13 Ago 2026".
+  function montarListagem(registro) {
+    return registro.nickname + ' [' + (registro.tag || '---') + '] ' + (registro.data || '---');
   }
 
   function buscarUsuario(nickDigitado) {
@@ -254,16 +289,15 @@
     var registro = patentePorNickname[nick.toLowerCase()];
     if (!registro) { abrirModalComEstado('crh_modal_nao_encontrado'); return; }
 
-    // tagPatente: TAG embutida no registro de patente (usada na Identificação)
-    // tagLista: TAG da aba "TAG" separada (usada no campo TAG exibido)
-    var tagPatente = registro.tag || '';
     var tagLista = tagPorNickname[registro.nickname.toLowerCase()] || '';
+    var funcoes = funcaoPorNickname[registro.nickname.toLowerCase()];
 
     document.getElementById('crh_perfil_nick').textContent = registro.nickname;
     document.getElementById('crh_perfil_patente_badge').textContent = registro.patente;
     document.getElementById('crh_perfil_tag').textContent = tagLista || '---';
-    document.getElementById('crh_perfil_identificacao').textContent = montarIdentificacao(registro, tagPatente);
+    document.getElementById('crh_perfil_identificacao').textContent = montarListagem(registro);
     document.getElementById('crh_perfil_data').textContent = registro.data || '---';
+    document.getElementById('crh_perfil_funcoes').textContent = funcoes ? ('{' + funcoes + '}') : '---';
     definirAvatar(document.getElementById('crh_perfil_avatar'), registro.nickname);
 
     abrirModalComEstado('crh_modal_perfil');
@@ -425,6 +459,47 @@
     setTimeout(function () { t.classList.add('translate-y-24'); }, 3000);
   }
 
+  /* ---------------- Copiar Listagem ---------------- */
+
+  function copiarTexto(texto) {
+    if (!texto || texto === '---') return;
+
+    function marcarBotaoCopiado() {
+      var btn = document.getElementById('crh_btn_copiar_identificacao');
+      var icone = btn.querySelector('i');
+      btn.classList.add('crh-copiado');
+      icone.className = 'fas fa-check';
+      setTimeout(function () {
+        btn.classList.remove('crh-copiado');
+        icone.className = 'fas fa-copy';
+      }, 1500);
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(texto)
+        .then(marcarBotaoCopiado)
+        .catch(function () { copiarFallback(texto); marcarBotaoCopiado(); });
+    } else {
+      copiarFallback(texto);
+      marcarBotaoCopiado();
+    }
+    mostrarToast('Listagem copiada.', 'green');
+  }
+
+  // Fallback pra navegadores/contextos sem Clipboard API (ex: iframe sem
+  // permissão) — usa o método antigo de selecionar + document.execCommand.
+  function copiarFallback(texto) {
+    var ta = document.createElement('textarea');
+    ta.value = texto;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try { document.execCommand('copy'); } catch (e) { /* ignora */ }
+    document.body.removeChild(ta);
+  }
+
 
   crhPronto(function () {
     var campoBusca = document.getElementById('crh_campo_busca');
@@ -437,6 +512,10 @@
 
     campoBusca.addEventListener('keydown', function (e) {
       if (e.key === 'Enter') buscarUsuario(campoBusca.value);
+    });
+
+    document.getElementById('crh_btn_copiar_identificacao').addEventListener('click', function () {
+      copiarTexto(document.getElementById('crh_perfil_identificacao').textContent);
     });
 
     carregarTudo().then(function () {

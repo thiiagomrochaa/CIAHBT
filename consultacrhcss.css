@@ -90,6 +90,42 @@
     .crh-copy-btn:hover { background: #e5e7eb; color: #1f2937; }
     .crh-copy-btn.crh-copiado { background: #d1fae5; color: #059669; }
 
+    /* Emblema de função (campo Funções) — a imagem some o texto e o
+       tooltip aparece só no hover, com o nome original da função (ex:
+       "Min.INS"), mesmo quando o emblema é compartilhado com outras
+       variações da mesma sigla-base. */
+    .crh-funcao-badge {
+        position: relative;
+        display: inline-flex;
+        cursor: default;
+    }
+    .crh-funcao-badge img {
+        width: 34px;
+        height: 34px;
+        display: block;
+        object-fit: contain;
+    }
+    .crh-funcao-badge::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: calc(100% + 6px);
+        left: 50%;
+        transform: translateX(-50%);
+        background: #111827;
+        color: #ffffff;
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        padding: 4px 8px;
+        border-radius: 6px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .15s ease;
+        z-index: 30;
+    }
+    .crh-funcao-badge:hover::after { opacity: 1; }
+
     /* ---------------- MODAL ----------------
        position: fixed + z-index alto = cobre a viewport inteira da
        PÁGINA (não um iframe), então o resultado nunca fica cortado. */
@@ -108,7 +144,7 @@
     .crh-modal-box {
         background: transparent;
         width: 100%;
-        max-width: 1000px;
+        max-width: 720px;
         margin-top: 40px;
         animation: crh-modal-in .18s ease-out;
     }

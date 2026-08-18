@@ -8,23 +8,13 @@
   var URL_OFICIAIS  = 'https://opensheet.elk.sh/' + SHEET_ID + '/' + encodeURIComponent('Corpo de Oficiais');
   var URL_EXECUTIVO = 'https://opensheet.elk.sh/' + SHEET_ID + '/' + encodeURIComponent('Corpo Executivo');
   var URL_TAGS      = 'https://opensheet.elk.sh/' + SHEET_ID + '/TAG';
-
-  // Aba "Turnos e Tarefas" — mesma planilha principal (SHEET_ID). É daqui
-  // que vem o campo FUNÇÕES. Formato da célula: "Nickname [TAG] {FUNÇÕES}",
-  // ex: "MrThiiagoM [Ltk] {BOPE/INS}".
   var URL_TURNOS = 'https://opensheet.elk.sh/' + SHEET_ID + '/' + encodeURIComponent('Turnos e Tarefas');
 
-  // Planilha "Registros" (a mesma que o Apps Script grava) — precisa estar
-  // compartilhada como "qualquer pessoa com o link pode visualizar" pro
-  // OpenSheets conseguir ler. TROCAR pelo ID dessa planilha (não é a mesma
-  // SHEET_ID acima).
+  // Planilha "Registros" dos Instrutores
   var SHEET_ID_REGISTROS = '1-lTpEe-GRgKRkf_YD25NDxWWfyIyi1zS-F6R80j6W2s';
   var URL_REGISTROS = 'https://opensheet.elk.sh/' + SHEET_ID_REGISTROS + '/Registros';
 
-  // Segunda fonte de Registros ([APM] Administração) — mesma estrutura de
-  // colunas da planilha acima (ID, CURSO, NICK INSTRUTOR, NICK ALUNO, DATA,
-  // RESULTADO, COMENTÁRIOS, STATUS). Também precisa estar compartilhada como
-  // "qualquer pessoa com o link pode visualizar".
+  // Planilha "Registros" da Academia Policial Militar
   var SHEET_ID_REGISTROS_2 = '1VnAFOGCmK-V_5L6C3uwHT9HNxlJ8CjbY0cd8Fk1frto';
   var URL_REGISTROS_2 = 'https://opensheet.elk.sh/' + SHEET_ID_REGISTROS_2 + '/Registros';
 
@@ -107,8 +97,7 @@
       .catch(function (err) { console.error('[dados] falha ao ler ' + url, err); });
   }
 
-  // Aba "Soldados" é uma coluna única chamada "SOLDADOS" — a patente de
-  // todo mundo ali é sempre "Soldado", não o nome da coluna
+  // Aba "Soldados"
   function carregarSoldados() {
     return fetchComTimeout(URL_SOLDADOS)
       .then(function (r) { return r.json(); })

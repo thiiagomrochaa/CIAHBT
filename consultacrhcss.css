@@ -72,6 +72,24 @@
     .crh-badge-amber  { background: #fef3c7; color: #b45309; }
     .crh-badge-cinza  { background: #f3f4f6; color: #6b7280; }
 
+    /* Botão de copiar (usado no campo "Listagem") */
+    .crh-copy-btn {
+        width: 28px;
+        height: 28px;
+        border: none;
+        border-radius: 8px;
+        background: #f3f4f6;
+        color: #6b7280;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 0.7rem;
+        transition: all .15s;
+    }
+    .crh-copy-btn:hover { background: #e5e7eb; color: #1f2937; }
+    .crh-copy-btn.crh-copiado { background: #d1fae5; color: #059669; }
+
     /* ---------------- MODAL ----------------
        position: fixed + z-index alto = cobre a viewport inteira da
        PÁGINA (não um iframe), então o resultado nunca fica cortado. */

@@ -108,7 +108,7 @@
     .crh-modal-box {
         background: transparent;
         width: 100%;
-        max-width: 720px;
+        max-width: 1000px;
         margin-top: 40px;
         animation: crh-modal-in .18s ease-out;
     }

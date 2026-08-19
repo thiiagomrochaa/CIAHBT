@@ -23,7 +23,7 @@
           texto = texto.replace(/[\[\]]/g, '');
         }
         texto = texto.replace(/,/g, ' ');
-        texto = texto.replace('Usuários registrados', 'Usuários conectados');
+        texto = texto.replace('Utilizadores registados', 'Usuários conectados');
         if (texto.trim() === '') { return; }
         novosFilhos.push(document.createTextNode(texto));
         return;

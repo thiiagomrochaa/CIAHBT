@@ -567,21 +567,26 @@
 
     carregarTudo().then(function () {
       var status = document.getElementById('crh_status_carregamento');
-
+      var totalEl = document.getElementById('crh_total_ativos_num');
+    
       if (listaUsuarios.length === 0) {
         status.innerHTML = '<i class="fas fa-triangle-exclamation text-rose-500"></i> Não foi possível carregar os dados. <button onclick="location.reload()" class="underline">Tentar novamente</button>';
         status.classList.remove('text-blue-500');
         status.classList.add('text-rose-500');
+        if (totalEl) totalEl.textContent = '—';
         return;
       }
-
+    
       status.classList.add('hidden');
+      if (totalEl) totalEl.textContent = listaUsuarios.length;
     }).catch(function (err) {
-      console.error('[crh] falha inesperada ao carregar dados', err);
+      console.error('[CRH] Falha inesperada ao carregar dados', err);
       var status = document.getElementById('crh_status_carregamento');
+      var totalEl = document.getElementById('crh_total_ativos_num');
       status.innerHTML = '<i class="fas fa-triangle-exclamation text-rose-500"></i> Não foi possível carregar os dados. <button onclick="location.reload()" class="underline">Tentar novamente</button>';
       status.classList.remove('text-blue-500');
       status.classList.add('text-rose-500');
+      if (totalEl) totalEl.textContent = '—';
     });
   });
 })();

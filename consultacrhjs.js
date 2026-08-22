@@ -8,23 +8,13 @@
   var URL_OFICIAIS  = 'https://opensheet.elk.sh/' + SHEET_ID + '/' + encodeURIComponent('Corpo de Oficiais');
   var URL_EXECUTIVO = 'https://opensheet.elk.sh/' + SHEET_ID + '/' + encodeURIComponent('Corpo Executivo');
   var URL_TAGS      = 'https://opensheet.elk.sh/' + SHEET_ID + '/TAG';
-
-  // Aba "Turnos e Tarefas" — mesma planilha principal (SHEET_ID). É daqui
-  // que vem o campo FUNÇÕES. Formato da célula: "Nickname [TAG] {FUNÇÕES}",
-  // ex: "MrThiiagoM [Ltk] {BOPE/INS}".
   var URL_TURNOS = 'https://opensheet.elk.sh/' + SHEET_ID + '/' + encodeURIComponent('Turnos e Tarefas');
-
-  // Planilha "Registros" (a mesma que o Apps Script grava) — precisa estar
-  // compartilhada como "qualquer pessoa com o link pode visualizar" pro
-  // OpenSheets conseguir ler. TROCAR pelo ID dessa planilha (não é a mesma
-  // SHEET_ID acima).
+  var URL_CONFIG = 'https://opensheet.elk.sh/' + SHEET_ID + '/' + encodeURIComponent('Config');
+  var totalPoliciaisAtivos = null;
+  // INS PLANS
   var SHEET_ID_REGISTROS = '1-lTpEe-GRgKRkf_YD25NDxWWfyIyi1zS-F6R80j6W2s';
   var URL_REGISTROS = 'https://opensheet.elk.sh/' + SHEET_ID_REGISTROS + '/Registros';
-
-  // Segunda fonte de Registros ([APM] Administração) — mesma estrutura de
-  // colunas da planilha acima (ID, CURSO, NICK INSTRUTOR, NICK ALUNO, DATA,
-  // RESULTADO, COMENTÁRIOS, STATUS). Também precisa estar compartilhada como
-  // "qualquer pessoa com o link pode visualizar".
+  // APM PLANILHA
   var SHEET_ID_REGISTROS_2 = '1VnAFOGCmK-V_5L6C3uwHT9HNxlJ8CjbY0cd8Fk1frto';
   var URL_REGISTROS_2 = 'https://opensheet.elk.sh/' + SHEET_ID_REGISTROS_2 + '/Registros';
 
@@ -173,6 +163,26 @@
       .catch(function (err) { console.error('[dados] falha ao ler Turnos e Tarefas', err); });
   }
 
+  // Aba "Config" — pega o valor da coluna "TOTAL NA ATIVA" (célula E2).
+  // Busca a chave de forma case-insensitive pra não quebrar se a planilha
+  // mudar acentuação/maiúsculas no cabeçalho.
+  function carregarTotalAtivos() {
+    return fetchComTimeout(URL_CONFIG)
+      .then(function (r) { return r.json(); })
+      .then(function (linhas) {
+        if (!linhas || !linhas[0]) return;
+        var linha = linhas[0];
+        var chaveTotal = Object.keys(linha).find(function (k) {
+          return k.trim().toUpperCase() === 'TOTAL NA ATIVA';
+        });
+        if (chaveTotal) {
+          var n = parseInt(linha[chaveTotal], 10);
+          if (!isNaN(n)) totalPoliciaisAtivos = n;
+        }
+      })
+      .catch(function (err) { console.error('[dados] falha ao ler Config', err); });
+  }
+  
   function carregarTudo() {
     return Promise.all([
       carregarSoldados(),
@@ -180,7 +190,8 @@
       carregarPatentes(URL_OFICIAIS),
       carregarPatentes(URL_EXECUTIVO),
       carregarTags(),
-      carregarTurnos()
+      carregarTurnos(),
+      carregarTotalAtivos()   // ← novo
     ]);
   }
 
@@ -578,9 +589,11 @@
       }
     
       status.classList.add('hidden');
-      if (totalEl) totalEl.textContent = listaUsuarios.length;
+      if (totalEl) {
+        totalEl.textContent = totalPoliciaisAtivos != null ? totalPoliciaisAtivos : listaUsuarios.length;
+      }
     }).catch(function (err) {
-      console.error('[CRH] Falha inesperada ao carregar dados', err);
+      console.error('[crh] falha inesperada ao carregar dados', err);
       var status = document.getElementById('crh_status_carregamento');
       var totalEl = document.getElementById('crh_total_ativos_num');
       status.innerHTML = '<i class="fas fa-triangle-exclamation text-rose-500"></i> Não foi possível carregar os dados. <button onclick="location.reload()" class="underline">Tentar novamente</button>';

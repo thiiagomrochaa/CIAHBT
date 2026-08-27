@@ -26,6 +26,10 @@
     border-radius: 999px;
     font-size: 0.85em;
   }
+  .nick-preenchido {
+    color: #1d4ed8;
+    font-weight: 700;
+  }
 
   .aviso {
     display: flex;
@@ -183,7 +187,7 @@
       Uma das formas de expressar respeito nas propriedades oficiais da Polícia é por pronomes de tratamento.
       Para se dirigir ao superior deve ser <strong>“Senhor(a) + Patente/Cargo + Nickname”</strong>, enquanto ao
       par/subalterno é <strong>“Patente/Cargo + Nickname”</strong>.
-      Exemplos: <em>“Sim, senhora Tenente {'{'}USERNAME{'}'}.”</em> e <em>“Com certeza, coronel Paulo.”</em>
+      Exemplos: <em>“Sim, senhora Tenente <span class="placeholder">{USERNAME}</span>.”</em> e <em>“Com certeza, coronel Paulo.”</em>
       Alguma dúvida?
     </p>
     <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
@@ -387,9 +391,25 @@
     </p>
   </div>
 
-  <p class="text-center text-xs text-gray-400 pt-6">Central Intelligence Agency · Companhia dos Instrutores</p>
-
 </div>
+
+<script>
+  // A Central de Aulas passa o nick de quem está logado via ?nick=... na URL
+  // (o GitHub Pages não consegue detectar login do fórum sozinho, por ser
+  // outro domínio). Se o parâmetro vier preenchido, troca todo mundo que
+  // ainda está marcado como {USERNAME} pelo nick real; se a página for
+  // aberta direto, sem esse parâmetro, mantém o placeholder como está.
+  (function () {
+    const nick = new URLSearchParams(location.search).get('nick')?.trim();
+    if (!nick) return;
+
+    document.querySelectorAll('.placeholder').forEach(el => {
+      el.textContent = nick;
+      el.classList.remove('placeholder');
+      el.classList.add('nick-preenchido');
+    });
+  })();
+</script>
 
 </body>
 </html>

@@ -118,7 +118,7 @@
 </head>
 <body class="min-h-screen">
 
-<div class="max-w-3xl mx-auto px-5 py-10 md:py-14">
+<div id="conteudo-aula" class="max-w-3xl mx-auto px-5 py-10 md:py-14">
 
   <!-- ============ CABEÇALHO ============ -->
   <div class="mb-8">
@@ -416,20 +416,35 @@
   // real do conteúdo, pra ela ajustar o iframe e não sobrar barra de
   // rolagem duplicada (uma da página da aula, outra da página que embute).
   // Usa postMessage porque são domínios diferentes (GitHub Pages x fórum).
+  //
+  // IMPORTANTE: mede o container #conteudo-aula, não document.documentElement.
+  // A altura do <html> nunca fica menor que a altura da própria janela do
+  // iframe — então se ficássemos ouvindo "resize" (que também dispara
+  // quando o PAI aumenta o iframe) e medindo o documento inteiro, cada
+  // ajuste do pai geraria uma medida maior, num loop que só cresce.
+  // Uma div normal não tem esse problema: a altura dela reflete só o
+  // próprio conteúdo.
   (function () {
+    let ultimaAltura = 0;
+
     function enviarAltura() {
-      const altura = document.documentElement.scrollHeight;
+      const el = document.getElementById('conteudo-aula');
+      if (!el) return;
+      const altura = el.scrollHeight;
+      if (Math.abs(altura - ultimaAltura) < 3) return; // ignora variações insignificantes
+      ultimaAltura = altura;
       window.parent.postMessage({ tipo: 'cia-aula-altura', altura }, '*');
     }
 
     window.addEventListener('load', enviarAltura);
-    window.addEventListener('resize', enviarAltura);
 
     // Reenvia se o conteúdo mudar de altura depois do load (fontes/ícones
     // carregando depois, por exemplo) — sem isso a altura enviada no load
-    // pode ficar desatualizada.
-    if (window.ResizeObserver) {
-      new ResizeObserver(enviarAltura).observe(document.body);
+    // pode ficar desatualizada. Observa o container de conteúdo, não o
+    // body/documento inteiro, pelo mesmo motivo explicado acima.
+    const alvo = document.getElementById('conteudo-aula');
+    if (window.ResizeObserver && alvo) {
+      new ResizeObserver(enviarAltura).observe(alvo);
     } else {
       setInterval(enviarAltura, 800);
     }

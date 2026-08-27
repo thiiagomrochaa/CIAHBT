@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CIA — Curso de Formação de Soldados (CFSd)</title>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://use.fontawesome.com/releases/v7.3.1/css/all.css" rel="stylesheet">
+<link href="https://kit-pro.fontawesome.com/releases/v7.3.1/css/pro.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+<style>
+  * { font-family: 'Poppins', sans-serif; }
+  body { background: #f5f6f8; }
+
+  .placeholder {
+    display: inline-block;
+    background: #eef2ff;
+    color: #4338ca;
+    font-weight: 600;
+    padding: 1px 8px;
+    border-radius: 999px;
+    font-size: 0.85em;
+  }
+  .nick-preenchido {
+    color: #1d4ed8;
+    font-weight: 700;
+  }
+
+  .aviso {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    color: #ff513a;
+    font-size: 13px;
+    font-weight: 600;
+    font-style: italic;
+    margin-top: 10px;
+  }
+
+  .callout {
+    padding: 16px 18px;
+    border-radius: 10px;
+    border-left: 6px solid;
+    margin: 18px 0;
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+  .callout-verde  { background: #f0fdf4; border-color: #3cea04; color: #14532d; }
+  .callout-azul   { background: #eff6ff; border-color: #045fba; color: #1e3a8a; }
+  .callout-vermelho { background: #fef2f2; border-color: #ea0606; color: #7f1d1d; }
+
+  .instrutor-box {
+    background: #5771a5;
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 18px 22px;
+    margin: 24px 0;
+  }
+  .instrutor-box .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.15);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .secao-titulo {
+    color: #045fba;
+    font-weight: 800;
+    font-size: 19px;
+    margin-top: 40px;
+    margin-bottom: 14px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+  }
+  .secao-titulo:first-of-type { border-top: none; padding-top: 0; margin-top: 24px; }
+
+  .fala p { margin-bottom: 14px; line-height: 1.75; color: #1f2937; font-size: 15px; }
+  .fala strong { color: #111827; }
+
+  .pergunta {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+  .pergunta .resposta {
+    margin-top: 8px;
+    font-size: 13.5px;
+    color: #16a34a;
+    font-weight: 600;
+  }
+
+  .comando {
+    display: inline-block;
+    background: #111827;
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: .03em;
+    padding: 6px 14px;
+    border-radius: 8px;
+    margin: 4px 6px 4px 0;
+    font-size: 14px;
+  }
+
+  .hierarquia-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .hierarquia-card .titulo {
+    font-weight: 800;
+    color: #045fba;
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+  .hierarquia-card .subgrupo { margin-bottom: 12px; }
+  .hierarquia-card .subgrupo:last-child { margin-bottom: 0; }
+  .hierarquia-card .sub-titulo {
+    font-weight: 600;
+    color: #6b7280;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    margin-bottom: 6px;
+  }
+  .chip {
+    display: inline-block;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-weight: 600;
+    font-size: 12.5px;
+    padding: 4px 11px;
+    border-radius: 8px;
+    margin: 2px 5px 2px 0;
+  }
+</style>
+</head>
+<body class="min-h-screen">
+
+<div id="conteudo-aula" class="max-w-3xl mx-auto px-5 py-10 md:py-14">
+
+  <!-- ============ CABEÇALHO ============ -->
+  <div class="mb-8">
+    <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-blue-600 bg-blue-50 px-3 py-1.5 rounded-full mb-3">
+      <i class="fa-solid fa-shield-halved"></i> Central de Aulas · Nível 1
+    </span>
+    <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight">Curso de Formação de Soldados (CFSd)</h1>
+    <p class="text-gray-500 mt-1 text-sm">Roteiro oficial aplicado pelo Instrutor ao soldado, baseado no Título 2, Capítulo 1 da Constituição Militar.</p>
+  </div>
+
+  <!-- ============ REGRAS ============ -->
+  <div class="rounded-2xl p-5 md:p-6 mb-5 text-white" style="background:#ff2626;">
+    <p class="font-bold mb-2 flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation"></i> Antes de começar</p>
+    <ul class="text-sm leading-relaxed space-y-1.5 list-disc list-inside">
+      <li>É imprescindível que siga o roteiro, sem tomar atalhos. Caso contrário, poderá sofrer punição conforme o Regimento Interno da companhia de Instrutores;</li>
+      <li>Para copiar um trecho, só aperte <strong>CTRL+C</strong>. E para colar, <strong>CTRL+V</strong>;</li>
+      <li>Evite copiar as instruções passadas ao longo do roteiro;</li>
+      <li>Procure sempre retirar todas as dúvidas possíveis dos alunos;</li>
+      <li>Ao final do curso, é necessário realizar o registro. Caso contrário, não irá contabilizar na meta semanal, e poderá sofrer punições conforme o Regimento Interno da companhia de Instrutores.</li>
+    </ul>
+  </div>
+
+  <!-- ============ NOTA DO INSTRUTOR (topo) ============ -->
+  <div class="instrutor-box">
+    <span class="tag"><i class="fa-solid fa-user-tie"></i> Para o instrutor</span>
+    <p class="text-sm leading-relaxed">
+      Essa aula é baseada nos tópicos do <strong>TÍTULO 2, CAPÍTULO 1</strong> da Constituição Militar.
+      Se houver dúvidas acesse o documento.
+    </p>
+  </div>
+
+  <!-- ============ ROTEIRO ============ -->
+  <div class="fala">
+
+    <p>Olá, soldado.</p>
+    <p>
+      Seja bem-vindo ao Curso de Formação de Soldados da CIA.
+      Sou o instrutor <span class="placeholder">{USERNAME}</span> e serei responsável pela sua formação.
+      A partir deste momento, mantenham silêncio e atenção durante a aula.
+      Falem somente quando for autorizado ou quando eu realizar uma pergunta.
+      Durante a aula, deverá dirigir-se a mim utilizando <strong>"Senhor + patente + nick"</strong>.
+      Entendido?
+    </p>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <p class="secao-titulo">HIERARQUIA</p>
+    <p>
+      A hierarquia é a estrutura que define quem ocupa cada posto, quem possui autoridade sobre quem e quais
+      são as responsabilidades de cada patente e/ou cargo.
+    </p>
+    <p>
+      Atualmente, a hierarquia da CIA divide-se em duas: <strong>Corpo Militar (CM)</strong> e
+      <strong>Corpo Executivo (CE)</strong>.
+    </p>
+
+    <div class="hierarquia-card">
+      <p class="titulo">Corpo Militar (CM)</p>
+      <div class="subgrupo">
+        <p class="sub-titulo">Corpo de Praças</p>
+        <span class="chip">Soldado</span>
+        <span class="chip">Cabo</span>
+        <span class="chip">3° Sargento</span>
+        <span class="chip">2° Sargento</span>
+        <span class="chip">1° Sargento</span>
+        <span class="chip">Subtenente</span>
+      </div>
+      <div class="subgrupo">
+        <p class="sub-titulo">Corpo de Praças Especiais</p>
+        <span class="chip">Aluno</span>
+        <span class="chip">Aspirante a Oficial</span>
+      </div>
+      <div class="subgrupo">
+        <p class="sub-titulo">Corpo de Oficiais</p>
+        <span class="chip">Tenente</span>
+        <span class="chip">Capitão</span>
+        <span class="chip">Coronel</span>
+        <span class="chip">General</span>
+        <span class="chip">Marechal</span>
+        <span class="chip">Comandante</span>
+        <span class="chip">Comandante-Geral</span>
+      </div>
+    </div>
+
+    <div class="hierarquia-card">
+      <p class="titulo">Corpo Executivo (CE)</p>
+      <div class="subgrupo">
+        <span class="chip">Supervisor</span>
+        <span class="chip">Supervisor-Geral</span>
+        <span class="chip">Inspetor</span>
+        <span class="chip">Inspetor-Geral</span>
+        <span class="chip">Coordenador</span>
+        <span class="chip">Coordenador-Geral</span>
+        <span class="chip">Superintendente</span>
+        <span class="chip">Superintendente-Geral</span>
+        <span class="chip">VIP</span>
+        <span class="chip">Vice-Presidente</span>
+        <span class="chip">Presidente</span>
+        <span class="chip">Acionista Majoritário</span>
+        <span class="chip">Chanceler</span>
+      </div>
+    </div>
+
+    <p>
+      Os cargos do Corpo Executivo começam da equivalência de tenente, possuindo dois cargos equivalente a
+      uma patente do Corpo Militar (com exceção de Chanceler e Comandante-Geral). A patente de
+      <strong>Supremacia</strong> é a maior patente das duas hierarquia. Alguma dúvida?
+    </p>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <p class="secao-titulo">TESTE TEÓRICO</p>
+    <p>
+      Agora, irei realizar algumas perguntas sobre o que foi ensinado até aqui. Para dar continuidade na sua
+      aula você precisará acertar 2 das 4 questões. Podemos começar?
+    </p>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <div class="callout callout-azul">
+      <i class="fa-duotone fa-circle-exclamation"></i>
+      Sempre após o aluno responder dê um feedback da resposta dele antes de seguir para a próxima pergunta.
+      Por exemplo, se acertar diga algo como "Boa!" ou "Isso!", se ele errar corrija-o e se ele responder
+      parcialmente tente fazer ele lembrar da resposta dando algumas dicas.
+    </div>
+
+    <div class="pergunta">
+      <p class="font-bold">1. Qual a hierarquia do Corpo de Praças?</p>
+      <p class="resposta">R: Soldado; Cabo; 3° sargento; 2° sargento; 1° sargento; Subtenente.</p>
+      <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, se o usuário acertar pelo menos 3, corrija os restantes. Se ele errar mais, considere como errado.]</div>
+    </div>
+
+    <div class="pergunta">
+      <p class="font-bold">2. Qual a hierarquia do Corpo de Praças Especiais?</p>
+      <p class="resposta">R: Aluno e Aspirante a Oficial.</p>
+      <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, se o usuário acertar pelo menos 1, corrija os restantes. Se ele errar mais, considere como errado.]</div>
+    </div>
+
+    <div class="pergunta">
+      <p class="font-bold">3. Qual a hierarquia do Corpo de Oficiais?</p>
+      <p class="resposta">R: Tenente; Capitão; Coronel; General; Marechal; Comandante; Comandante-geral.</p>
+      <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, se o usuário acertar pelo menos 3, corrija os restantes. Se ele errar mais, considere como errado.]</div>
+    </div>
+
+    <div class="pergunta">
+      <p class="font-bold">4. Qual a maior patente das duas hierarquias?</p>
+      <p class="resposta">R: Supremacia.</p>
+    </div>
+
+    <div class="callout callout-vermelho">
+      <p class="font-bold mb-1">Se reprovado:</p>
+      <p>
+        Você foi reprovado por atingir o limite de erros. Infelizmente, terá de realizar a aula novamente.
+        Mas não desanime. Essa é uma oportunidade para rever o conteúdo e fortalecer o seu conhecimento!
+      </p>
+    </div>
+
+    <p class="secao-titulo">NOVOS COMANDOS</p>
+    <p>
+      Em sua instrução inicial foram apresentados alguns comandos essenciais e obrigatórios dentro da CIA,
+      sendo eles: <strong>Sentido</strong>; <strong>À vontade</strong>; <strong>Continência</strong>;
+      <strong>Apresentar armas</strong>; <strong>Marcar passos</strong>.
+    </p>
+    <p>
+      Nessa aula você aprenderá mais dois novos comandos que contribuem para o bom andamento da nossa
+      instituição. Você conhece os comandos <strong>Apresente-se</strong> e <strong>Dispensado</strong>?
+    </p>
+
+    <div class="callout callout-verde">
+      <p class="font-bold mb-1">Se a resposta for positiva:</p>
+      <p>Podemos pular para o Teste Prático?</p>
+      <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela resposta. Se ele concordar pule para o TESTE PRÁTICO.]</div>
+    </div>
+
+    <p>
+      <strong>Apresente-se:</strong> Comando prestado em forma de sentido para orientar, punir e/ou gratificar
+      militares. Primeiramente, será dado o comando sentido. Então, será dado o comando "apresente-se". Nesse
+      momento, vá até o quadrado bem na frente de seu superior e acene. Aguarde seu superior retribuir de forma
+      a acenar e, então, diga: <em>"Senhor, [sua patente] [seu nick] apresentando-se, senhor!"</em>.
+    </p>
+    <p>
+      <strong>Dispensado:</strong> Depois que já se apresentou, será dado o comando "dispensado". Nesse
+      momento, acene e aguarde o seu superior retribuir. Então, <strong>retorne ao mesmo lugar que estava em
+      sentido</strong> e aguarde o "à vontade". Alguma dúvida?
+    </p>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <p class="secao-titulo">TESTE PRÁTICO</p>
+    <p>
+      Agora irei repassar os comandos para que você execute como eu te expliquei. Não se preocupe se errar,
+      ensinarei novamente. Podemos começar?
+    </p>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <p class="my-4">
+      <span class="comando">APRESENTE-SE!</span>
+      <span class="comando">DISPENSADO!</span>
+    </p>
+
+    <div class="callout callout-azul">
+      Se o aluno errar algum comando corrija-o. Se possível peça para ele dar o comando e você executar para
+      que ele não tenha dúvidas. Só siga a aula se o aluno tiver aprendido!
+    </div>
+
+    <p class="secao-titulo">FINALIZAÇÃO</p>
+    <p>
+      Meus parabéns, soldado. Você foi aprovado(a) no curso! Acrescente <strong>[CFSd]</strong> ao final de sua
+      missão. Após esta aula, você completa todos os seus cursos de soldado. Alguma dúvida?
+    </p>
+
+  </div>
+
+  <!-- ============ NOTA DO INSTRUTOR (fechamento) ============ -->
+  <div class="instrutor-box">
+    <span class="tag"><i class="fa-solid fa-user-tie"></i> Para o instrutor</span>
+    <p class="text-sm leading-relaxed mb-3">
+      Ao finalizar a aula, realize a postagem do Relatório de Aula clicando no link:
+      <a href="https://ciahbt.forumeiros.com/t76-ins-relatorios-de-aula" target="_blank" rel="noopener" class="underline font-semibold">INS | Relatórios de aula</a>.
+    </p>
+    <p class="text-sm leading-relaxed">
+      Mesmo que o aluno não tenha sido aprovado é importante a postagem do Relatório de Aula para contar sua meta.
+    </p>
+  </div>
+
+</div>
+
+<script>
+  // A Central de Aulas passa o nick de quem está logado via ?nick=... na URL
+  // (o GitHub Pages não consegue detectar login do fórum sozinho, por ser
+  // outro domínio). Se o parâmetro vier preenchido, troca todo mundo que
+  // ainda está marcado como {USERNAME} pelo nick real; se a página for
+  // aberta direto, sem esse parâmetro, mantém o placeholder como está.
+  (function () {
+    const nick = new URLSearchParams(location.search).get('nick')?.trim();
+    if (!nick) return;
+
+    document.querySelectorAll('.placeholder').forEach(el => {
+      el.textContent = nick;
+      el.classList.remove('placeholder');
+      el.classList.add('nick-preenchido');
+    });
+  })();
+</script>
+
+<script>
+  // Avisa a página que estiver embutindo esta (via iframe) qual é a altura
+  // real do conteúdo, pra ela ajustar o iframe e não sobrar barra de
+  // rolagem duplicada (uma da página da aula, outra da página que embute).
+  // Usa postMessage porque são domínios diferentes (GitHub Pages x fórum).
+  //
+  // IMPORTANTE: mede o container #conteudo-aula, não document.documentElement.
+  // A altura do <html> nunca fica menor que a altura da própria janela do
+  // iframe — então se ficássemos ouvindo "resize" (que também dispara
+  // quando o PAI aumenta o iframe) e medindo o documento inteiro, cada
+  // ajuste do pai geraria uma medida maior, num loop que só cresce.
+  // Uma div normal não tem esse problema: a altura dela reflete só o
+  // próprio conteúdo.
+  (function () {
+    let ultimaAltura = 0;
+
+    function enviarAltura() {
+      const el = document.getElementById('conteudo-aula');
+      if (!el) return;
+      const altura = el.scrollHeight;
+      if (Math.abs(altura - ultimaAltura) < 3) return; // ignora variações insignificantes
+      ultimaAltura = altura;
+      window.parent.postMessage({ tipo: 'cia-aula-altura', altura }, '*');
+    }
+
+    window.addEventListener('load', enviarAltura);
+
+    // Reenvia se o conteúdo mudar de altura depois do load (fontes/ícones
+    // carregando depois, por exemplo) — sem isso a altura enviada no load
+    // pode ficar desatualizada. Observa o container de conteúdo, não o
+    // body/documento inteiro, pelo mesmo motivo explicado acima.
+    const alvo = document.getElementById('conteudo-aula');
+    if (window.ResizeObserver && alvo) {
+      new ResizeObserver(enviarAltura).observe(alvo);
+    } else {
+      setInterval(enviarAltura, 800);
+    }
+
+    enviarAltura();
+  })();
+</script>
+
+</body>
+</html>

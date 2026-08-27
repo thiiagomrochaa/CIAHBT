@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CIA — Curso de Aprimoramento de Soldados (CAS)</title>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://use.fontawesome.com/releases/v7.3.1/css/all.css" rel="stylesheet">
+<link href="https://kit-pro.fontawesome.com/releases/v7.3.1/css/pro.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+<style>
+  * { font-family: 'Poppins', sans-serif; }
+  body { background: #f5f6f8; }
+
+  .placeholder {
+    display: inline-block;
+    background: #eef2ff;
+    color: #4338ca;
+    font-weight: 600;
+    padding: 1px 8px;
+    border-radius: 999px;
+    font-size: 0.85em;
+  }
+  .nick-preenchido {
+    color: #1d4ed8;
+    font-weight: 700;
+  }
+
+  .aviso {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    color: #ff513a;
+    font-size: 13px;
+    font-weight: 600;
+    font-style: italic;
+    margin-top: 10px;
+  }
+
+  .callout {
+    padding: 16px 18px;
+    border-radius: 10px;
+    border-left: 6px solid;
+    margin: 18px 0;
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+  .callout-verde  { background: #f0fdf4; border-color: #3cea04; color: #14532d; }
+  .callout-azul   { background: #eff6ff; border-color: #045fba; color: #1e3a8a; }
+  .callout-vermelho { background: #fef2f2; border-color: #ea0606; color: #7f1d1d; }
+
+  .instrutor-box {
+    background: #5771a5;
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 18px 22px;
+    margin: 24px 0;
+  }
+  .instrutor-box .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.15);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .secao-titulo {
+    color: #045fba;
+    font-weight: 800;
+    font-size: 19px;
+    margin-top: 40px;
+    margin-bottom: 14px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+  }
+  .secao-titulo:first-of-type { border-top: none; padding-top: 0; margin-top: 24px; }
+
+  .fala p { margin-bottom: 14px; line-height: 1.75; color: #1f2937; font-size: 15px; }
+  .fala strong { color: #111827; }
+
+  .pergunta {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+  .pergunta .resposta {
+    margin-top: 8px;
+    font-size: 13.5px;
+    color: #16a34a;
+    font-weight: 600;
+  }
+
+  .comando {
+    display: inline-block;
+    background: #111827;
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: .03em;
+    padding: 6px 14px;
+    border-radius: 8px;
+    margin: 4px 6px 4px 0;
+    font-size: 14px;
+  }
+
+  .setor-card, .funcao-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+  .setor-card .nome, .funcao-card .nome {
+    font-weight: 700;
+    color: #111827;
+    font-size: 14.5px;
+    margin-bottom: 2px;
+  }
+  .setor-card .desc, .funcao-card .desc {
+    font-size: 13.5px;
+    color: #4b5563;
+    line-height: 1.55;
+  }
+  .balao {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 999px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .balao-cinza    { background: #f3f4f6; color: #4b5563; }
+  .balao-vermelho { background: #fef2f2; color: #b91c1c; }
+  .balao-amarelo  { background: #fefce8; color: #a16207; }
+</style>
+</head>
+<body class="min-h-screen">
+
+<div id="conteudo-aula" class="max-w-3xl mx-auto px-5 py-10 md:py-14">
+
+  <!-- ============ CABEÇALHO ============ -->
+  <div class="mb-8">
+    <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-blue-600 bg-blue-50 px-3 py-1.5 rounded-full mb-3">
+      <i class="fa-solid fa-shield-halved"></i> Central de Aulas · Nível 1
+    </span>
+    <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight">Curso de Aprimoramento de Soldados (CAS)</h1>
+    <p class="text-gray-500 mt-1 text-sm">Roteiro oficial aplicado pelo Instrutor ao soldado, baseado no Título 1, Capítulo 2, Seções 1, 2 e 3 da Constituição Militar.</p>
+  </div>
+
+  <!-- ============ REGRAS ============ -->
+  <div class="rounded-2xl p-5 md:p-6 mb-5 text-white" style="background:#ff2626;">
+    <p class="font-bold mb-2 flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation"></i> Antes de começar</p>
+    <ul class="text-sm leading-relaxed space-y-1.5 list-disc list-inside">
+      <li>É imprescindível que siga o roteiro, sem tomar atalhos. Caso contrário, poderá sofrer punição conforme o Regimento Interno da companhia de Instrutores;</li>
+      <li>Para copiar um trecho, só aperte <strong>CTRL+C</strong>. E para colar, <strong>CTRL+V</strong>;</li>
+      <li>Evite copiar as instruções passadas ao longo do roteiro;</li>
+      <li>Procure sempre retirar todas as dúvidas possíveis dos alunos;</li>
+      <li>Ao final do curso, é necessário realizar o registro. Caso contrário, não irá contabilizar na meta semanal, e poderá sofrer punições conforme o Regimento Interno da companhia de Instrutores.</li>
+    </ul>
+  </div>
+
+  <!-- ============ NOTA DO INSTRUTOR (topo) ============ -->
+  <div class="instrutor-box">
+    <span class="tag"><i class="fa-solid fa-user-tie"></i> Para o instrutor</span>
+    <p class="text-sm leading-relaxed">
+      Essa aula é baseada nos tópicos do <strong>TÍTULO 1, CAPÍTULO 2, SEÇÃO 1, 2 e 3</strong> da Constituição Militar.
+      Se houver dúvidas acesse o documento.
+    </p>
+  </div>
+
+  <!-- ============ ROTEIRO ============ -->
+  <div class="fala">
+
+    <p>Olá, soldado.</p>
+    <p>
+      Seja bem-vindo ao Curso de Aprimoramento de Soldados da CIA.
+      Sou o instrutor <span class="placeholder">{USERNAME}</span> e serei responsável pela sua formação.
+      A partir deste momento, mantenham silêncio e atenção durante a aula.
+      Falem somente quando for autorizado ou quando eu realizar uma pergunta.
+      Durante a aula, deverá dirigir-se a mim utilizando <strong>"Senhor + patente + nick"</strong>.
+      Entendido?
+    </p>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <p class="secao-titulo">DO BATALHÃO</p>
+    <p>Na base, como você já deve ter percebido, temos diferentes funções e setores.</p>
+    <p>Ao todo são <strong>7 setores</strong>: recepção, sala de controle, sala de estado, sala de ausências, centro de instrução, área de recrutas e o saguão.</p>
+
+    <div class="setor-card">
+      <p class="nome">Recepção</p>
+      <p class="desc">Responsável pelo alistamento de novos policiais. Sendo o primeiro contato com novos membros.</p>
+    </div>
+    <div class="setor-card">
+      <p class="nome">Sala de Controle (SC)</p>
+      <p class="desc">Responsável pela execução dos procedimentos de fiscalização e controle de acesso ao batalhão.</p>
+    </div>
+    <div class="setor-card">
+      <p class="nome">Sala de Estado</p>
+      <p class="desc">Destina-se aos policiais presentes, ativos e não designados para qualquer função.</p>
+    </div>
+    <div class="setor-card">
+      <p class="nome">Sala de Ausências</p>
+      <p class="desc">Destina-se ao afastamento temporário dos militares.</p>
+    </div>
+    <div class="setor-card">
+      <p class="nome">Centro de Instrução (CI)</p>
+      <p class="desc">Destina-se para a realização de atos disciplinares e educativos, podendo ser promoções, punições, orientações ou outras atividades.</p>
+    </div>
+    <div class="setor-card">
+      <p class="nome">Área de Recrutas</p>
+      <p class="desc">Destina-se ao acolhimento e à preparação inicial dos recrutas.</p>
+    </div>
+    <div class="setor-card">
+      <p class="nome">Saguão</p>
+      <p class="desc">Corresponde à área externa das dependências internas do batalhão.</p>
+    </div>
+
+    <p>Alguma dúvida?</p>
+
+    <p>Nos setores temos <strong>6 funções</strong>: recepcionistas, sentinela, operadores, Auxiliar Operacional (AO), Cabo da Guarda (CG) e Oficial da Guarda (OG).</p>
+
+    <div class="funcao-card">
+      <p class="nome">Recepcionista</p>
+      <p class="desc">Responsável pela execução dos procedimentos de alistamento e ingresso de novos policiais.</p>
+    </div>
+    <div class="funcao-card">
+      <p class="nome">Sentinela <span class="balao balao-cinza"><i class="fa-solid fa-comment"></i> balão cinza</span></p>
+      <p class="desc">Responsável pela condução da instrução dos recrutas.</p>
+    </div>
+    <div class="funcao-card">
+      <p class="nome">Operadores da Sala de Controle</p>
+      <p class="desc">Responsáveis pela fiscalização, verificação, triagem e autorização de acesso dos policiais.</p>
+    </div>
+    <div class="funcao-card">
+      <p class="nome">Auxiliar Operacional (AO) <span class="balao balao-cinza"><i class="fa-solid fa-comment"></i> balão cinza</span></p>
+      <p class="desc">Responsável pela coordenação imediata da Sala de Controle.</p>
+    </div>
+    <div class="funcao-card">
+      <p class="nome">Cabo da Guarda (CG) <span class="balao balao-vermelho"><i class="fa-solid fa-comment"></i> balão vermelho</span></p>
+      <p class="desc">Responsável pela coordenação da recepção do batalhão.</p>
+    </div>
+    <div class="funcao-card">
+      <p class="nome">Oficial da Guarda (OG) <span class="balao balao-amarelo"><i class="fa-solid fa-comment"></i> balão amarelo</span></p>
+      <p class="desc">Responsável pela direção, coordenação e fiscalização de todas as atividades do batalhão.</p>
+    </div>
+
+    <p>Alguma dúvida?</p>
+
+    <p class="secao-titulo">TESTE TEÓRICO</p>
+    <p>
+      Agora, irei realizar algumas perguntas de modo a saber se absorveu todo o conteúdo.
+      É necessário acertar pelo menos 2 questões para ser aprovado.
+      Podemos começar?
+    </p>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <div class="pergunta">
+      <p class="font-bold">1. Quantas e quais são os setores da base?</p>
+      <p class="resposta">R: 7 setores, sendo: recepção, sala de controle, sala de estado, sala de ausências, centro de instrução, área de recrutas e o saguão.</p>
+    </div>
+
+    <div class="pergunta">
+      <p class="font-bold">2. Quantas e quais são as funções da base?</p>
+      <p class="resposta">R: 6 funções, sendo: recepcionistas, sentinela, operadores, Auxiliar Operacional (AO), Cabo da Guarda (CG) e Oficial da Guarda (OG).</p>
+    </div>
+
+    <div class="pergunta">
+      <p class="font-bold">3. Qual a função dos recepcionistas?</p>
+      <p class="resposta">R: Execução dos procedimentos de alistamento e ingresso de novos policiais.</p>
+    </div>
+
+    <div class="pergunta">
+      <p class="font-bold">4. Para que serve o Centro de Instrução?</p>
+      <p class="resposta">R: Realização de atos disciplinares e educativos, podendo ser promoções, punições, orientações ou outras atividades.</p>
+    </div>
+
+    <p class="secao-titulo">FINALIZAÇÃO</p>
+
+    <div class="callout callout-verde">
+      <p class="font-bold mb-1">Se aprovado:</p>
+      <p>
+        Meus parabéns, soldado. Você foi aprovado(a) no curso! Acrescente <strong>[CAS]</strong> ao final de sua missão.
+        Após esta supervisão, você deverá procurar um instrutor (brevê azul) para receber o Curso de Formação de
+        Soldados (CFSd). Alguma dúvida?
+      </p>
+    </div>
+
+    <div class="callout callout-vermelho">
+      <p class="font-bold mb-1">Se reprovado:</p>
+      <p>
+        Você foi reprovado por atingir o limite de erros. Infelizmente, terá de realizar a aula novamente.
+        Mas não desanime, soldado. Essa é uma oportunidade para rever o conteúdo e fortalecer o seu conhecimento!
+      </p>
+    </div>
+
+  </div>
+
+  <!-- ============ NOTA DO INSTRUTOR (fechamento) ============ -->
+  <div class="instrutor-box">
+    <span class="tag"><i class="fa-solid fa-user-tie"></i> Para o instrutor</span>
+    <p class="text-sm leading-relaxed mb-3">
+      Ao finalizar a aula, realize a postagem do Relatório de Aula clicando no link:
+      <a href="https://ciahbt.forumeiros.com/t76-ins-relatorios-de-aula" target="_blank" rel="noopener" class="underline font-semibold">INS | Relatórios de aula</a>.
+    </p>
+    <p class="text-sm leading-relaxed">
+      Mesmo que o aluno não tenha sido aprovado é importante a postagem do Relatório de Aula para contar sua meta.
+    </p>
+  </div>
+
+</div>
+
+<script>
+  // A Central de Aulas passa o nick de quem está logado via ?nick=... na URL
+  // (o GitHub Pages não consegue detectar login do fórum sozinho, por ser
+  // outro domínio). Se o parâmetro vier preenchido, troca todo mundo que
+  // ainda está marcado como {USERNAME} pelo nick real; se a página for
+  // aberta direto, sem esse parâmetro, mantém o placeholder como está.
+  (function () {
+    const nick = new URLSearchParams(location.search).get('nick')?.trim();
+    if (!nick) return;
+
+    document.querySelectorAll('.placeholder').forEach(el => {
+      el.textContent = nick;
+      el.classList.remove('placeholder');
+      el.classList.add('nick-preenchido');
+    });
+  })();
+</script>
+
+<script>
+  // Avisa a página que estiver embutindo esta (via iframe) qual é a altura
+  // real do conteúdo, pra ela ajustar o iframe e não sobrar barra de
+  // rolagem duplicada (uma da página da aula, outra da página que embute).
+  // Usa postMessage porque são domínios diferentes (GitHub Pages x fórum).
+  //
+  // IMPORTANTE: mede o container #conteudo-aula, não document.documentElement.
+  // A altura do <html> nunca fica menor que a altura da própria janela do
+  // iframe — então se ficássemos ouvindo "resize" (que também dispara
+  // quando o PAI aumenta o iframe) e medindo o documento inteiro, cada
+  // ajuste do pai geraria uma medida maior, num loop que só cresce.
+  // Uma div normal não tem esse problema: a altura dela reflete só o
+  // próprio conteúdo.
+  (function () {
+    let ultimaAltura = 0;
+
+    function enviarAltura() {
+      const el = document.getElementById('conteudo-aula');
+      if (!el) return;
+      const altura = el.scrollHeight;
+      if (Math.abs(altura - ultimaAltura) < 3) return; // ignora variações insignificantes
+      ultimaAltura = altura;
+      window.parent.postMessage({ tipo: 'cia-aula-altura', altura }, '*');
+    }
+
+    window.addEventListener('load', enviarAltura);
+
+    // Reenvia se o conteúdo mudar de altura depois do load (fontes/ícones
+    // carregando depois, por exemplo) — sem isso a altura enviada no load
+    // pode ficar desatualizada. Observa o container de conteúdo, não o
+    // body/documento inteiro, pelo mesmo motivo explicado acima.
+    const alvo = document.getElementById('conteudo-aula');
+    if (window.ResizeObserver && alvo) {
+      new ResizeObserver(enviarAltura).observe(alvo);
+    } else {
+      setInterval(enviarAltura, 800);
+    }
+
+    enviarAltura();
+  })();
+</script>
+
+</body>
+</html>

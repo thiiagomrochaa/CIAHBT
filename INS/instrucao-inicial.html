@@ -1,1 +1,395 @@
-<b>teste ins</b>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CIA — Instrução Inicial</title>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://use.fontawesome.com/releases/v7.3.1/css/all.css" rel="stylesheet">
+<link href="https://kit-pro.fontawesome.com/releases/v7.3.1/css/pro.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+<style>
+  * { font-family: 'Poppins', sans-serif; }
+  body { background: #f5f6f8; }
+
+  .placeholder {
+    display: inline-block;
+    background: #eef2ff;
+    color: #4338ca;
+    font-weight: 600;
+    padding: 1px 8px;
+    border-radius: 999px;
+    font-size: 0.85em;
+  }
+
+  .aviso {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    color: #ff513a;
+    font-size: 13px;
+    font-weight: 600;
+    font-style: italic;
+    margin-top: 10px;
+  }
+
+  .callout {
+    padding: 16px 18px;
+    border-radius: 10px;
+    border-left: 6px solid;
+    margin: 18px 0;
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+  .callout-verde  { background: #f0fdf4; border-color: #3cea04; color: #14532d; }
+  .callout-azul   { background: #eff6ff; border-color: #045fba; color: #1e3a8a; }
+  .callout-vermelho { background: #fef2f2; border-color: #ea0606; color: #7f1d1d; }
+
+  .instrutor-box {
+    background: #5771a5;
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 18px 22px;
+    margin: 24px 0;
+  }
+  .instrutor-box .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.15);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .secao-titulo {
+    color: #045fba;
+    font-weight: 800;
+    font-size: 19px;
+    margin-top: 40px;
+    margin-bottom: 14px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+  }
+  .secao-titulo:first-of-type { border-top: none; padding-top: 0; margin-top: 24px; }
+
+  .fala p { margin-bottom: 14px; line-height: 1.75; color: #1f2937; font-size: 15px; }
+  .fala strong { color: #111827; }
+
+  .pergunta {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+  .pergunta .resposta {
+    margin-top: 8px;
+    font-size: 13.5px;
+    color: #16a34a;
+    font-weight: 600;
+  }
+
+  .comando {
+    display: inline-block;
+    background: #111827;
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: .03em;
+    padding: 6px 14px;
+    border-radius: 8px;
+    margin: 4px 6px 4px 0;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body class="min-h-screen">
+
+<div class="max-w-3xl mx-auto px-5 py-10 md:py-14">
+
+  <!-- ============ CABEÇALHO ============ -->
+  <div class="mb-8">
+    <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-blue-600 bg-blue-50 px-3 py-1.5 rounded-full mb-3">
+      <i class="fa-solid fa-shield-halved"></i> Central de Aulas · Nível 1
+    </span>
+    <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight">Instrução Inicial</h1>
+    <p class="text-gray-500 mt-1 text-sm">Roteiro oficial aplicado pelo Instrutor ao recruta, baseado no Título 1, Capítulo 1 da Constituição Militar.</p>
+  </div>
+
+  <!-- ============ REGRAS ============ -->
+  <div class="rounded-2xl p-5 md:p-6 mb-5 text-white" style="background:#ff2626;">
+    <p class="font-bold mb-2 flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation"></i> Antes de começar</p>
+    <ul class="text-sm leading-relaxed space-y-1.5 list-disc list-inside">
+      <li>É imprescindível que siga o roteiro, sem tomar atalhos. Caso contrário, poderá sofrer punição conforme o Regimento Interno da companhia de Instrutores;</li>
+      <li>Para copiar um trecho, só aperte <strong>CTRL+C</strong>. E para colar, <strong>CTRL+V</strong>;</li>
+      <li>Evite copiar as instruções passadas ao longo do roteiro;</li>
+      <li>Procure sempre retirar todas as dúvidas possíveis dos alunos;</li>
+      <li>Ao final do curso, é necessário realizar o registro. Caso contrário, não irá contabilizar na meta semanal, e poderá sofrer punições conforme o Regimento Interno da companhia de Instrutores.</li>
+    </ul>
+  </div>
+
+  <!-- ============ NOTA DO INSTRUTOR (topo) ============ -->
+  <div class="instrutor-box">
+    <span class="tag"><i class="fa-solid fa-user-tie"></i> Para o instrutor</span>
+    <p class="text-sm leading-relaxed">
+      Essa aula é baseada nos tópicos do <strong>TÍTULO 1, CAPÍTULO 1</strong> da Constituição Militar.
+      Se houver dúvidas acesse o documento.
+    </p>
+  </div>
+
+  <!-- ============ ROTEIRO ============ -->
+  <div class="fala">
+
+    <p>
+      Bem-vindo a Central Intelligence Agency! Eu sou o instrutor <span class="placeholder">{USERNAME}</span> e
+      irei aplicar a sua instrução inicial para que você possa começar a trabalhar junto com a gente.
+      Previamente, gostaria de agradecer por escolher a nossa Polícia!
+      Aconselho-vos que anote as informações que acharem necessário, pois terão questões durante o curso,
+      e se errar duas vezes, deverá refazer o curso com outro integrante.
+      Qualquer dúvida, basta acenar ou aguardar o encerramento do tópico.
+      Podemos começar?
+    </p>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <p class="secao-titulo">HISTÓRIA DA CIA</p>
+    <p>
+      A Central Intelligence Agency foi fundada em <strong>7 de dezembro de 2015</strong> por
+      <strong>Cmd.igor</strong>, e os atuais Supremos <strong>Letking</strong> e <strong>Celos</strong>,
+      tendo como objetivo formar os melhores militares, ensinando-lhes os valores fundamentais da disciplina,
+      compromisso e patriotismo.
+    </p>
+    <p>Antes de dar continuidade. Você já participou de alguma polícia anteriormente?</p>
+
+    <div class="callout callout-verde">
+      <p class="font-bold mb-1">Se a resposta for positiva:</p>
+      <p>
+        Você tem interesse em pular para as perguntas sobre conhecimentos básicos ou prefere que eu repasse
+        sobre os Pronomes de tratamento, a Recepção e sobre assumir um superior?
+      </p>
+      <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela resposta. Se ele concordar pule para o TESTE TEÓRICO.]</div>
+    </div>
+
+    <p class="secao-titulo">PRONOMES DE TRATAMENTO</p>
+    <p>
+      Uma das formas de expressar respeito nas propriedades oficiais da Polícia é por pronomes de tratamento.
+      Para se dirigir ao superior deve ser <strong>“Senhor(a) + Patente/Cargo + Nickname”</strong>, enquanto ao
+      par/subalterno é <strong>“Patente/Cargo + Nickname”</strong>.
+      Exemplos: <em>“Sim, senhora Tenente {'{'}USERNAME{'}'}.”</em> e <em>“Com certeza, coronel Paulo.”</em>
+      Alguma dúvida?
+    </p>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <p class="secao-titulo">RECEPÇÃO</p>
+    <p>
+      Você como futuro soldado da CIA irá trabalhar na Recepção em alistamentos, onde o objetivo é trazer os
+      civis para a nossa instituição. Os três requisitos básicos são: <strong>missão</strong>,
+      <strong>fardamento</strong> e <strong>grupo</strong>.
+    </p>
+    <p>
+      A <strong>missão</strong> é onde fica no perfil do boneco, em que este deve estar completamente vazio.
+      O <strong>fardamento</strong> deve observar se o civil possui a roupa correta do manequim, se possuir
+      acessórios (chapéus, brincos, maquiagem e outros) peça para retirar. Além disso, deve checar as costas
+      se não possui algum outro acessório, não é permitido barba no rosto e se o cabelo e a cor de pele estão
+      nos permitidos. Em caso de dúvidas em um possível alistamento, acene e um superior irá te ajudar.
+    </p>
+    <p>
+      O <strong>grupo</strong> é nossa identificação oficial que os civis precisam clicar nele, juntar e
+      favoritar. É fundamental que o recruta não pode estar em outros grupos com cunho militar ou organizativo,
+      e com modo offline ativado ou visibilidade do perfil desabilitada. Caso se esqueça, uma dica é sempre se
+      lembrar de como você foi alistado. Alguma dúvida?
+    </p>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <p>
+      Na recepção, deve tomar cuidado ao se movimentar por lá, é fundamental que seja um quadrado à distância.
+      Como novato na polícia terá que assumir os superiores, onde podem ser identificados segundo a missão ou
+      a cor da camisa, basta se encaminhar ao mesmo com um quadrado de distância também e dizer:
+      <strong>“Assumo, senhor(a).”</strong> Alguma dúvida?
+    </p>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <p class="secao-titulo">TESTE TEÓRICO</p>
+    <p>
+      Agora, irei realizar algumas perguntas sobre o que foi ensinado até aqui. Para dar continuidade na sua
+      aula você precisará acertar 2 das 4 questões. Podemos começar?
+    </p>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <div class="callout callout-azul">
+      <i class="fa-duotone fa-circle-exclamation"></i>
+      Sempre após o aluno responder dê um feedback da resposta dele antes de seguir para a próxima pergunta.
+      Por exemplo, se acertar diga algo como "Boa!" ou "Isso!", se ele errar corrija-o e se ele responder
+      parcialmente tente fazer ele lembrar da resposta dando algumas dicas.
+    </div>
+
+    <div class="pergunta">
+      <p class="font-bold">1. Quando e por quem a Polícia CIA foi fundada?</p>
+      <p class="resposta">R: 7 de dezembro de 2015, por Cmd.Igor.</p>
+      <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, se o usuário acertar a data ou o usuário não considere como errado, corrija-o. Se ele errar as duas perguntas, considere como errado.]</div>
+    </div>
+
+    <div class="pergunta">
+      <p class="font-bold">2. Um civil está com acessórios e com um tom de pele irreal (ex: azul) com um cabelo exagerado. Você deve liberar?</p>
+      <p class="resposta">R: Não.</p>
+    </div>
+
+    <div class="pergunta">
+      <p class="font-bold">3. Como se deve referir ao superior? E ao par/subalterno?</p>
+      <p class="resposta">R: Senhor(a) + Patente/Cargo + Nickname e Patente/Cargo + Nickname.</p>
+      <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, se o usuário acertar uma das perguntas não considere como errado, corrija-o. Se ele errar as duas perguntas, considere como errado.]</div>
+    </div>
+
+    <div class="pergunta">
+      <p class="font-bold">4. Diga a alternativa correta em relação aos protocolos de assumir um superior na recepção:</p>
+      <p class="text-sm text-gray-700 mt-1">
+        a. Dois quadrados de distância e dizer "Assumo, senhor(a)"<br>
+        b. Um quadrado de distância e dizer "Assumo, senhor(a)"<br>
+        c. Dois quadrados de distância e dizer "Assumo, senhor(a)"
+      </p>
+      <p class="resposta">R: B.</p>
+    </div>
+
+    <div class="callout callout-vermelho">
+      <p class="font-bold mb-1">Se reprovado:</p>
+      <p>
+        Você foi reprovado por atingir o limite de erros. Infelizmente, terá de realizar a aula novamente.
+        Mas não desanime. Essa é uma oportunidade para rever o conteúdo e fortalecer o seu conhecimento!
+      </p>
+    </div>
+
+    <p class="secao-titulo">COMANDOS</p>
+    <p>
+      Na CIA utilizamos alguns comandos, estes são:
+      Sentido, continência, marcar-passos, apresentar-armas e à vontade.
+      Você conhece esses comandos?
+    </p>
+
+    <div class="callout callout-verde">
+      <p class="font-bold mb-1">Se a resposta for positiva:</p>
+      <p>Podemos pular para o Teste Prático?</p>
+      <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela resposta. Se ele concordar pule para o TESTE PRÁTICO.]</div>
+    </div>
+
+    <p>
+      <strong>Sentido:</strong> Dê um passo à frente ou levante-se.<br>
+      <strong>Continência:</strong> Acene uma vez, digite o/ para acenar.<br>
+      <strong>Marcar-Passos:</strong> Clique em você e selecione dançar hip-hop e só pare de dançar quando receber Sentido.<br>
+      <strong>Apresentar-Armas:</strong> Acene sem parar, digite o/ e repita várias vezes até receber Sentido, não deixe o braço cair.<br>
+      <strong>À vontade:</strong> Retorne um passo pra trás ou sente-se novamente.
+    </p>
+    <p>Alguma dúvida?</p>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <p class="secao-titulo">TESTE PRÁTICO</p>
+    <p>
+      Agora irei repassar os comandos para que você execute como eu te expliquei. Não se preocupe se errar,
+      ensinarei novamente. Podemos começar?
+    </p>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <p class="my-4">
+      <span class="comando">SENTIDO!</span>
+      <span class="comando">CONTINÊNCIA!</span>
+      <span class="comando">APRESENTAR-ARMAS!</span>
+      <span class="comando">SENTIDO!</span>
+      <span class="comando">MARCAR-PASSOS!</span>
+      <span class="comando">SENTIDO!</span>
+      <span class="comando">À VONTADE!</span>
+    </p>
+
+    <div class="callout callout-azul">
+      Se o aluno errar algum comando corrija-o antes de seguir com o próximo. Se possível vá ao lado do aluno
+      para exemplificar como o comando deverá ser executado. Só siga o próximo comando se o aluno tiver aprendido!
+    </div>
+
+    <p class="secao-titulo">NEGRITO</p>
+    <p>Antes de finalizar o curso. Você sabe falar em negrito?</p>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela resposta. Se ele souber pule a explicação.]</div>
+
+    <div class="callout callout-azul">
+      <p class="mb-2">Vocês jogam o Habblet em qual plataforma? Celular ou computador?</p>
+      <p class="font-bold mb-1">Caso jogue pelo computador:</p>
+      <p class="mb-2">
+        Escreva uma frase simples, como: <em>Oi, tudo bem?</em> (Mas não envie ainda) Mas antes de enviar,
+        vocês devem pressionar a tecla <strong>SHIFT</strong>, e logo em seguida, apertar na tecla
+        <strong>ENTER</strong> junto. Vamos testar?
+      </p>
+      <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [Caso tenha dificuldades, ajude até conseguirem falar em negrito. Assim que conseguir, prossiga.]</div>
+      <p class="font-bold mt-3 mb-1">Caso jogue pelo celular:</p>
+      <p>
+        Dentro da barra, onde você escreve as suas falas, deve digitar <strong>Gritar!</strong> antes de tudo
+        e depois digitar normalmente e enviar. Vamos testar?
+      </p>
+      <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [Caso tenha dificuldades, ajude até conseguirem falar em negrito. Assim que conseguir, prossiga.]</div>
+    </div>
+
+    <p>
+      Excelente, é importante que utilize o negrito em todos os momentos. Assim podendo destacar as suas
+      falas, e ajuda bastante na sua carreira.
+    </p>
+
+    <p class="secao-titulo">FINALIZAÇÃO</p>
+    <p>
+      Parabéns, você foi aprovado na Instrução Inicial. Agora você é oficialmente membro da Central
+      Intelligence Agency!
+    </p>
+    <p>
+      Para ter uma carreira de sucesso, é importante ter uma boa ortografia, estar atento no trabalho e ser
+      presente. O seu esforço é totalmente transformado em raros, que você receberá como forma de pagamento
+      pelo o seu esforço.
+    </p>
+    <p>
+      Para estar por dentro de todas as novidades das CIA, como eventos, prêmios e outras informações,
+      procure um superior e solicite o link do nosso discord.
+    </p>
+    <p>Alguma dúvida?</p>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <p>
+      Peço que coloque os seguintes requisitos:<br>
+      Mude a cor da camisa para marrom não HC ou HC;<br>
+      Coloque a boina preta igual às calças;<br>
+      Coloque na missão:<br>
+      <strong>[CIA] Soldado [TAG]</strong>
+    </p>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, não se esqueça de alterar e inserir sua TAG.]</div>
+
+    <p>Aguarde um momento que irei postar sua aula.</p>
+    <p>
+      Sua próxima aula é <strong>Curso de Formação de Soldados</strong>, procure por alguém que esteja usando
+      uma estrela azul na boina para te dar sua aula.
+    </p>
+
+  </div>
+
+  <!-- ============ NOTA DO INSTRUTOR (fechamento) ============ -->
+  <div class="instrutor-box">
+    <span class="tag"><i class="fa-solid fa-user-tie"></i> Para o instrutor</span>
+    <p class="text-sm leading-relaxed mb-3">
+      Ao finalizar a aula, realize a postagem da Instrução Inicial clicando no link:
+      <a href="https://ciahbt.forumeiros.com/t43-requerimento-instrucao-inicial" target="_blank" rel="noopener" class="underline font-semibold">CRH | Instrução Inicial</a>.
+    </p>
+    <p class="text-sm leading-relaxed mb-3">
+      O formulário de Instrução Inicial já contabiliza a sua aula para o sistema dos Instrutores.
+    </p>
+    <p class="text-sm leading-relaxed">
+      Caso o aluno tenha caído ou sido reprovado durante a aula, poste em Relatórios de Aula clicando no link:
+      <a href="https://ciahbt.forumeiros.com/t76-ins-relatorios-de-aula" target="_blank" rel="noopener" class="underline font-semibold">INS | Relatórios de Aula</a>.
+    </p>
+  </div>
+
+  <p class="text-center text-xs text-gray-400 pt-6">Central Intelligence Agency · Companhia dos Instrutores</p>
+
+</div>
+
+</body>
+</html>

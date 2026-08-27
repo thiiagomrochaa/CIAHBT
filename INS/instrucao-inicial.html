@@ -411,5 +411,32 @@
   })();
 </script>
 
+<script>
+  // Avisa a página que estiver embutindo esta (via iframe) qual é a altura
+  // real do conteúdo, pra ela ajustar o iframe e não sobrar barra de
+  // rolagem duplicada (uma da página da aula, outra da página que embute).
+  // Usa postMessage porque são domínios diferentes (GitHub Pages x fórum).
+  (function () {
+    function enviarAltura() {
+      const altura = document.documentElement.scrollHeight;
+      window.parent.postMessage({ tipo: 'cia-aula-altura', altura }, '*');
+    }
+
+    window.addEventListener('load', enviarAltura);
+    window.addEventListener('resize', enviarAltura);
+
+    // Reenvia se o conteúdo mudar de altura depois do load (fontes/ícones
+    // carregando depois, por exemplo) — sem isso a altura enviada no load
+    // pode ficar desatualizada.
+    if (window.ResizeObserver) {
+      new ResizeObserver(enviarAltura).observe(document.body);
+    } else {
+      setInterval(enviarAltura, 800);
+    }
+
+    enviarAltura();
+  })();
+</script>
+
 </body>
 </html>

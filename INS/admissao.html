@@ -1,1 +1,342 @@
-<b>Oiie</b>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CIA — Curso de Admissão de Instrutores</title>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://use.fontawesome.com/releases/v7.3.1/css/all.css" rel="stylesheet">
+<link href="https://kit-pro.fontawesome.com/releases/v7.3.1/css/pro.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+<style>
+  * { font-family: 'Poppins', sans-serif; }
+  body { background: #f5f6f8; }
+
+  .placeholder {
+    display: inline-block;
+    background: #eef2ff;
+    color: #4338ca;
+    font-weight: 600;
+    padding: 1px 8px;
+    border-radius: 999px;
+    font-size: 0.85em;
+  }
+  .nick-preenchido {
+    color: #1d4ed8;
+    font-weight: 700;
+  }
+
+  .aviso {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    color: #ff513a;
+    font-size: 13px;
+    font-weight: 600;
+    font-style: italic;
+    margin-top: 10px;
+  }
+
+  .callout {
+    padding: 16px 18px;
+    border-radius: 10px;
+    border-left: 6px solid;
+    margin: 18px 0;
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+  .callout-verde  { background: #f0fdf4; border-color: #3cea04; color: #14532d; }
+  .callout-azul   { background: #eff6ff; border-color: #045fba; color: #1e3a8a; }
+  .callout-vermelho { background: #fef2f2; border-color: #ea0606; color: #7f1d1d; }
+
+  .instrutor-box {
+    background: #5771a5;
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 18px 22px;
+    margin: 24px 0;
+  }
+  .instrutor-box .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.15);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .secao-titulo {
+    color: #045fba;
+    font-weight: 800;
+    font-size: 19px;
+    margin-top: 40px;
+    margin-bottom: 14px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+  }
+  .secao-titulo:first-of-type { border-top: none; padding-top: 0; margin-top: 24px; }
+
+  .fala p { margin-bottom: 14px; line-height: 1.75; color: #1f2937; font-size: 15px; }
+  .fala strong { color: #111827; }
+
+  .pergunta {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+  }
+  .pergunta .resposta {
+    margin-top: 8px;
+    font-size: 13.5px;
+    color: #16a34a;
+    font-weight: 600;
+    line-height: 1.6;
+  }
+  .pergunta .resposta ul {
+    margin: 6px 0 0 0;
+    padding-left: 18px;
+    list-style: disc;
+    color: #15803d;
+    font-weight: 500;
+  }
+  .pergunta .resposta ul li { margin-bottom: 2px; }
+  .pergunta .obs {
+    margin-top: 6px;
+    font-size: 12.5px;
+    color: #9ca3af;
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  code, .codigo {
+    display: inline-block;
+    background: #f3f4f6;
+    color: #111827;
+    font-family: 'Courier New', monospace;
+    font-size: 0.92em;
+    padding: 1px 8px;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+  }
+</style>
+</head>
+<body class="min-h-screen">
+
+<div id="conteudo-aula" class="max-w-3xl mx-auto px-5 py-10 md:py-14">
+
+  <!-- ============ CABEÇALHO ============ -->
+  <div class="mb-8">
+    <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-blue-600 bg-blue-50 px-3 py-1.5 rounded-full mb-3">
+      <i class="fa-solid fa-crown"></i> Central de Aulas · Ministro
+    </span>
+    <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight">Curso de Admissão de Instrutores</h1>
+    <p class="text-gray-500 mt-1 text-sm">Roteiro oficial aplicado pelo Ministro ao policial interessado, baseado na Constituição Militar.</p>
+  </div>
+
+  <!-- ============ REGRAS ============ -->
+  <div class="rounded-2xl p-5 md:p-6 mb-5 text-white" style="background:#ff2626;">
+    <p class="font-bold mb-2 flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation"></i> Antes de começar</p>
+    <ul class="text-sm leading-relaxed space-y-1.5 list-disc list-inside">
+      <li>É imprescindível que siga o roteiro, sem tomar atalhos. Caso contrário, poderá sofrer punição conforme o Regimento Interno da companhia de Instrutores;</li>
+      <li>Para copiar um trecho, só aperte <strong>CTRL+C</strong>. E para colar, <strong>CTRL+V</strong>;</li>
+      <li>Evite copiar as instruções passadas ao longo do roteiro;</li>
+      <li>Procure sempre retirar todas as dúvidas possíveis dos alunos;</li>
+      <li>Ao final do curso, é necessário realizar o registro. Caso contrário, não irá contabilizar na meta semanal, e poderá sofrer punições conforme o Regimento Interno da companhia de Instrutores.</li>
+    </ul>
+  </div>
+
+  <!-- ============ NOTA DO INSTRUTOR (topo) ============ -->
+  <div class="instrutor-box">
+    <span class="tag"><i class="fa-solid fa-user-tie"></i> Para o instrutor</span>
+    <p class="text-sm leading-relaxed">
+      Essa aula é baseada nos tópicos do <strong>TÍTULO X, CAPÍTULO X e X</strong> da Constituição Militar.
+      Se houver dúvidas acesse o documento.
+    </p>
+  </div>
+
+  <!-- ============ ROTEIRO ============ -->
+  <div class="fala">
+
+    <p>Olá, policial.</p>
+    <p>
+      Seja bem-vindo ao Curso de Admissão aos Instrutores.
+      Sou o ministro <span class="placeholder">{USERNAME}</span> e serei responsável pela sua formação.
+      A partir deste momento, mantenham silêncio e atenção durante a aula.
+      Falem somente quando for autorizado ou quando eu realizar uma pergunta.
+      Durante a aula, deverá dirigir-se a mim utilizando <strong>"Senhor + patente + nick"</strong>.
+      Entendido?
+    </p>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <p class="secao-titulo">INTRODUÇÃO</p>
+    <p>
+      Primeiramente, seja bem-vindo e obrigado pela escolha de integrar ao time dos Instrutores! O curso será
+      por slides. Ao acessar o link você poderá dar início à leitura da aula e, quando finalizar a leitura, me
+      informe para darmos continuidade.
+    </p>
+    <p>Peço que acesse o link:</p>
+    <p><code>ciahbt.forumeiros.com/h45-</code></p>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação da finalização da leitura da aula.]</div>
+
+    <p>Alguma dúvida?</p>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <p class="secao-titulo">TESTE TEÓRICO</p>
+    <p>
+      Agora, irei realizar algumas perguntas de modo a saber se absorveu todo o conteúdo.
+      É necessário acertar pelo menos 2 questões para ser aprovado.
+      Podemos começar?
+    </p>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <div class="pergunta">
+      <p class="font-bold">1. Para você, o que significa ser um instrutor?</p>
+      <p class="resposta">
+        R: A resposta deve obrigatoriamente conter uma das seguintes palavras-chave: formação, instrução,
+        capacitação, aplicar, ensinar alunos e policiais.
+      </p>
+      <p class="obs">Se no geral a resposta fizer sentido com a proposta, considere certo.</p>
+    </div>
+
+    <div class="pergunta">
+      <p class="font-bold">2. Quais são os níveis de instrutores existentes? E para qual patente cada nível aplica aula?</p>
+      <p class="resposta">
+        R: A resposta deve conter os seguintes tópicos:
+        <ul>
+          <li>Nível 1: Recruta a Cabo</li>
+          <li>Nível 2: 3º e 2º Sargento</li>
+          <li>Nível 3: 1º Sargento</li>
+          <li>Nível 4: Subtenente</li>
+        </ul>
+      </p>
+      <p class="obs">Se ele não souber para qual patente aplica, considere errado.</p>
+    </div>
+
+    <div class="pergunta">
+      <p class="font-bold">3. Cite 2 tópicos de uma Rotina de Aula.</p>
+      <p class="resposta">
+        R: A resposta deve conter um dos seguintes tópicos:
+        <ul>
+          <li>As aulas devem ser aplicadas nas dependências da CIA</li>
+          <li>Cada aula aplicada vale 20% da meta semanal</li>
+          <li>Postar a aula em até 15 minutos após o término</li>
+          <li>Proibido dar 2 aulas seguidas ao mesmo aluno</li>
+          <li>Proibido pular partes do script</li>
+        </ul>
+      </p>
+    </div>
+
+    <div class="pergunta">
+      <p class="font-bold">4. O que acontece se eu aplicar duas aulas seguidas ao mesmo policial?</p>
+      <p class="resposta">R: Será advertido verbalmente.</p>
+    </div>
+
+    <p class="secao-titulo">FINALIZAÇÃO</p>
+
+    <div class="callout callout-verde">
+      <p class="font-bold mb-1">Se aprovado:</p>
+      <p>
+        Meus parabéns! Você agora pertence aos Instrutores! Acrescente <strong>[INS]</strong> ao final de sua
+        missão. Adicione um brevê cor azul não HC na sua boina. Te encaminharei uma Mensagem Privada no fórum
+        com uma carta de boas-vindas e uma apostila. Alguma dúvida?
+      </p>
+    </div>
+
+    <div class="callout callout-vermelho">
+      <p class="font-bold mb-1">Se reprovado:</p>
+      <p>
+        Você foi reprovado por atingir o limite de erros. Infelizmente, terá de realizar a aula novamente.
+        Mas não desanime. Essa é uma oportunidade para rever o conteúdo e fortalecer o seu conhecimento!
+      </p>
+    </div>
+
+  </div>
+
+  <!-- ============ NOTA DO INSTRUTOR (fechamento) ============ -->
+  <div class="instrutor-box">
+    <span class="tag"><i class="fa-solid fa-user-tie"></i> Para o instrutor</span>
+    <p class="text-sm leading-relaxed mb-3">
+      Ao finalizar a aula, realize a postagem do Requerimento de Admissão no SystemINS clicando no link:
+      <a href="https://ciahbt.forumeiros.com/h36-#/requerimentos" target="_blank" rel="noopener" class="underline font-semibold">INS | Requerimentos</a>.
+    </p>
+    <p class="text-sm leading-relaxed">
+      Em seguida, acesse a aba <strong>Ministério</strong> e encaminhe a ele a carta de Boas-Vindas e a
+      Apostila.
+    </p>
+  </div>
+
+</div>
+
+<script>
+  // A Central de Aulas passa o nick de quem está logado via ?nick=... na URL
+  // (o GitHub Pages não consegue detectar login do fórum sozinho, por ser
+  // outro domínio). Se o parâmetro vier preenchido, troca todo mundo que
+  // ainda está marcado como {USERNAME} pelo nick real; se a página for
+  // aberta direto, sem esse parâmetro, mantém o placeholder como está.
+  (function () {
+    const nick = new URLSearchParams(location.search).get('nick')?.trim();
+    if (!nick) return;
+
+    document.querySelectorAll('.placeholder').forEach(el => {
+      el.textContent = nick;
+      el.classList.remove('placeholder');
+      el.classList.add('nick-preenchido');
+    });
+  })();
+</script>
+
+<script>
+  // Avisa a página que estiver embutindo esta (via iframe) qual é a altura
+  // real do conteúdo, pra ela ajustar o iframe e não sobrar barra de
+  // rolagem duplicada (uma da página da aula, outra da página que embute).
+  // Usa postMessage porque são domínios diferentes (GitHub Pages x fórum).
+  //
+  // IMPORTANTE: mede o container #conteudo-aula, não document.documentElement.
+  // A altura do <html> nunca fica menor que a altura da própria janela do
+  // iframe — então se ficássemos ouvindo "resize" (que também dispara
+  // quando o PAI aumenta o iframe) e medindo o documento inteiro, cada
+  // ajuste do pai geraria uma medida maior, num loop que só cresce.
+  // Uma div normal não tem esse problema: a altura dela reflete só o
+  // próprio conteúdo.
+  (function () {
+    let ultimaAltura = 0;
+
+    function enviarAltura() {
+      const el = document.getElementById('conteudo-aula');
+      if (!el) return;
+      const altura = el.scrollHeight;
+      if (Math.abs(altura - ultimaAltura) < 3) return; // ignora variações insignificantes
+      ultimaAltura = altura;
+      window.parent.postMessage({ tipo: 'cia-aula-altura', altura }, '*');
+    }
+
+    window.addEventListener('load', enviarAltura);
+
+    // Reenvia se o conteúdo mudar de altura depois do load (fontes/ícones
+    // carregando depois, por exemplo) — sem isso a altura enviada no load
+    // pode ficar desatualizada. Observa o container de conteúdo, não o
+    // body/documento inteiro, pelo mesmo motivo explicado acima.
+    const alvo = document.getElementById('conteudo-aula');
+    if (window.ResizeObserver && alvo) {
+      new ResizeObserver(enviarAltura).observe(alvo);
+    } else {
+      setInterval(enviarAltura, 800);
+    }
+
+    enviarAltura();
+  })();
+</script>
+
+</body>
+</html>

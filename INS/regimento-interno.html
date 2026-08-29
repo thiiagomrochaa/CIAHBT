@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CIA — Regimento Interno da Companhia dos Instrutores</title>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://use.fontawesome.com/releases/v7.3.1/css/all.css" rel="stylesheet">
+<link href="https://kit-pro.fontawesome.com/releases/v7.3.1/css/pro.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+<style>
+  * { font-family: 'Poppins', sans-serif; }
+  body { background: #f5f6f8; }
+
+  .callout {
+    padding: 16px 18px;
+    border-radius: 10px;
+    border-left: 6px solid;
+    margin: 18px 0;
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+  .callout-azul { background: #eff6ff; border-color: #045fba; color: #1e3a8a; }
+
+  .instrutor-box {
+    background: #5771a5;
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 18px 22px;
+    margin: 24px 0;
+  }
+  .instrutor-box .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.15);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .preambulo {
+    text-align: justify;
+    color: #374151;
+    font-size: 14.5px;
+    line-height: 1.8;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin: 20px 0 8px;
+  }
+
+  .capitulo {
+    margin-top: 44px;
+    padding-top: 26px;
+    border-top: 1px solid #e5e7eb;
+  }
+  .capitulo:first-of-type { border-top: none; margin-top: 30px; padding-top: 0; }
+  .capitulo-header { text-align: center; margin-bottom: 22px; }
+  .capitulo-header .numero {
+    display: block;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #93a5c4;
+    margin-bottom: 4px;
+  }
+  .capitulo-header .titulo {
+    display: block;
+    font-size: 20px;
+    font-weight: 800;
+    color: #045fba;
+  }
+
+  .artigo { margin-bottom: 16px; }
+  .artigo p {
+    text-align: justify;
+    color: #1f2937;
+    font-size: 14.5px;
+    line-height: 1.75;
+    margin: 0;
+  }
+  .artigo p strong.numero-art { color: #045fba; }
+
+  .lista-romana {
+    margin: 10px 0 0 0;
+    padding-left: 26px;
+    list-style-type: upper-roman;
+  }
+  .lista-romana li {
+    color: #1f2937;
+    font-size: 14.5px;
+    line-height: 1.7;
+    margin-bottom: 6px;
+    padding-left: 4px;
+  }
+  .lista-romana.aninhada {
+    margin-top: 8px;
+    padding-left: 22px;
+    list-style-type: lower-roman;
+  }
+  .lista-romana .nivel-titulo {
+    font-weight: 700;
+    color: #111827;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .lista-romana ul.cursos {
+    margin: 0 0 0 0;
+    padding-left: 18px;
+    list-style: disc;
+  }
+  .lista-romana ul.cursos li {
+    font-size: 13.5px;
+    color: #4b5563;
+    margin-bottom: 2px;
+  }
+
+  .paragrafo {
+    margin: 8px 0 0 0;
+    padding-left: 4px;
+    color: #1f2937;
+    font-size: 14.5px;
+    line-height: 1.75;
+    text-align: justify;
+  }
+  .paragrafo strong { color: #045fba; }
+
+  .historico {
+    background: #eff6ff;
+    border-left: 6px solid #045fba;
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin: 32px 0 8px;
+    font-size: 13.5px;
+    color: #1e3a8a;
+    line-height: 1.8;
+  }
+</style>
+</head>
+<body class="min-h-screen">
+
+<div id="conteudo-aula" class="max-w-3xl mx-auto px-5 py-10 md:py-14">
+
+  <!-- ============ CABEÇALHO ============ -->
+  <div class="mb-8">
+    <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-blue-600 bg-blue-50 px-3 py-1.5 rounded-full mb-3">
+      <i class="fa-solid fa-scale-balanced"></i> Documento Oficial · Companhia dos Instrutores
+    </span>
+    <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight">Regimento Interno</h1>
+    <p class="text-gray-500 mt-1 text-sm">Documento normativo da Companhia dos Instrutores, homologado em conjunto com a Corregedoria.</p>
+  </div>
+
+  <!-- ============ NOTA / BASE LEGAL ============ -->
+  <div class="instrutor-box">
+    <span class="tag"><i class="fa-solid fa-book"></i> Base legal</span>
+    <p class="text-sm leading-relaxed">
+      Esse documento é baseado nos tópicos do <strong>TÍTULO 3, CAPÍTULO 1, SEÇÃO 1</strong> da Constituição
+      Militar. Se houver dúvidas acesse o documento.
+    </p>
+  </div>
+
+  <!-- ============ PREÂMBULO ============ -->
+  <p class="capitulo-header titulo" style="text-align:center;color:#045fba;font-weight:800;font-size:18px;margin-top:28px;">PREÂMBULO</p>
+  <div class="preambulo">
+    Nós, membros da Companhia dos Instrutores, em uso de suas atribuições concedidas pelos documentos,
+    códigos, regimentos e diretrizes que regem esta Instituição, reunidos em conjunto com a Corregedoria,
+    promulgamos este regimento interno oficial desta Instituição, destinada a assegurar o exercício dos
+    direitos de todos os militares que fazem parte da companhia.
+  </div>
+
+  <!-- ============ CAPÍTULO I ============ -->
+  <div class="capitulo">
+    <div class="capitulo-header">
+      <span class="numero">Capítulo I</span>
+      <span class="titulo">Introdução</span>
+    </div>
+
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 1°</strong> A Companhia dos Instrutores possui a missão de transmitir os conhecimentos ortográfico, sistemas e funções do Batalhão a todos os policiais através dos cursos, sendo eles, com as destinações pré-determinadas:</p>
+      <ol class="lista-romana">
+        <li>Aula de Formação de Soldados ↝ instrução inicial;</li>
+        <li>Curso de Formação de Soldados (CFSd) ↝ soldado;</li>
+        <li>Supervisão de Soldados (SUP) ↝ soldado;</li>
+        <li>Curso de Formação de Cabos (CFC) ↝ cabo;</li>
+        <li>Aula de Segurança (SEG) ↝ cabo;</li>
+        <li>Curso de Formação de Sargentos (CFS) ↝ 3° sargento;</li>
+        <li>Curso de Aperfeiçoamento de Comunicação ↝ 3° sargento;</li>
+        <li>Curso de Aperfeiçoamento de Sargentos (CAS) ↝ 2° sargento;</li>
+        <li>Curso de Aprimoramento Ortográfico (CAO) ↝ 2° sargento;</li>
+        <li>Aula para Promotor (PRO) ↝ 1° sargento;</li>
+        <li>Curso Complementar Ortográfico (CCO) ↝ 1° sargento;</li>
+        <li>Curso de Aperfeiçoamento de Praças (CAP) ↝ subtenente;</li>
+        <li>Treinamento de Qualificação para Subtenentes (TQSb) ↝ subtenente.</li>
+      </ol>
+    </div>
+
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 2°</strong> É de responsabilidade da Companhia dos Instrutores de Treinamento:</p>
+      <ol class="lista-romana">
+        <li>Realizar a formação inicial dos recrutas mediante aplicação da Instrução Inicial;</li>
+        <li>Ministrar os cursos com os praças, habilitando os policiais à progressão funcional e ao exercício das atribuições correspondentes;</li>
+        <li>Promover cursos, reciclagens, treinamentos e avaliações sempre que determinado pelo Alto Comando Supremo;</li>
+        <li>Garantir a padronização do ensino, da doutrina militar e dos procedimentos operacionais adotados pela instituição.</li>
+      </ol>
+    </div>
+
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 3°</strong> É de total responsabilidade que um integrante preze pela ciência de quaisquer mudanças em relação às mudanças na instituição, assim fazendo o uso correto delas de forma constante. De forma saliente, é cobrado minimamente o conhecimento no nível mediano para atender o padrão da divisão, assim excluindo qualquer hipótese de cobrança do domínio perfeito.</p>
+    </div>
+
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 4°</strong> A Liderança tem suas responsabilidades administrativas para manter a ordem na companhia com competência e fiscalização constante e praticar os feitos necessários que são referentes ao seu gerenciamento interno, e de função adicional, deve policiar, quando requisitado, as propriedades físicas e intelectuais que são da jurisdição dos instrutores.</p>
+    </div>
+
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 5°</strong> A Companhia dos Instrutores é uma pequena sociedade que possui suas próprias leis que são homologadas nesse documento, entretanto faz parte da grande sociedade, que é a Central Intelligence Agency, e todas as normas que forem impostas por lá estarão valendo por aqui também.</p>
+    </div>
+  </div>
+
+  <!-- ============ CAPÍTULO II ============ -->
+  <div class="capitulo">
+    <div class="capitulo-header">
+      <span class="numero">Capítulo II</span>
+      <span class="titulo">Sistema Hierárquico</span>
+    </div>
+
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 1°</strong> A hierarquia é a ordenação da autoridade, em níveis diferentes, na estrutura da Companhia dos Instrutores. O respeito à hierarquia é consubstanciado no espírito de acatamento à sequência de autoridade.</p>
+      <ol class="lista-romana">
+        <li>Líder ↝ 1 (uma) vaga;</li>
+        <li>Vice-Líder ↝ 1 (uma) vaga;</li>
+        <li>Ministro ↝ 6 (seis) vagas;</li>
+        <li>Instrutor ↝ ilimitado.</li>
+      </ol>
+    </div>
+
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 2°</strong> Com o intuito de identificar o cargo, de acordo com a tonalidade do brevê (estrela), quanto mais escuro for indicará superioridade na hierarquia interna da Companhia dos Instrutores.</p>
+    </div>
+
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 3°</strong> Os líderes, juntos com os ministros, têm que prezar pela organização e o bom funcionamento da companhia, assim sempre trazendo melhorias significativas e transparência para estabelecer pontes comunicativas, evitando conflitos de qualquer porte.</p>
+    </div>
+
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 4°</strong> O cargo de ministro é dividido em 3 funções administrativas com o intuito de manter o funcionamento estrutural e administrativo da Companhia dos Instrutores.</p>
+      <ol class="lista-romana">
+        <li><strong>Ministério Contábil</strong> ↝ Responsável pela realização das porcentagens semanais, quinzenais e mensais, juntamente com a entrega das bonificações;</li>
+        <li><strong>Ministério de Atualização</strong> ↝ Responsável pela atualização e fiscalização diária da listagem de membros, membros do sub-fórum e a progressão de níveis;</li>
+        <li><strong>Ministério de Fiscalização</strong> ↝ Responsável pela fiscalização dos relatórios de aulas;</li>
+        <li><strong>Ministério de Recrutamento</strong> ↝ Responsável pela aplicação da graduação a novos instrutores.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- ============ CAPÍTULO III ============ -->
+  <div class="capitulo">
+    <div class="capitulo-header">
+      <span class="numero">Capítulo III</span>
+      <span class="titulo">Dos Níveis de Instrutores</span>
+    </div>
+
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 1º</strong> O cargo de instrutores é dividido em níveis conforme sua patente e seus cursos concluídos. As aulas são divididas em níveis:</p>
+      <ol class="lista-romana">
+        <li>
+          <span class="nivel-titulo">Nível 1:</span>
+          <ul class="cursos">
+            <li>Instrução Inicial — Recruta</li>
+            <li>Curso de Formação de Soldados (CFSd) — Soldado</li>
+            <li>Supervisão de Soldados (SUP) — Soldado</li>
+            <li>Curso de Formação de Cabos (CFC) — Cabo</li>
+            <li>Aula de Segurança (SEG) — Cabo</li>
+          </ul>
+        </li>
+        <li>
+          <span class="nivel-titulo">Nível 2:</span>
+          <ul class="cursos">
+            <li>Curso de Formação de Sargentos (CFS) — 3º Sargento</li>
+            <li>Curso de Aperfeiçoamento de Comunicação (CAC) — 3º Sargento</li>
+            <li>Curso de Aperfeiçoamento de Sargentos (CAS) — 2º Sargento</li>
+            <li>Curso de Aprimoramento Ortográfico (CAO) — 2º Sargento</li>
+          </ul>
+        </li>
+        <li>
+          <span class="nivel-titulo">Nível 3:</span>
+          <ul class="cursos">
+            <li>Aula para Promotores (PRO) — 1º Sargento</li>
+            <li>Curso Complementar Ortográfico (CCO) — 1º Sargento</li>
+          </ul>
+        </li>
+        <li>
+          <span class="nivel-titulo">Nível 4:</span>
+          <ul class="cursos">
+            <li>Curso de Aprimoramento de Praças (CAP) — Subtenente</li>
+            <li>Treinamento de Qualificação para Subtenente (TQSb) — Subtenente</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 2º</strong> São requisitos para promoção de níveis:</p>
+      <ol class="lista-romana">
+        <li>Nível 1 para Nível 2 ↝ Ser Cabo e ter concluído Curso de Formação de Cabos (CFC) e Aula de Segurança (SEG);</li>
+        <li>Nível 2 para Nível 3 ↝ Ser 2º Sargento e ter concluído Curso de Aperfeiçoamento de Sargentos (CAS) e Curso de Aprimoramento Ortográfico (CAO);</li>
+        <li>Nível 3 para Nível 4 ↝ Ser Subtenente e ter concluído Curso de Aprimoramento de Praças (CAP) e Treinamento de Qualificação para Subtenente (TQSb).</li>
+      </ol>
+    </div>
+
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 3º</strong> A progressão de nível acontecerá automaticamente assim que tiver cumprido os requisitos obrigatórios.</p>
+      <p class="paragrafo"><strong>Parágrafo único.</strong> Caso a progressão não ocorra ou demore para acontecer, procurar o Ministro de Atualização.</p>
+    </div>
+  </div>
+
+  <!-- ============ CAPÍTULO IV ============ -->
+  <div class="capitulo">
+    <div class="capitulo-header">
+      <span class="numero">Capítulo IV</span>
+      <span class="titulo">Entrada e Reintegração</span>
+    </div>
+
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 1°</strong> Todo e qualquer militar pertencente à Central Intelligence Agency, sendo do corpo militar, tem como obrigação participar da Companhia dos Instrutores.</p>
+    </div>
+
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 2°</strong> Para ser integrante da Companhia dos Instrutores é necessário:</p>
+      <ol class="lista-romana">
+        <li>Ter conta ativa no fórum;</li>
+        <li>Ter a patente de cabo ou acima;</li>
+        <li>Ter concluído os cursos de cabo;</li>
+        <li>Ter tempo e disposição.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- ============ CAPÍTULO V ============ -->
+  <div class="capitulo">
+    <div class="capitulo-header">
+      <span class="numero">Capítulo V</span>
+      <span class="titulo">Aulas</span>
+    </div>
+
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 1°</strong> As aulas devem ser aplicadas nas dependências da Central Intelligence Agency.</p>
+    </div>
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 2°</strong> Todas as aulas têm o valor de 20% que irá implicar em sua meta semanal.</p>
+    </div>
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 3°</strong> Em caso de postagens fora do padrão de aplicações, o instrutor deverá solicitar ao Ministro de Fiscalização num prazo de até 24 horas, extinguindo-se punições.</p>
+    </div>
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 4°</strong> O membro que não realizar a postagem de aula no fórum dentro do prazo de quinze (15) minutos após o término desta deverá apresentar uma justificativa plausível. Tal justificativa deve ser apresentada ao Ministério de Fiscalização.</p>
+    </div>
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 5°</strong> O não cumprimento das diretrizes deste capítulo acarretará em uma advertência verbal do Ministro de Fiscalização e, em caso de violação de uma mesma norma, o professor receberá quinze (15) medalhas efetivas negativas.</p>
+    </div>
+  </div>
+
+  <!-- ============ CAPÍTULO VI ============ -->
+  <div class="capitulo">
+    <div class="capitulo-header">
+      <span class="numero">Capítulo VI</span>
+      <span class="titulo">Metas e Gratificações</span>
+    </div>
+
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 1°</strong> Os membros da Companhia dos Instrutores têm a obrigação de cumprir com a meta semanal ou mensal em seu cargo, ficando passível de punição caso não haja cumprimento da meta.</p>
+    </div>
+
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 2°</strong> O cargo de instrutor tem como meta semanal a aplicação de 100% de aulas. Caso cumpra, receberá o acréscimo de dez (10) medalhas efetivas positivas.</p>
+      <p class="paragrafo"><strong>§ 1º</strong> A primeira semana (a semana de ingresso) do instrutor estará isenta da meta semanal.</p>
+      <p class="paragrafo"><strong>§ 2º</strong> O instrutor que não cumprir a meta semanal deverá apresentar uma justificativa plausível ao Ministro Contábil. Caso não apresente a justificativa, será advertido verbalmente e, em caso de reincidência, receberá o acréscimo de quinze (15) medalhas efetivas negativas.</p>
+    </div>
+
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 3°</strong> O ministro que cumprir com suas obrigações receberá o acréscimo de vinte (20) medalhas positivas efetivas. Em caso de descumprimento, ele será rebaixado internamente.</p>
+    </div>
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 4°</strong> A liderança recebe o acréscimo de vinte e cinco (25) medalhas positivas efetivas.</p>
+    </div>
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 5°</strong> O membro que tiver um projeto aprovado na companhia será gratificado com dez (10) medalhas temporárias positivas.</p>
+    </div>
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 6°</strong> O instrutor que atingir o destaque semanal terá o direito de utilizar uma medalha de honra pelo seu serviço prestado.</p>
+    </div>
+  </div>
+
+  <!-- ============ CAPÍTULO VII ============ -->
+  <div class="capitulo">
+    <div class="capitulo-header">
+      <span class="numero">Capítulo VII</span>
+      <span class="titulo">Promoções</span>
+    </div>
+
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 1º</strong> A promoção é concedida aos membros que se destacarem em seus cargos, seguindo o critério de tempo e desempenho. Ficam elegíveis para promoção ao cargo de Ministro aqueles que cumprirem com os requisitos:</p>
+      <ol class="lista-romana">
+        <li>Ter 3 (três) semanas na companhia;</li>
+        <li>Ter 2 (duas) metas concluídas no cargo de instrutor.</li>
+      </ol>
+    </div>
+
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 2°</strong> O membro que for promovido deve cumprir com sua meta do cargo anterior, caso contrário, a promoção será cancelada, ficando passível de outras punições.</p>
+    </div>
+  </div>
+
+  <!-- ============ CAPÍTULO VIII ============ -->
+  <div class="capitulo">
+    <div class="capitulo-header">
+      <span class="numero">Capítulo VIII</span>
+      <span class="titulo">Saídas e Punições</span>
+    </div>
+
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 1°</strong> O membro que atingir o período de sete (7+) dias offline ou mais será expulso da companhia.</p>
+    </div>
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 2°</strong> O membro que cometer falsificação de aplicações será passível de punições tanto na companhia quanto na instituição.</p>
+    </div>
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 3º</strong> É expressamente proibido aplicar 2 (duas) aulas subsequentes a um mesmo aluno. A primeira ocorrência será advertida verbalmente; em caso de recorrência, será advertida por escrito.</p>
+    </div>
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 4º</strong> O membro que for pego pulando partes do script da aula será advertido verbalmente e, em caso de recorrência, será advertido por escrito.</p>
+    </div>
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 5º</strong> As advertências verbais são avisos e servem como instrução para que não torne a se repetir futuramente. Elas não são registradas no sistema.</p>
+    </div>
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 6°</strong> As advertências escritas têm duração de trinta (30) dias; o acúmulo de duas (02) advertências internas gera um rebaixamento interno ou expulsão da companhia.</p>
+    </div>
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 7º</strong> Uma vez expulso da companhia, fica proibido retornar à companhia dentro de um período de 30 (trinta) dias. Após o seu retorno, ficará sob observação por um período de 7 (sete) dias.</p>
+    </div>
+  </div>
+
+  <!-- ============ CAPÍTULO IX ============ -->
+  <div class="capitulo">
+    <div class="capitulo-header">
+      <span class="numero">Capítulo IX</span>
+      <span class="titulo">Licença e Reserva do Serviço</span>
+    </div>
+
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 1°</strong> Qualquer membro poderá solicitar a licença de serviço quando houver a necessidade de tal, desde que apresente motivos adequados e tenha a autorização do ministério ou liderança.</p>
+    </div>
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 2°</strong> O membro poderá solicitar a licença de serviço de, no mínimo, sete (07) dias e de, no máximo, trinta (30) dias. Por conseguinte, dependendo do período de dias que utilizarem, os membros ficarão fora da listagem de seus respectivos cargos.</p>
+    </div>
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 3°</strong> O ministro que queira ingressar na licença de serviço deverá solicitar a autorização da liderança.</p>
+    </div>
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 4°</strong> Todos os membros que retornarem de sua licença de serviço devem, obrigatoriamente, postar o retorno nos requerimentos da companhia.</p>
+    </div>
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 5°</strong> Caso o membro retorne de sua licença de serviço no decorrer da semana, este ficará isento de sua meta semanal.</p>
+    </div>
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 6°</strong> A reserva é destinada aos membros que precisarem ficar ausentes por um período de, no mínimo, trinta (30) dias e de, no máximo, setenta (70) dias.</p>
+    </div>
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 7°</strong> O membro que queira solicitar sua reserva deverá solicitar a autorização da liderança.</p>
+    </div>
+  </div>
+
+  <!-- ============ CAPÍTULO X ============ -->
+  <div class="capitulo">
+    <div class="capitulo-header">
+      <span class="numero">Capítulo X</span>
+      <span class="titulo">Encontros Oficiais</span>
+    </div>
+
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 1°</strong> Os encontros da companhia são as reuniões e os eventos, pré-determinados a partir de comunicação via Mensagem Privada e/ou WhatsApp.</p>
+    </div>
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 2°</strong> Caso o membro falte à reunião geral, este deverá postar sua justificativa em até vinte e quatro (24) horas no Quadro de Justificativas. Caso contrário, receberá 10 medalhas negativas efetivas.</p>
+    </div>
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 3°</strong> Para o membro ter sua presença contabilizada na reunião geral, é obrigatório que este fique 50% presente. Em casos de atrasos ou ausências, o membro deverá comunicar o ministro responsável pela listagem de presenças.</p>
+    </div>
+  </div>
+
+  <!-- ============ CAPÍTULO XI ============ -->
+  <div class="capitulo">
+    <div class="capitulo-header">
+      <span class="numero">Capítulo XI</span>
+      <span class="titulo">Considerações Finais</span>
+    </div>
+
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 1°</strong> Quaisquer alterações neste documento devem obter a autorização prévia da Liderança da Companhia dos Instrutores.</p>
+    </div>
+    <div class="artigo">
+      <p><strong class="numero-art">Art. 2°</strong> Este documento deverá se manter atualizado a todo momento por responsabilidade da Liderança. Caso não haja o cumprimento da atualização, a Liderança será penalizada.</p>
+    </div>
+  </div>
+
+  <!-- ============ HISTÓRICO ============ -->
+  <div class="historico">
+    <p class="font-bold mb-1"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Histórico</p>
+    <p>Versão: 02</p>
+    <p>Revisado por: vcapelli</p>
+    <p>Data de revisão: 17 Ago 2026</p>
+  </div>
+
+</div>
+
+<script>
+  // Avisa a página que estiver embutindo esta (via iframe) qual é a altura
+  // real do conteúdo, pra ela ajustar o iframe e não sobrar barra de
+  // rolagem duplicada (mesmo mecanismo usado nas páginas de aula — mantém
+  // o id "conteudo-aula" de propósito, pra esse documento também poder ser
+  // embutido pela mesma Central de Aulas sem precisar de código extra).
+  (function () {
+    let ultimaAltura = 0;
+
+    function enviarAltura() {
+      const el = document.getElementById('conteudo-aula');
+      if (!el) return;
+      const altura = el.scrollHeight;
+      if (Math.abs(altura - ultimaAltura) < 3) return;
+      ultimaAltura = altura;
+      window.parent.postMessage({ tipo: 'cia-aula-altura', altura }, '*');
+    }
+
+    window.addEventListener('load', enviarAltura);
+
+    const alvo = document.getElementById('conteudo-aula');
+    if (window.ResizeObserver && alvo) {
+      new ResizeObserver(enviarAltura).observe(alvo);
+    } else {
+      setInterval(enviarAltura, 800);
+    }
+
+    enviarAltura();
+  })();
+</script>
+
+</body>
+</html>

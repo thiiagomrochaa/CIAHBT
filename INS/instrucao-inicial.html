@@ -26,10 +26,7 @@
     border-radius: 999px;
     font-size: 0.85em;
   }
-  .nick-preenchido {
-    color: #1d4ed8;
-    font-weight: 700;
-  }
+  .nick-preenchido { color: #1d4ed8; font-weight: 700; }
 
   .aviso {
     display: flex;
@@ -40,6 +37,7 @@
     font-weight: 600;
     font-style: italic;
     margin-top: 10px;
+    margin-bottom: 4px;
   }
 
   .callout {
@@ -86,14 +84,11 @@
   }
   .secao-titulo:first-of-type { border-top: none; padding-top: 0; margin-top: 24px; }
 
-  .fala p { margin-bottom: 14px; line-height: 1.75; color: #1f2937; font-size: 15px; }
-  .fala strong { color: #111827; }
-
   .pergunta {
     background: #ffffff;
     border: 1px solid #e5e7eb;
     border-radius: 12px;
-    padding: 16px 18px;
+    padding: 14px 16px;
     margin-bottom: 14px;
   }
   .pergunta .resposta {
@@ -103,17 +98,92 @@
     font-weight: 600;
   }
 
+  /* ---- Linha de fala copiável (clique pra copiar) ---- */
+  .linha-copiavel, .linha-copiavel-clara {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all .15s ease;
+    user-select: none;
+  }
+  .linha-copiavel {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+  }
+  .linha-copiavel:hover { border-color: #045fba; background: #f8faff; }
+  .linha-copiavel.copiado { border-color: #16a34a; background: #f0fdf4; }
+
+  .linha-copiavel-clara {
+    background: rgba(255,255,255,0.45);
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+  .linha-copiavel-clara:hover { background: rgba(255,255,255,0.75); }
+  .linha-copiavel-clara.copiado { background: rgba(255,255,255,0.95); border-color: #16a34a; }
+
+  .linha-copiavel .texto, .linha-copiavel-clara .texto {
+    font-size: 14.5px;
+    line-height: 1.5;
+  }
+  .linha-copiavel .texto { color: #1f2937; }
+
+  .lado-direito { display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
+  .contador { font-size: 10px; color: #d1d5db; min-width: 16px; text-align: right; }
+  .contador.excedido { color: #dc2626; font-weight: 800; }
+  .icone-copiar { color: #9ca3af; transition: color .15s ease; }
+  .linha-copiavel:hover .icone-copiar, .linha-copiavel-clara:hover .icone-copiar { color: #045fba; }
+  .linha-copiavel.copiado .icone-copiar, .linha-copiavel-clara.copiado .icone-copiar { color: #16a34a; }
+
   .comando {
     display: inline-block;
     background: #111827;
     color: #fff;
     font-weight: 700;
     letter-spacing: .03em;
-    padding: 6px 14px;
+    padding: 7px 15px;
     border-radius: 8px;
     margin: 4px 6px 4px 0;
     font-size: 14px;
+    cursor: pointer;
+    transition: background .15s ease;
   }
+  .comando:hover { background: #1f2937; }
+  .comando.copiado { background: #16a34a; }
+
+  .dica-copia {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #eff6ff;
+    color: #1e3a8a;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+  }
+
+  .toast-copia {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #111827;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 999px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+    z-index: 100;
+  }
+  .toast-copia.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body class="min-h-screen">
@@ -150,82 +220,70 @@
     </p>
   </div>
 
-  <!-- ============ ROTEIRO ============ -->
-  <div class="fala">
+  <div class="dica-copia">
+    <i class="fa-solid fa-hand-pointer"></i>
+    Clique em qualquer frase abaixo pra copiar ela sozinha, pronta pra colar no jogo.
+  </div>
 
-    <p>
-      Bem-vindo a Central Intelligence Agency! Eu sou o instrutor <span class="placeholder">{USERNAME}</span> e
-      irei aplicar a sua instrução inicial para que você possa começar a trabalhar junto com a gente.
-      Previamente, gostaria de agradecer por escolher a nossa Polícia!
-      Aconselho-vos que anote as informações que acharem necessário, pois terão questões durante o curso,
-      e se errar duas vezes, deverá refazer o curso com outro integrante.
-      Qualquer dúvida, basta acenar ou aguardar o encerramento do tópico.
-      Podemos começar?
-    </p>
+  <!-- ============ ROTEIRO ============ -->
+  <div id="lista-falas">
+
+    <div class="linha-copiavel"><span class="texto">Bem-vindo a Central Intelligence Agency!</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Eu sou o instrutor <span class="placeholder">{USERNAME}</span>.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Vou aplicar sua instrução inicial hoje.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Obrigado por escolher a nossa Polícia!</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Anote as informações importantes, pois terá perguntas depois.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Se errar duas vezes, terá que refazer o curso com outro instrutor.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Qualquer dúvida, é só acenar ou aguardar o fim do tópico.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Podemos começar?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
 
     <p class="secao-titulo">HISTÓRIA DA CIA</p>
-    <p>
-      A Central Intelligence Agency foi fundada em <strong>7 de dezembro de 2015</strong> por
-      <strong>Cmd.igor</strong>, e os atuais Supremos <strong>Letking</strong> e <strong>Celos</strong>,
-      tendo como objetivo formar os melhores militares, ensinando-lhes os valores fundamentais da disciplina,
-      compromisso e patriotismo.
-    </p>
-    <p>Antes de dar continuidade. Você já participou de alguma polícia anteriormente?</p>
+    <div class="linha-copiavel"><span class="texto">A CIA foi fundada em 7 de dezembro de 2015 por Cmd.Igor.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Os atuais Supremos são Letking e Celos.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Nosso objetivo é formar os melhores militares.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Ensinando disciplina, compromisso e patriotismo.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Antes de continuar: você já participou de outra polícia?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
 
     <div class="callout callout-verde">
-      <p class="font-bold mb-1">Se a resposta for positiva:</p>
-      <p>
-        Você tem interesse em pular para as perguntas sobre conhecimentos básicos ou prefere que eu repasse
-        sobre os Pronomes de tratamento, a Recepção e sobre assumir um superior?
-      </p>
+      <p class="font-bold mb-2">Se a resposta for positiva:</p>
+      <div class="linha-copiavel-clara"><span class="texto">Você quer pular direto pro Teste Teórico,</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel-clara"><span class="texto">ou prefere que eu repasse Pronomes, Recepção e Assumir Superior?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
       <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela resposta. Se ele concordar pule para o TESTE TEÓRICO.]</div>
     </div>
 
     <p class="secao-titulo">PRONOMES DE TRATAMENTO</p>
-    <p>
-      Uma das formas de expressar respeito nas propriedades oficiais da Polícia é por pronomes de tratamento.
-      Para se dirigir ao superior deve ser <strong>“Senhor(a) + Patente/Cargo + Nickname”</strong>, enquanto ao
-      par/subalterno é <strong>“Patente/Cargo + Nickname”</strong>.
-      Exemplos: <em>“Sim, senhora Tenente <span class="placeholder">{USERNAME}</span>.”</em> e <em>“Com certeza, coronel Paulo.”</em>
-      Alguma dúvida?
-    </p>
+    <div class="linha-copiavel"><span class="texto">Uma forma de respeito na Polícia são os pronomes de tratamento.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Pro superior: "Senhor(a) + Patente/Cargo + Nickname".</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Pro par/subalterno: "Patente/Cargo + Nickname".</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Exemplo: "Sim, senhora Tenente <span class="placeholder">{USERNAME}</span>."</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Outro exemplo: "Com certeza, coronel Paulo."</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Alguma dúvida?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
 
     <p class="secao-titulo">RECEPÇÃO</p>
-    <p>
-      Você como futuro soldado da CIA irá trabalhar na Recepção em alistamentos, onde o objetivo é trazer os
-      civis para a nossa instituição. Os três requisitos básicos são: <strong>missão</strong>,
-      <strong>fardamento</strong> e <strong>grupo</strong>.
-    </p>
-    <p>
-      A <strong>missão</strong> é onde fica no perfil do boneco, em que este deve estar completamente vazio.
-      O <strong>fardamento</strong> deve observar se o civil possui a roupa correta do manequim, se possuir
-      acessórios (chapéus, brincos, maquiagem e outros) peça para retirar. Além disso, deve checar as costas
-      se não possui algum outro acessório, não é permitido barba no rosto e se o cabelo e a cor de pele estão
-      nos permitidos. Em caso de dúvidas em um possível alistamento, acene e um superior irá te ajudar.
-    </p>
-    <p>
-      O <strong>grupo</strong> é nossa identificação oficial que os civis precisam clicar nele, juntar e
-      favoritar. É fundamental que o recruta não pode estar em outros grupos com cunho militar ou organizativo,
-      e com modo offline ativado ou visibilidade do perfil desabilitada. Caso se esqueça, uma dica é sempre se
-      lembrar de como você foi alistado. Alguma dúvida?
-    </p>
+    <div class="linha-copiavel"><span class="texto">Você vai trabalhar na Recepção fazendo alistamentos.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">O objetivo é trazer civis pra nossa instituição.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Os 3 requisitos são: missão, fardamento e grupo.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">A missão do perfil do civil deve estar vazia.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">O fardamento deve ser o do manequim, sem acessórios.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Confira as costas: sem acessórios extras nem barba.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Cabelo e cor de pele precisam estar nos permitidos.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Em dúvida no alistamento, acene que um superior ajuda.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Alguma dúvida?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
 
-    <p>
-      Na recepção, deve tomar cuidado ao se movimentar por lá, é fundamental que seja um quadrado à distância.
-      Como novato na polícia terá que assumir os superiores, onde podem ser identificados segundo a missão ou
-      a cor da camisa, basta se encaminhar ao mesmo com um quadrado de distância também e dizer:
-      <strong>“Assumo, senhor(a).”</strong> Alguma dúvida?
-    </p>
+    <div class="linha-copiavel"><span class="texto">Na recepção, mantenha sempre um quadrado de distância.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Você vai precisar assumir os superiores que encontrar.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Identifique-os pela missão ou pela cor da camisa.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Aproxime-se a um quadrado e diga: "Assumo, senhor(a)."</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Alguma dúvida?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
 
     <p class="secao-titulo">TESTE TEÓRICO</p>
-    <p>
-      Agora, irei realizar algumas perguntas sobre o que foi ensinado até aqui. Para dar continuidade na sua
-      aula você precisará acertar 2 das 4 questões. Podemos começar?
-    </p>
+    <div class="linha-copiavel"><span class="texto">Agora vou fazer algumas perguntas sobre o que foi ensinado.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Você precisa acertar 2 das 4 questões pra continuar.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Podemos começar?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
 
     <div class="callout callout-azul">
@@ -236,29 +294,33 @@
     </div>
 
     <div class="pergunta">
-      <p class="font-bold">1. Quando e por quem a Polícia CIA foi fundada?</p>
+      <p class="font-bold mb-2">1.</p>
+      <div class="linha-copiavel"><span class="texto">Quando e por quem a Polícia CIA foi fundada?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
       <p class="resposta">R: 7 de dezembro de 2015, por Cmd.Igor.</p>
       <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, se o usuário acertar a data ou o usuário não considere como errado, corrija-o. Se ele errar as duas perguntas, considere como errado.]</div>
     </div>
 
     <div class="pergunta">
-      <p class="font-bold">2. Um civil está com acessórios e com um tom de pele irreal (ex: azul) com um cabelo exagerado. Você deve liberar?</p>
+      <p class="font-bold mb-2">2.</p>
+      <div class="linha-copiavel"><span class="texto">Um civil tem acessórios, pele irreal (ex: azul) e cabelo exagerado.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel"><span class="texto">Você deve liberar esse civil?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
       <p class="resposta">R: Não.</p>
     </div>
 
     <div class="pergunta">
-      <p class="font-bold">3. Como se deve referir ao superior? E ao par/subalterno?</p>
+      <p class="font-bold mb-2">3.</p>
+      <div class="linha-copiavel"><span class="texto">Como se deve referir ao superior?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel"><span class="texto">E como se refere ao par/subalterno?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
       <p class="resposta">R: Senhor(a) + Patente/Cargo + Nickname e Patente/Cargo + Nickname.</p>
       <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, se o usuário acertar uma das perguntas não considere como errado, corrija-o. Se ele errar as duas perguntas, considere como errado.]</div>
     </div>
 
     <div class="pergunta">
-      <p class="font-bold">4. Diga a alternativa correta em relação aos protocolos de assumir um superior na recepção:</p>
-      <p class="text-sm text-gray-700 mt-1">
-        a. Dois quadrados de distância e dizer "Assumo, senhor(a)"<br>
-        b. Um quadrado de distância e dizer "Assumo, senhor(a)"<br>
-        c. Dois quadrados de distância e dizer "Assumo, senhor(a)"
-      </p>
+      <p class="font-bold mb-2">4.</p>
+      <div class="linha-copiavel"><span class="texto">Qual a forma correta de assumir um superior na recepção?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel"><span class="texto">a. Dois quadrados de distância e "Assumo, senhor(a)"</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel"><span class="texto">b. Um quadrado de distância e "Assumo, senhor(a)"</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel"><span class="texto">c. Dois quadrados de distância e "Assumo, senhor(a)"</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
       <p class="resposta">R: B.</p>
     </div>
 
@@ -271,36 +333,32 @@
     </div>
 
     <p class="secao-titulo">COMANDOS</p>
-    <p>
-      Na CIA utilizamos alguns comandos, estes são:
-      Sentido, continência, marcar-passos, apresentar-armas e à vontade.
-      Você conhece esses comandos?
-    </p>
+    <div class="linha-copiavel"><span class="texto">Na CIA usamos alguns comandos: Sentido, Continência,</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Marcar-Passos, Apresentar-Armas e À Vontade.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Você já conhece esses comandos?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
 
     <div class="callout callout-verde">
-      <p class="font-bold mb-1">Se a resposta for positiva:</p>
-      <p>Podemos pular para o Teste Prático?</p>
+      <p class="font-bold mb-2">Se a resposta for positiva:</p>
+      <div class="linha-copiavel-clara"><span class="texto">Podemos pular para o Teste Prático?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
       <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela resposta. Se ele concordar pule para o TESTE PRÁTICO.]</div>
     </div>
 
-    <p>
-      <strong>Sentido:</strong> Dê um passo à frente ou levante-se.<br>
-      <strong>Continência:</strong> Acene uma vez, digite o/ para acenar.<br>
-      <strong>Marcar-Passos:</strong> Clique em você e selecione dançar hip-hop e só pare de dançar quando receber Sentido.<br>
-      <strong>Apresentar-Armas:</strong> Acene sem parar, digite o/ e repita várias vezes até receber Sentido, não deixe o braço cair.<br>
-      <strong>À vontade:</strong> Retorne um passo pra trás ou sente-se novamente.
-    </p>
-    <p>Alguma dúvida?</p>
+    <div class="linha-copiavel"><span class="texto">Sentido: dê um passo à frente ou levante-se.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Continência: acene uma vez (digite o/).</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Marcar-Passos: dance hip-hop até receber Sentido.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Apresentar-Armas: acene sem parar (o/) até Sentido.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">À Vontade: volte um passo atrás ou sente-se.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Alguma dúvida?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
 
     <p class="secao-titulo">TESTE PRÁTICO</p>
-    <p>
-      Agora irei repassar os comandos para que você execute como eu te expliquei. Não se preocupe se errar,
-      ensinarei novamente. Podemos começar?
-    </p>
+    <div class="linha-copiavel"><span class="texto">Agora vou dar os comandos pra você executar.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Não se preocupe se errar, eu ensino de novo.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Podemos começar?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
 
-    <p class="my-4">
+    <p class="text-xs text-gray-400 mt-4 mb-2">Clique em cada comando abaixo, na ordem, pra colar um de cada vez:</p>
+    <p class="my-2">
       <span class="comando">SENTIDO!</span>
       <span class="comando">CONTINÊNCIA!</span>
       <span class="comando">APRESENTAR-ARMAS!</span>
@@ -316,62 +374,49 @@
     </div>
 
     <p class="secao-titulo">NEGRITO</p>
-    <p>Antes de finalizar o curso. Você sabe falar em negrito?</p>
+    <div class="linha-copiavel"><span class="texto">Antes de finalizar o curso. Você sabe falar em negrito?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela resposta. Se ele souber pule a explicação.]</div>
 
     <div class="callout callout-azul">
-      <p class="mb-2">Vocês jogam o Habblet em qual plataforma? Celular ou computador?</p>
-      <p class="font-bold mb-1">Caso jogue pelo computador:</p>
-      <p class="mb-2">
-        Escreva uma frase simples, como: <em>Oi, tudo bem?</em> (Mas não envie ainda) Mas antes de enviar,
-        vocês devem pressionar a tecla <strong>SHIFT</strong>, e logo em seguida, apertar na tecla
-        <strong>ENTER</strong> junto. Vamos testar?
-      </p>
+      <div class="linha-copiavel-clara"><span class="texto">Vocês jogam o Habblet em qual plataforma? Celular ou computador?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+
+      <p class="font-bold mt-3 mb-1">Caso jogue pelo computador:</p>
+      <div class="linha-copiavel-clara"><span class="texto">Escreva uma frase simples, tipo: Oi, tudo bem?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel-clara"><span class="texto">Não envie ainda!</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel-clara"><span class="texto">Seguido, aperte SHIFT + ENTER juntos pra enviar.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel-clara"><span class="texto">Vamos testar?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
       <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [Caso tenha dificuldades, ajude até conseguirem falar em negrito. Assim que conseguir, prossiga.]</div>
+
       <p class="font-bold mt-3 mb-1">Caso jogue pelo celular:</p>
-      <p>
-        Dentro da barra, onde você escreve as suas falas, deve digitar <strong>Gritar!</strong> antes de tudo
-        e depois digitar normalmente e enviar. Vamos testar?
-      </p>
+      <div class="linha-copiavel-clara"><span class="texto">Na barra de fala, digite "Gritar!" antes do texto.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel-clara"><span class="texto">Depois escreva normalmente e envie.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel-clara"><span class="texto">Vamos testar?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
       <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [Caso tenha dificuldades, ajude até conseguirem falar em negrito. Assim que conseguir, prossiga.]</div>
     </div>
 
-    <p>
-      Excelente, é importante que utilize o negrito em todos os momentos. Assim podendo destacar as suas
-      falas, e ajuda bastante na sua carreira.
-    </p>
+    <div class="linha-copiavel"><span class="texto">Excelente! Use negrito sempre que estiver falando.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Isso destaca suas falas e ajuda na sua carreira.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
 
     <p class="secao-titulo">FINALIZAÇÃO</p>
-    <p>
-      Parabéns, você foi aprovado na Instrução Inicial. Agora você é oficialmente membro da Central
-      Intelligence Agency!
-    </p>
-    <p>
-      Para ter uma carreira de sucesso, é importante ter uma boa ortografia, estar atento no trabalho e ser
-      presente. O seu esforço é totalmente transformado em raros, que você receberá como forma de pagamento
-      pelo o seu esforço.
-    </p>
-    <p>
-      Para estar por dentro de todas as novidades das CIA, como eventos, prêmios e outras informações,
-      procure um superior e solicite o link do nosso discord.
-    </p>
-    <p>Alguma dúvida?</p>
+    <div class="linha-copiavel"><span class="texto">Parabéns, você foi aprovado na Instrução Inicial!</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Agora você é oficialmente membro da CIA!</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Pra ter sucesso: boa ortografia, atenção e presença.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Seu esforço vira raros — é seu pagamento aqui na CIA.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Pra saber de eventos, prêmios e novidades,</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">peça o link do nosso Discord a um superior.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Alguma dúvida?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
 
-    <p>
-      Peço que coloque os seguintes requisitos:<br>
-      Mude a cor da camisa para marrom não HC ou HC;<br>
-      Coloque a boina preta igual às calças;<br>
-      Coloque na missão:<br>
-      <strong>[CIA] Soldado [TAG]</strong>
-    </p>
+    <p class="text-xs text-gray-400 mt-4 mb-2">Peça pra ele ajustar o visual, um passo de cada vez:</p>
+    <div class="linha-copiavel"><span class="texto">Agora ajuste seu visual:</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Mude a camisa pra marrom (não precisa ser HC).</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Coloque a boina preta, igual à calça.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Coloque na missão: [CIA] Soldado [TAG]</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, não se esqueça de alterar e inserir sua TAG.]</div>
 
-    <p>Aguarde um momento que irei postar sua aula.</p>
-    <p>
-      Sua próxima aula é <strong>Curso de Formação de Soldados</strong>, procure por alguém que esteja usando
-      uma estrela azul na boina para te dar sua aula.
-    </p>
+    <div class="linha-copiavel"><span class="texto">Aguarde um momento que irei postar sua aula.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Sua próxima aula é o Curso de Formação de Soldados.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Procure alguém com uma estrela azul na boina.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
 
   </div>
 
@@ -393,6 +438,8 @@
 
 </div>
 
+<div id="toast-copia" class="toast-copia">Copiado!</div>
+
 <script>
   // A Central de Aulas passa o nick de quem está logado via ?nick=... na URL
   // (o GitHub Pages não consegue detectar login do fórum sozinho, por ser
@@ -407,6 +454,79 @@
       el.textContent = nick;
       el.classList.remove('placeholder');
       el.classList.add('nick-preenchido');
+    });
+  })();
+</script>
+
+<script>
+  // Copiar com um clique: cada linha de fala e cada comando copia o próprio
+  // texto (já com o nick real, se substituído acima) direto pra área de
+  // transferência, sem precisar selecionar nada manualmente.
+  (function () {
+    const toast = document.getElementById('toast-copia');
+    let toastTimeout;
+
+    function mostrarToast(texto) {
+      toast.textContent = texto;
+      toast.classList.add('show');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => toast.classList.remove('show'), 1400);
+    }
+
+    function copiarTexto(texto, elemento, iconeSeletor) {
+      const icone = iconeSeletor ? elemento.querySelector(iconeSeletor) : null;
+
+      function marcarCopiado() {
+        elemento.classList.add('copiado');
+        if (icone) { icone.classList.remove('fa-copy'); icone.classList.add('fa-check'); }
+        mostrarToast('Copiado!');
+        setTimeout(() => {
+          elemento.classList.remove('copiado');
+          if (icone) { icone.classList.remove('fa-check'); icone.classList.add('fa-copy'); }
+        }, 1100);
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(texto).then(marcarCopiado).catch(() => selecionarManualmente(elemento));
+      } else {
+        selecionarManualmente(elemento);
+      }
+    }
+
+    // Fallback pra navegadores/contextos sem permissão de clipboard: deixa
+    // o texto selecionado, pronto pro instrutor apertar Ctrl+C.
+    function selecionarManualmente(elemento) {
+      const alvo = elemento.querySelector('.texto') || elemento;
+      const range = document.createRange();
+      range.selectNodeContents(alvo);
+      const selecao = window.getSelection();
+      selecao.removeAllRanges();
+      selecao.addRange(range);
+      mostrarToast('Selecionado — aperte Ctrl+C');
+    }
+
+    document.querySelectorAll('.linha-copiavel, .linha-copiavel-clara').forEach(linha => {
+      linha.addEventListener('click', () => {
+        const texto = linha.querySelector('.texto').textContent.trim();
+        copiarTexto(texto, linha, '.icone-copiar i');
+      });
+    });
+
+    document.querySelectorAll('.comando').forEach(pill => {
+      pill.addEventListener('click', () => {
+        copiarTexto(pill.textContent.trim(), pill, null);
+      });
+    });
+
+    // Mostra quantos caracteres cada linha tem (já com o nick real) — fica
+    // vermelho se passar de 75, pra avisar que pode não caber no balão do jogo.
+    document.querySelectorAll('.linha-copiavel .texto, .linha-copiavel-clara .texto').forEach(el => {
+      const linha = el.closest('.linha-copiavel, .linha-copiavel-clara');
+      const contador = linha.querySelector('.contador');
+      if (!contador) return;
+      const tamanho = el.textContent.trim().length;
+      contador.textContent = tamanho;
+      contador.classList.toggle('excedido', tamanho > 75);
     });
   })();
 </script>
@@ -438,10 +558,6 @@
 
     window.addEventListener('load', enviarAltura);
 
-    // Reenvia se o conteúdo mudar de altura depois do load (fontes/ícones
-    // carregando depois, por exemplo) — sem isso a altura enviada no load
-    // pode ficar desatualizada. Observa o container de conteúdo, não o
-    // body/documento inteiro, pelo mesmo motivo explicado acima.
     const alvo = document.getElementById('conteudo-aula');
     if (window.ResizeObserver && alvo) {
       new ResizeObserver(enviarAltura).observe(alvo);

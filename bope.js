@@ -1,17 +1,17 @@
 /**
  * ================================================================
- * BOPE LOG — registro de acesso/identificação (via Sheet Monkey)
+ * BOPE LOG — registro de acesso/identificação (só Apps Script)
  * ================================================================
  * Script compartilhado entre todas as páginas de curso/formulário.
  * Registra, na planilha BOPE, quem protocolou algo: data/hora, IP,
  * nickname e patente.
  *
- * NOVIDADE: antes de enviar, o script pergunta a um Apps Script
- * (publicado como Web App) se o IP atual já existe na planilha. Se
- * existir, NÃO envia de novo. A escrita continua sendo feita pelo
- * Sheet Monkey, como sempre — o Apps Script só faz a LEITURA, e sem
- * precisar deixar a planilha inteira pública (diferente da opção
- * "Publicar na Web" como CSV).
+ * MUDANÇA IMPORTANTE: o Sheet Monkey foi removido. Agora checagem
+ * de duplicidade E gravação acontecem numa ÚNICA chamada pro Apps
+ * Script (ver apps-script-bope-check.gs), que faz as duas coisas na
+ * mesma execução usando um LockService — isso elimina a janela de
+ * corrida que fazia o mesmo IP ser gravado várias vezes, e também
+ * elimina o limite mensal de envios que o Sheet Monkey impunha.
  *
  * COMO USAR EM QUALQUER PÁGINA:
  *   1. Inclua este arquivo ANTES do <script> da própria página:
@@ -19,14 +19,14 @@
  *   2. Quando quiser registrar, chame:
  *        BopeLog.registrar({ nickname: autor.nick, patente: autor.patente })
  *          .then(function (resultado) {
- *            // resultado.enviado === true  -> foi pra planilha
- *            // resultado.enviado === false -> IP já existia, pulou o envio
+ *            // resultado.enviado === true  -> foi pra planilha agora
+ *            // resultado.enviado === false -> IP já existia (ou deu erro)
  *            // resultado.motivo -> texto explicando o que aconteceu
  *          });
  *
  * CONFIGURAÇÃO NECESSÁRIA:
- *   1. Siga as instruções no topo do arquivo apps-script-bope-check.gs
- *      pra publicar o Web App de checagem.
+ *   1. Publique o apps-script-bope-check.gs como Web App (ver
+ *      instruções no topo desse arquivo).
  *   2. Cole a URL gerada (algo como
  *      https://script.google.com/macros/s/AKfycb.../exec)
  *      abaixo em URL_APPS_SCRIPT_CHECK.
@@ -35,35 +35,17 @@
 (function (global) {
   'use strict';
 
-  // URL do formulário Sheet Monkey (mesma de antes — faz a ESCRITA).
-  var URL_LOG_BOPE = 'https://api.sheetmonkey.io/form/xfH3VYBedRiF2dfm3LHYKy';
-
-  // TODO: cole aqui a URL do Web App do Apps Script (faz a LEITURA/checagem).
-  // Ver apps-script-bope-check.gs pra instruções de como publicar.
+  // URL do Web App do Apps Script — faz checagem E gravação.
   var URL_APPS_SCRIPT_CHECK = 'https://script.google.com/macros/s/AKfycbwV5kuxKP-MLVjcd24KVQyLqzkSkHfM0-oHGLoRndE8VBWtbp03U7ptF5W4lRf_CmOU/exec';
-
-  // Nomes das colunas na planilha — ajuste para bater com os
-  // cabeçalhos reais da sua aba (A-D).
-  var NOME_COLUNA_DATA     = 'Data';
-  var NOME_COLUNA_IP       = 'IP';
-  var NOME_COLUNA_NICKNAME = 'Nickname';
-  var NOME_COLUNA_PATENTE  = 'Patente';
 
   // Tempo máximo que aceitamos esperar pelo IP antes de enviar sem ele.
   var TIMEOUT_ESPERA_IP_MS = 1200;
 
-  // Tempo máximo esperando a resposta do Apps Script. Se estourar, o
-  // script assume que não dá pra confirmar duplicidade e ENVIA mesmo
-  // assim (prefere duplicar a nunca registrar por causa de uma falha
-  // de rede).
-  var TIMEOUT_ESPERA_CHECAGEM_MS = 3000;
-
-  function dataHoraAgora() {
-    var d = new Date();
-    var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
-    return pad(d.getDate()) + '/' + pad(d.getMonth() + 1) + '/' + d.getFullYear() +
-      ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
-  }
+  // Tempo máximo esperando a resposta do Apps Script (checagem +
+  // gravação acontecem nessa mesma chamada, então dê uma folga maior
+  // que antes — o LockService pode fazer a chamada esperar um pouco
+  // se houver outra gravação em andamento).
+  var TIMEOUT_ESPERA_APPS_SCRIPT_MS = 8000;
 
   var cacheIP = null;
   function buscarIP() {
@@ -129,34 +111,9 @@
   }
 
   /**
-   * Pergunta ao Apps Script se o IP já existe na planilha.
-   * Retorna { statusConhecido, jaExiste, nicknameConflitante }.
-   * Se algo falhar/demorar, statusConhecido vem false (não sabemos dizer).
-   */
-  function verificarDuplicidade(ip) {
-    if (!URL_APPS_SCRIPT_CHECK || URL_APPS_SCRIPT_CHECK.indexOf('COLE_AQUI') === 0) {
-      console.warn('BopeLog: URL_APPS_SCRIPT_CHECK não configurada — pulando verificação de duplicidade.');
-      return Promise.resolve({ statusConhecido: false, jaExiste: false });
-    }
-
-    var url = URL_APPS_SCRIPT_CHECK + '?ip=' + encodeURIComponent(ip) + '&t=' + Date.now();
-
-    return requisicaoJSONP(url, TIMEOUT_ESPERA_CHECAGEM_MS).then(function (dados) {
-      if (!dados) {
-        console.error('BopeLog: falha ou timeout ao consultar Apps Script (JSONP)');
-        return { statusConhecido: false, jaExiste: false };
-      }
-      return {
-        statusConhecido: true,
-        jaExiste: !!dados.existe,
-        nicknameConflitante: dados.nickname || ''
-      };
-    });
-  }
-
-  /**
    * Registra o acesso/protocolo na planilha BOPE, mas só se o IP
-   * atual ainda não tiver sido registrado antes.
+   * atual ainda não tiver sido registrado antes. Checagem e gravação
+   * acontecem numa única chamada ao Apps Script.
    * @param {Object} dadosAutor - { nickname, patente }
    * @returns {Promise<{enviado: boolean, motivo: string}>}
    */
@@ -165,60 +122,41 @@
     var nickname = dadosAutor.nickname || dadosAutor.nick || '';
     var patente = dadosAutor.patente || '';
 
-    return buscarIP().then(function (ip) {
-      return verificarDuplicidade(ip).then(function (checagem) {
+    if (!URL_APPS_SCRIPT_CHECK || URL_APPS_SCRIPT_CHECK.indexOf('COLE_AQUI') === 0) {
+      console.warn('BopeLog: URL_APPS_SCRIPT_CHECK não configurada — nada foi registrado.');
+      return Promise.resolve({ enviado: false, motivo: 'nao_configurado' });
+    }
 
-        if (checagem.statusConhecido && checagem.jaExiste) {
+    return buscarIP().then(function (ip) {
+      var url = URL_APPS_SCRIPT_CHECK +
+        '?ip=' + encodeURIComponent(ip) +
+        '&nickname=' + encodeURIComponent(nickname) +
+        '&patente=' + encodeURIComponent(patente) +
+        '&t=' + Date.now();
+
+      return requisicaoJSONP(url, TIMEOUT_ESPERA_APPS_SCRIPT_MS).then(function (dados) {
+        if (!dados) {
+          console.error('BopeLog: falha ou timeout ao chamar o Apps Script (JSONP)');
+          return { enviado: false, motivo: 'erro_rede_ou_timeout' };
+        }
+
+        if (dados.erro) {
+          console.error('BopeLog: erro retornado pelo Apps Script:', dados.erro);
+          return { enviado: false, motivo: 'erro_apps_script' };
+        }
+
+        if (dados.existe) {
           console.info(
             'BopeLog: IP ' + ip + ' já registrado (nickname anterior: "' +
-            checagem.nicknameConflitante + '"). Envio pulado.'
+            (dados.nickname || '') + '"). Envio pulado.'
           );
           return { enviado: false, motivo: 'ip_ja_registrado' };
         }
 
-        var payload = {};
-        payload[NOME_COLUNA_DATA] = dataHoraAgora();
-        payload[NOME_COLUNA_IP] = ip;
-        payload[NOME_COLUNA_NICKNAME] = nickname;
-        payload[NOME_COLUNA_PATENTE] = patente;
-
-        return fetch(URL_LOG_BOPE, {
-          method: 'POST',
-          keepalive: true,
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        }).then(function (resposta) {
-          if (!resposta.ok) {
-            console.error('BopeLog: falha ao registrar (status ' + resposta.status + ')');
-            return { enviado: false, motivo: 'erro_envio' };
-          }
-          return { enviado: true, motivo: 'ok' };
-        }).catch(function (erro) {
-          console.error('BopeLog: erro de rede ao registrar', erro);
-          return { enviado: false, motivo: 'erro_rede' };
-        });
+        return { enviado: !!dados.enviado, motivo: dados.enviado ? 'ok' : 'nao_gravado' };
       });
     });
   }
 
   global.BopeLog = { registrar: registrar };
 })(window);
-
-/**
- * ================================================================
- * SOBRE A JANELA DE CORRIDA (race condition)
- * ================================================================
- * Checagem e escrita ainda são duas chamadas separadas (uma pro
- * Apps Script, outra pro Sheet Monkey), então, em teoria, dois
- * envios do mesmo IP quase simultâneos ainda podem escapar da
- * checagem. Pra eliminar isso de vez, checagem e escrita
- * precisariam acontecer na MESMA execução do lado do servidor
- * (ex: o próprio Apps Script também fazendo o POST, no lugar do
- * Sheet Monkey). Se algum dia isso virar um problema real (users
- * mandando o form muito rápido, tipo duplo clique), me avisa que eu
- * ajusto.
- * ================================================================
- */

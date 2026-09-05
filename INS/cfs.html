@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CIA — Curso de Formação de Sargentos (CFS)</title>
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://use.fontawesome.com/releases/v7.3.1/css/all.css" rel="stylesheet">
+<link href="https://kit-pro.fontawesome.com/releases/v7.3.1/css/pro.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+<style>
+  * { font-family: 'Poppins', sans-serif; }
+  body { background: #f5f6f8; }
+
+  .placeholder {
+    display: inline-block;
+    background: #eef2ff;
+    color: #4338ca;
+    font-weight: 600;
+    padding: 1px 8px;
+    border-radius: 999px;
+    font-size: 0.85em;
+  }
+  .nick-preenchido { color: #1d4ed8; font-weight: 700; }
+
+  .aviso {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    color: #ff513a;
+    font-size: 13px;
+    font-weight: 600;
+    font-style: italic;
+    margin-top: 10px;
+    margin-bottom: 4px;
+  }
+
+  .callout {
+    padding: 16px 18px;
+    border-radius: 10px;
+    border-left: 6px solid;
+    margin: 18px 0;
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+  .callout-verde  { background: #f0fdf4; border-color: #3cea04; color: #14532d; }
+  .callout-azul   { background: #eff6ff; border-color: #045fba; color: #1e3a8a; }
+  .callout-vermelho { background: #fef2f2; border-color: #ea0606; color: #7f1d1d; }
+
+  .instrutor-box {
+    background: #5771a5;
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 18px 22px;
+    margin: 24px 0;
+  }
+  .instrutor-box .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.15);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .secao-titulo {
+    color: #045fba;
+    font-weight: 800;
+    font-size: 19px;
+    margin-top: 40px;
+    margin-bottom: 14px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+  }
+  .secao-titulo:first-of-type { border-top: none; padding-top: 0; margin-top: 24px; }
+
+  .pergunta {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+  }
+  .pergunta .resposta {
+    margin-top: 8px;
+    font-size: 13.5px;
+    color: #16a34a;
+    font-weight: 600;
+  }
+
+  .funcao-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .funcao-card .nome {
+    font-weight: 700;
+    color: #111827;
+    font-size: 15px;
+    margin-bottom: 2px;
+  }
+  .balao {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 999px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .balao-amarelo  { background: #fefce8; color: #a16207; }
+  .balao-vermelho { background: #fef2f2; color: #b91c1c; }
+  .balao-cinza    { background: #f3f4f6; color: #4b5563; }
+
+  /* ---- Linha de fala copiável (clique pra copiar) ---- */
+  .linha-copiavel, .linha-copiavel-clara {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all .15s ease;
+    user-select: none;
+  }
+  .linha-copiavel {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+  }
+  .linha-copiavel:hover { border-color: #045fba; background: #f8faff; }
+  .linha-copiavel.copiado { border-color: #16a34a; background: #f0fdf4; }
+
+  .linha-copiavel-clara {
+    background: rgba(255,255,255,0.45);
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+  .linha-copiavel-clara:hover { background: rgba(255,255,255,0.75); }
+  .linha-copiavel-clara.copiado { background: rgba(255,255,255,0.95); border-color: #16a34a; }
+
+  .linha-copiavel .texto, .linha-copiavel-clara .texto {
+    font-size: 14.5px;
+    line-height: 1.5;
+  }
+  .linha-copiavel .texto { color: #1f2937; }
+
+  .lado-direito { display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
+  .contador { font-size: 10px; color: #d1d5db; min-width: 16px; text-align: right; }
+  .contador.excedido { color: #dc2626; font-weight: 800; }
+  .icone-copiar { color: #9ca3af; transition: color .15s ease; }
+  .linha-copiavel:hover .icone-copiar, .linha-copiavel-clara:hover .icone-copiar { color: #045fba; }
+  .linha-copiavel.copiado .icone-copiar, .linha-copiavel-clara.copiado .icone-copiar { color: #16a34a; }
+
+  .dica-copia {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #eff6ff;
+    color: #1e3a8a;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+  }
+
+  .toast-copia {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #111827;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 999px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+    z-index: 100;
+  }
+  .toast-copia.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body class="min-h-screen">
+
+<div id="conteudo-aula" class="max-w-3xl mx-auto px-5 py-10 md:py-14">
+
+  <!-- ============ CABEÇALHO ============ -->
+  <div class="mb-8">
+    <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-blue-600 bg-blue-50 px-3 py-1.5 rounded-full mb-3">
+      <i class="fa-solid fa-shield-halved"></i> Central de Aulas · Nível 3
+    </span>
+    <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight">Curso de Formação de Sargentos (CFS)</h1>
+    <p class="text-gray-500 mt-1 text-sm">Roteiro oficial aplicado pelo Instrutor ao sargento, baseado no Título 1, Capítulo 2 e Seção 2 da Constituição Militar.</p>
+  </div>
+
+  <!-- ============ REGRAS ============ -->
+  <div class="rounded-2xl p-5 md:p-6 mb-5 text-white" style="background:#ff2626;">
+    <p class="font-bold mb-2 flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation"></i> Antes de começar</p>
+    <ul class="text-sm leading-relaxed space-y-1.5 list-disc list-inside">
+      <li>É imprescindível que siga o roteiro, sem tomar atalhos. Caso contrário, poderá sofrer punição conforme o Regimento Interno da companhia de Instrutores;</li>
+      <li>Para copiar um trecho, só aperte <strong>CTRL+C</strong>. E para colar, <strong>CTRL+V</strong>;</li>
+      <li>Evite copiar as instruções passadas ao longo do roteiro;</li>
+      <li>Procure sempre retirar todas as dúvidas possíveis dos alunos;</li>
+      <li>Ao final do curso, é necessário realizar o registro. Caso contrário, não irá contabilizar na meta semanal, e poderá sofrer punições conforme o Regimento Interno da companhia de Instrutores.</li>
+    </ul>
+  </div>
+
+  <!-- ============ NOTA DO INSTRUTOR (topo) ============ -->
+  <div class="instrutor-box">
+    <span class="tag"><i class="fa-solid fa-user-tie"></i> Para o instrutor</span>
+    <p class="text-sm leading-relaxed">
+      Essa aula é baseada nos tópicos do <strong>TÍTULO 1, CAPÍTULO 2 e SEÇÃO 2</strong> da Constituição Militar.
+      Se houver dúvidas acesse o documento.
+    </p>
+  </div>
+
+  <div class="dica-copia">
+    <i class="fa-solid fa-hand-pointer"></i>
+    Clique em qualquer frase abaixo pra copiar ela sozinha, pronta pra colar no jogo.
+  </div>
+
+  <!-- ============ ROTEIRO ============ -->
+  <div id="lista-falas">
+
+    <div class="linha-copiavel"><span class="texto">Olá, sargento.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Seja bem-vindo ao Curso de Formação de Sargento.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Sou o instrutor <span class="placeholder">{USERNAME}</span> e serei responsável pela sua formação.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">A partir de agora, mantenha silêncio e atenção.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Só fale quando eu autorizar ou perguntar algo.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Chame-me de "Senhor + patente + nick".</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Entendido?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <p class="secao-titulo">INTRODUÇÃO</p>
+    <div class="linha-copiavel"><span class="texto">Você já sabe que o batalhão tem 6 funções.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Hoje vamos aprofundar em 3 delas:</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Oficial da Guarda, Cabo da Guarda e Chefe Operacional.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Alguma dúvida?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <p class="secao-titulo">OFICIAL DA GUARDA</p>
+    <div class="funcao-card"><p class="nome">Oficial da Guarda (OG) <span class="balao balao-amarelo"><i class="fa-solid fa-comment"></i> balão amarelo</span></p></div>
+    <div class="linha-copiavel"><span class="texto">O OG mantém a ordem de todo o batalhão.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Ele designa policiais pros demais setores.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">E cuida da integridade da dependência.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Só pode ser Subtenente ou superior, com os cursos concluídos.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Precisa ser portador de direitos, ou ter alguém que seja.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Usa o balão de fala na cor amarela.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Quando a maior patente entrar, o OG dá o comando "sentido".</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Isso também vale pra quem tem medalha de honra (temp. ou permanente).</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Alguma dúvida?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <p class="secao-titulo">CABO DA GUARDA</p>
+    <div class="funcao-card"><p class="nome">Cabo da Guarda (CG) <span class="balao balao-vermelho"><i class="fa-solid fa-comment"></i> balão vermelho</span></p></div>
+    <div class="linha-copiavel"><span class="texto">O CG mantém a ordem da recepção.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Concede permissões, tira dúvidas e treina os militares.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Deixa os recepcionistas sempre atentos aos alistamentos.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Só pode ser Sargento ou superior, com os cursos concluídos.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Usa o balão de fala na cor vermelha.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Depois do "sentido" do OG, o CG repete o comando à recepção.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Faça treinamentos periódicos pra manter a recepção alerta.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Nesses treinos: "sentido", depois "marcar-passos".</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Faça perguntas sobre alistamento ou conhecimentos básicos.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">O CG precisa ser par ou subalterno ao Oficial da Guarda.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Alguma dúvida?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <p class="secao-titulo">CHEFE OPERACIONAL</p>
+    <div class="funcao-card"><p class="nome">Chefe Operacional (CO) <span class="balao balao-cinza"><i class="fa-solid fa-comment"></i> balão cinza</span></p></div>
+    <div class="linha-copiavel"><span class="texto">O CO fiscaliza e comanda a Sala de Controle.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Mantém os operadores atentos e corrige erros.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Precisa ser Subtenente ou superior, com cursos concluídos.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">E precisa ser superior aos demais operadores.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Sempre é ocupado pela maior patente presente na sala.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Erros na Sala de Controle são responsabilidade do CO.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Usa o balão de fala na cor cinza.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Alguma dúvida?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <p class="secao-titulo">GRUPOS DE TAREFAS</p>
+    <div class="linha-copiavel"><span class="texto">A CIA tem 1 companhia e 2 subcompanhias de tarefas.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Companhia: dos Instrutores.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Você já conhece a Companhia dos Instrutores.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Somos nós que aplicamos as aulas e cursos.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">A partir de Sargento, é obrigatório estar na companhia</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">pra continuar sendo promovido hierarquicamente.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Procure um Ministro (missão Min.INS) pra sua admissão.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Subcompanhias: APM e CRH.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">A APM aplica o CFO a Aspirantes e Tenentes contratados.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">O CRH mantém sistema, listagens e requerimentos em dia.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Alguma dúvida?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <p class="secao-titulo">TESTE TEÓRICO</p>
+    <div class="linha-copiavel"><span class="texto">Agora vou fazer perguntas sobre o que foi ensinado até aqui.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Você precisa acertar 2 de 4 questões pra continuar.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Podemos começar?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
+
+    <div class="pergunta">
+      <p class="font-bold mb-2">1.</p>
+      <div class="linha-copiavel"><span class="texto">Qual a função do Oficial da Guarda e Cabo da Guarda?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <p class="resposta">R: O Oficial da Guarda (OG) é responsável pela direção, coordenação e fiscalização de todas as atividades do batalhão. Ele usa balão de fala amarelo. O Cabo da Guarda (CG) é responsável pela coordenação da recepção do batalhão. Ele usa balão de fala vermelho.</p>
+    </div>
+
+    <div class="pergunta">
+      <p class="font-bold mb-2">2.</p>
+      <div class="linha-copiavel"><span class="texto">Qual a função do Chefe Operacional?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <p class="resposta">R: O Chefe Operacional (CO) é responsável pela coordenação imediata da Sala de Controle. Ele usa balão de fala cinza.</p>
+    </div>
+
+    <div class="pergunta">
+      <p class="font-bold mb-2">3.</p>
+      <div class="linha-copiavel"><span class="texto">Supondo que você já seja um sargento com os cursos concluídos,</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel"><span class="texto">quais das 3 funções ensinadas você já pode assumir?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <p class="resposta">R: Cabo da Guarda.</p>
+    </div>
+
+    <div class="pergunta">
+      <p class="font-bold mb-2">4.</p>
+      <div class="linha-copiavel"><span class="texto">Quais são as companhias e subcompanhias?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <p class="resposta">R: Companhia: Instrutores. Subcompanhia: Academia de Polícia Militar (APM) e Centro de Recursos Humanos (CRH).</p>
+    </div>
+
+    <p class="secao-titulo">FINALIZAÇÃO</p>
+
+    <div class="callout callout-verde">
+      <p class="font-bold mb-2">Se aprovado:</p>
+      <div class="linha-copiavel-clara"><span class="texto">Meus parabéns, sargento! Você foi aprovado na aula.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel-clara"><span class="texto">Acrescente [CFS] ao final da sua missão.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel-clara"><span class="texto">Procure um instrutor (brevê azul) pra sua próxima aula.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel-clara"><span class="texto">Sua próxima aula é o Curso de Aprimoramento Ortográfico.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel-clara"><span class="texto">Alguma dúvida?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    </div>
+
+    <div class="callout callout-vermelho">
+      <p class="font-bold mb-1">Se reprovado:</p>
+      <p>
+        Você foi reprovado por atingir o limite de erros. Infelizmente, terá de realizar a aula novamente.
+        Mas não desanime. Essa é uma oportunidade para rever o conteúdo e fortalecer o seu conhecimento!
+      </p>
+    </div>
+
+  </div>
+
+  <!-- ============ NOTA DO INSTRUTOR (fechamento) ============ -->
+  <div class="instrutor-box">
+    <span class="tag"><i class="fa-solid fa-user-tie"></i> Para o instrutor</span>
+    <p class="text-sm leading-relaxed mb-3">
+      Ao finalizar a aula, realize a postagem do Relatório de Aula clicando no link:
+      <a href="https://ciahbt.forumeiros.com/t76-ins-relatorios-de-aula" target="_blank" rel="noopener" class="underline font-semibold">INS | Relatórios de aula</a>.
+    </p>
+    <p class="text-sm leading-relaxed">
+      Mesmo que o aluno não tenha sido aprovado é importante a postagem do Relatório de Aula para contar sua meta.
+    </p>
+  </div>
+
+</div>
+
+<div id="toast-copia" class="toast-copia">Copiado!</div>
+
+<script>
+  // A Central de Aulas passa o nick de quem está logado via ?nick=... na URL
+  // (o GitHub Pages não consegue detectar login do fórum sozinho, por ser
+  // outro domínio). Se o parâmetro vier preenchido, troca todo mundo que
+  // ainda está marcado como {USERNAME} pelo nick real; se a página for
+  // aberta direto, sem esse parâmetro, mantém o placeholder como está.
+  (function () {
+    const nick = new URLSearchParams(location.search).get('nick')?.trim();
+    if (!nick) return;
+
+    document.querySelectorAll('.placeholder').forEach(el => {
+      el.textContent = nick;
+      el.classList.remove('placeholder');
+      el.classList.add('nick-preenchido');
+    });
+  })();
+</script>
+
+<script>
+  // Copiar com um clique: cada linha de fala copia o próprio texto (já com
+  // o nick real, se substituído acima) direto pra área de transferência,
+  // sem precisar selecionar nada manualmente.
+  (function () {
+    const toast = document.getElementById('toast-copia');
+    let toastTimeout;
+
+    function mostrarToast(texto) {
+      toast.textContent = texto;
+      toast.classList.add('show');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => toast.classList.remove('show'), 1400);
+    }
+
+    function copiarTexto(texto, elemento, iconeSeletor) {
+      const icone = iconeSeletor ? elemento.querySelector(iconeSeletor) : null;
+
+      function marcarCopiado() {
+        elemento.classList.add('copiado');
+        if (icone) { icone.classList.remove('fa-copy'); icone.classList.add('fa-check'); }
+        mostrarToast('Copiado!');
+        setTimeout(() => {
+          elemento.classList.remove('copiado');
+          if (icone) { icone.classList.remove('fa-check'); icone.classList.add('fa-copy'); }
+        }, 1100);
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(texto).then(marcarCopiado).catch(() => selecionarManualmente(elemento));
+      } else {
+        selecionarManualmente(elemento);
+      }
+    }
+
+    function selecionarManualmente(elemento) {
+      const alvo = elemento.querySelector('.texto') || elemento;
+      const range = document.createRange();
+      range.selectNodeContents(alvo);
+      const selecao = window.getSelection();
+      selecao.removeAllRanges();
+      selecao.addRange(range);
+      mostrarToast('Selecionado — aperte Ctrl+C');
+    }
+
+    document.querySelectorAll('.linha-copiavel, .linha-copiavel-clara').forEach(linha => {
+      linha.addEventListener('click', () => {
+        const texto = linha.querySelector('.texto').textContent.trim();
+        copiarTexto(texto, linha, '.icone-copiar i');
+      });
+    });
+
+    document.querySelectorAll('.linha-copiavel .texto, .linha-copiavel-clara .texto').forEach(el => {
+      const linha = el.closest('.linha-copiavel, .linha-copiavel-clara');
+      const contador = linha.querySelector('.contador');
+      if (!contador) return;
+      const tamanho = el.textContent.trim().length;
+      contador.textContent = tamanho;
+      contador.classList.toggle('excedido', tamanho > 75);
+    });
+  })();
+</script>
+
+<script>
+  // Avisa a página que estiver embutindo esta (via iframe) qual é a altura
+  // real do conteúdo, pra ela ajustar o iframe e não sobrar barra de
+  // rolagem duplicada. Mede o container #conteudo-aula (não o documento
+  // inteiro) pra evitar o loop de crescimento infinito.
+  (function () {
+    let ultimaAltura = 0;
+
+    function enviarAltura() {
+      const el = document.getElementById('conteudo-aula');
+      if (!el) return;
+      const altura = el.scrollHeight;
+      if (Math.abs(altura - ultimaAltura) < 3) return;
+      ultimaAltura = altura;
+      window.parent.postMessage({ tipo: 'cia-aula-altura', altura }, '*');
+    }
+
+    window.addEventListener('load', enviarAltura);
+
+    const alvo = document.getElementById('conteudo-aula');
+    if (window.ResizeObserver && alvo) {
+      new ResizeObserver(enviarAltura).observe(alvo);
+    } else {
+      setInterval(enviarAltura, 800);
+    }
+
+    enviarAltura();
+  })();
+</script>
+
+</body>
+</html>

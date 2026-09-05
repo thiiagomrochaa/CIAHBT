@@ -26,10 +26,7 @@
     border-radius: 999px;
     font-size: 0.85em;
   }
-  .nick-preenchido {
-    color: #1d4ed8;
-    font-weight: 700;
-  }
+  .nick-preenchido { color: #1d4ed8; font-weight: 700; }
 
   .aviso {
     display: flex;
@@ -40,6 +37,7 @@
     font-weight: 600;
     font-style: italic;
     margin-top: 10px;
+    margin-bottom: 4px;
   }
 
   .callout {
@@ -86,33 +84,11 @@
   }
   .secao-titulo:first-of-type { border-top: none; padding-top: 0; margin-top: 24px; }
 
-  .fala p { margin-bottom: 14px; line-height: 1.75; color: #1f2937; font-size: 15px; }
-  .fala strong { color: #111827; }
-  .fala ul { margin: 0 0 14px 0; padding-left: 0; list-style: none; }
-  .fala ul li {
-    position: relative;
-    padding-left: 20px;
-    margin-bottom: 8px;
-    line-height: 1.6;
-    color: #1f2937;
-    font-size: 15px;
-  }
-  .fala ul li::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 9px;
-    width: 6px;
-    height: 6px;
-    border-radius: 999px;
-    background: #045fba;
-  }
-
   .pergunta {
     background: #ffffff;
     border: 1px solid #e5e7eb;
     border-radius: 12px;
-    padding: 16px 18px;
+    padding: 14px 16px;
     margin-bottom: 14px;
   }
   .pergunta .resposta {
@@ -126,31 +102,87 @@
     background: #f9fafb;
     border-left: 4px solid #9ca3af;
     border-radius: 8px;
-    padding: 12px 16px;
+    padding: 10px 12px;
     margin: 18px 0 14px;
+  }
+  .pergunta-retorica .rotulo {
     font-style: italic;
-    color: #4b5563;
-    font-size: 14.5px;
+    color: #6b7280;
+    font-size: 12px;
+    margin-bottom: 6px;
   }
 
-  .funcao-card {
+  /* ---- Linha de fala copiável (clique pra copiar) ---- */
+  .linha-copiavel, .linha-copiavel-clara {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all .15s ease;
+    user-select: none;
+  }
+  .linha-copiavel {
     background: #ffffff;
     border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 14px 16px;
-    margin-bottom: 10px;
   }
-  .funcao-card .nome {
-    font-weight: 700;
-    color: #111827;
+  .linha-copiavel:hover { border-color: #045fba; background: #f8faff; }
+  .linha-copiavel.copiado { border-color: #16a34a; background: #f0fdf4; }
+
+  .linha-copiavel-clara {
+    background: rgba(255,255,255,0.45);
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+  .linha-copiavel-clara:hover { background: rgba(255,255,255,0.75); }
+  .linha-copiavel-clara.copiado { background: rgba(255,255,255,0.95); border-color: #16a34a; }
+
+  .linha-copiavel .texto, .linha-copiavel-clara .texto {
     font-size: 14.5px;
-    margin-bottom: 2px;
+    line-height: 1.5;
   }
-  .funcao-card .desc {
-    font-size: 13.5px;
-    color: #4b5563;
-    line-height: 1.55;
+  .linha-copiavel .texto { color: #1f2937; }
+  .pergunta-retorica .linha-copiavel-clara .texto { font-style: italic; color: #374151; }
+
+  .lado-direito { display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
+  .contador { font-size: 10px; color: #d1d5db; min-width: 16px; text-align: right; }
+  .contador.excedido { color: #dc2626; font-weight: 800; }
+  .icone-copiar { color: #9ca3af; transition: color .15s ease; }
+  .linha-copiavel:hover .icone-copiar, .linha-copiavel-clara:hover .icone-copiar { color: #045fba; }
+  .linha-copiavel.copiado .icone-copiar, .linha-copiavel-clara.copiado .icone-copiar { color: #16a34a; }
+
+  .dica-copia {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #eff6ff;
+    color: #1e3a8a;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 18px;
   }
+
+  .toast-copia {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #111827;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 999px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+    z-index: 100;
+  }
+  .toast-copia.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body class="min-h-screen">
@@ -186,126 +218,123 @@
     </p>
   </div>
 
-  <!-- ============ ROTEIRO ============ -->
-  <div class="fala">
+  <div class="dica-copia">
+    <i class="fa-solid fa-hand-pointer"></i>
+    Clique em qualquer frase abaixo pra copiar ela sozinha, pronta pra colar no jogo.
+  </div>
 
-    <p>Olá, cabo.</p>
-    <p>
-      Seja bem-vindo à Aula de Segurança da CIA.
-      Sou o instrutor <span class="placeholder">{USERNAME}</span> e serei responsável pela sua formação.
-      A partir deste momento, mantenham silêncio e atenção durante a aula.
-      Falem somente quando for autorizado ou quando eu realizar uma pergunta.
-      Durante a aula, deverá dirigir-se a mim utilizando <strong>"Senhor + patente + nick"</strong>.
-      Entendido?
-    </p>
+  <!-- ============ ROTEIRO ============ -->
+  <div id="lista-falas">
+
+    <div class="linha-copiavel"><span class="texto">Olá, cabo.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Seja bem-vindo à Aula de Segurança.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Sou o instrutor <span class="placeholder">{USERNAME}</span> e serei responsável pela sua formação.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">A partir de agora, mantenha silêncio e atenção.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Só fale quando eu autorizar ou perguntar algo.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Chame-me de "Senhor + patente + nick".</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Entendido?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
 
     <p class="secao-titulo">SEGURANÇA DA CONTA</p>
-    <p>Para ajudar a te proteger foram listadas algumas precauções para evitar perdas/danos em sua conta:</p>
-    <ul>
-      <li>Criar um e-mail e senha diferentes para habblet e discord;</li>
-      <li>Jamais compartilhar seus dados mesmo que seja parente/amigo;</li>
-      <li>É importante gravar suas senhas na cabeça e não escrevê-las na sua área de trabalho ou qualquer outro lugar;</li>
-      <li>Nunca acessar sites que ofereçam nitros ou qualquer outro site estranho;</li>
-      <li>Jamais aceitar arquivos/links de estranhos via qualquer tipo de rede social;</li>
-      <li>Nunca participar de apostas, poderão te passar a perna;</li>
-      <li>Não comprar raros com dinheiro real de estranhos ou pessoas distantes;</li>
-      <li>Jamais aceite suborno em troca de algo e/ou seja omisso ao crime;</li>
-      <li>Em hipótese alguma compartilhe sua conta, comprometimento de contas não será tolerado e consequentemente será punido caso seja descoberto.</li>
-    </ul>
+    <div class="linha-copiavel"><span class="texto">Seguem algumas precauções pra proteger sua conta:</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Use e-mail e senha diferentes pro Habblet e Discord.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Nunca compartilhe seus dados, nem com parente ou amigo.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Grave suas senhas de cabeça, não escreva em lugar nenhum.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Nunca acesse sites de nitro ou outros sites estranhos.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Nunca aceite arquivos/links de estranhos em redes sociais.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Nunca participe de apostas — podem te enganar.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Não compre raros com dinheiro real de estranhos.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Nunca aceite suborno nem seja omisso a um crime.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Nunca compartilhe sua conta — isso é punido se descoberto.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
 
     <div class="pergunta-retorica">
-      <i class="fa-solid fa-quote-left mr-1"></i> "Por que devo proteger minha conta trocando a senha do habblet e discord?"
+      <p class="rotulo"><i class="fa-solid fa-quote-left mr-1"></i> Pergunta retórica</p>
+      <div class="linha-copiavel-clara"><span class="texto">Por que devo proteger minha conta trocando a senha do Habblet e Discord?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     </div>
-    <p>
-      Essa prevenção garante, além da segurança das dependências da CIA, a segurança das suas contas (habblet,
-      fórum e discord). Caso tenha dúvidas de como trocar a senha do habblet, fórum e discord, procure um
-      oficial após a conclusão dessa aula. Alguma dúvida?
-    </p>
+
+    <div class="linha-copiavel"><span class="texto">Isso protege a CIA e suas contas (Habblet, fórum, Discord).</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Se tiver dúvida de como trocar as senhas,</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">procure um oficial depois dessa aula.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Alguma dúvida?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
 
     <p class="secao-titulo">SEGURANÇA DA POLÍCIA</p>
-    <p>
-      <strong>Como identificar fakes:</strong> fakes é a definição de policiais falsos, seja por falsificação
-      de cargos ou patentes ou falsificação de nome. Para identificar um fake devemos sempre observar as suas
-      ações, data de criação da conta, nível/placar de conquistas, amigos, grafia, conduta, entre outros.
-      Também podem ser encontrados pelos nicks, por exemplo: o policial <strong>Guilherme</strong> pode ser
-      confundido com o fake <strong>GuiIherme</strong> (com i maiúsculo), ou o policial <strong>Marcos.-</strong>
-      pode ser confundido com o fake <strong>Marcos.-.</strong> (com ponto final).
-    </p>
-    <p>
-      <strong>Como reagir a uma emergência:</strong> caso você tenha sua conta hackeada, procure imediatamente
-      um superior para que tenha sua conta transferida. O superior irá comprovar sua identidade e irá garantir
-      que tenha sido retirado dos grupos para evitar danos piores, logo após vem a punição. Conta comprometida
-      coloca a CIA em risco, portanto, você pode ser rebaixado ou até mesmo exonerado.
-    </p>
-    <p>
-      <strong>Perfil do policial:</strong> é exigido que todos os policiais ativos mantenham-se com a
-      visibilidade do perfil no modo online ativo. O policial que descumprir tal norma sofrerá um rebaixamento
-      imediato de patente a cada 24 horas que se passarem, salvo o previsto para praças que ainda não
-      ingressaram em uma companhia — onde serão orientados acerca da irregularidade e, em caso de reincidência
-      e/ou permanência, sofrerão um rebaixamento a cada 24 horas. Portanto, lembre-se sempre de nunca estar com
-      a invisibilidade do perfil ativa ou em modo offline!
-    </p>
-    <p>Alguma dúvida?</p>
+    <div class="linha-copiavel"><span class="texto">Como identificar fakes:</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Fake é um policial falso: cargo, patente ou nome falsificado.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Observe ações, data de criação da conta, nível/placar,</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">amigos, grafia e conduta pra identificar um fake.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Também dá pra notar pelo nick: Guilherme x GuiIherme.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Ou Marcos.- x Marcos.-. (ponto final a mais).</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+
+    <div class="linha-copiavel"><span class="texto">Como reagir a uma emergência:</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Se sua conta for hackeada, procure um superior na hora.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Ele vai confirmar sua identidade e te tirar dos grupos</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">pra evitar mais danos — depois vem a punição.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Conta comprometida é risco pra CIA: pode gerar rebaixamento</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">ou até exoneração.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+
+    <div class="linha-copiavel"><span class="texto">Perfil do policial:</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Todo policial ativo precisa ficar com o perfil visível/online.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Descumprir isso gera rebaixamento a cada 24h,</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">exceto praças ainda sem companhia (só recebem orientação,</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">mas rebaixam também se reincidirem ou continuarem).</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Nunca fique invisível ou offline!</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Alguma dúvida?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
 
     <p class="secao-titulo">SEGURANÇA DO BATALHÃO</p>
-    <p>
-      Para manter a segurança do batalhão devemos sempre estar de olho em possíveis ameaças, como:
-      <strong>má conduta</strong>, <strong>nicks inapropriados</strong> e <strong>baderneiros</strong>. Caso
-      presencie algo de errado e/ou suspeito, avise ao Oficial da Guarda.
-    </p>
-    <p>Algumas dicas para melhorar a segurança em funções:</p>
+    <div class="linha-copiavel"><span class="texto">Fique de olho em ameaças: má conduta, nicks inapropriados</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">e baderneiros.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Se perceber algo suspeito, avise o Oficial da Guarda.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Algumas dicas de segurança por função:</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
 
-    <div class="funcao-card">
-      <p class="nome">Recepção</p>
-      <p class="desc">Observar se o Recruta tem nome ofensivo ou está ali para bagunçar. Caso isso aconteça, não permita a entrada do mesmo e comunique um superior.</p>
-    </div>
-    <div class="funcao-card">
-      <p class="nome">Operador 1</p>
-      <p class="desc">Deve conferir com atenção os requisitos para diferenciar de um fake ou não.</p>
-    </div>
-    <div class="funcao-card">
-      <p class="nome">Operador 2</p>
-      <p class="desc">Conferir se o policial possui grupo de outras organizações policiais em seu perfil.</p>
-    </div>
+    <div class="linha-copiavel"><span class="texto">Recepção</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Observe se o recruta tem nome ofensivo ou quer bagunçar.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Se sim, não deixe entrar e avise um superior.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
 
-    <p>Alguma dúvida?</p>
+    <div class="linha-copiavel"><span class="texto">Operador 1</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Confira com atenção os requisitos pra identificar um fake.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+
+    <div class="linha-copiavel"><span class="texto">Operador 2</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Confira se o policial tem grupo de outra polícia no perfil.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+
+    <div class="linha-copiavel"><span class="texto">Alguma dúvida?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
 
     <p class="secao-titulo">TESTE TEÓRICO</p>
-    <p>
-      Agora, irei realizar algumas perguntas de modo a saber se absorveu todo o conteúdo.
-      É necessário acertar pelo menos 2 questões para ser aprovado.
-      Podemos começar?
-    </p>
+    <div class="linha-copiavel"><span class="texto">Agora vou fazer perguntas pra ver se você absorveu o conteúdo.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Precisa acertar 2 de 3 questões pra ser aprovado.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Podemos começar?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
 
     <div class="pergunta">
-      <p class="font-bold">1. Como prevenir perdas/danos em sua conta? Cite 3 exemplos.</p>
+      <p class="font-bold mb-2">1.</p>
+      <div class="linha-copiavel"><span class="texto">Como prevenir perdas/danos em sua conta? Cite 3 exemplos.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
       <p class="resposta">R: O aluno deve citar 3 exemplos citados no script.</p>
     </div>
 
     <div class="pergunta">
-      <p class="font-bold">2. O que fazer caso seja hackeado?</p>
+      <p class="font-bold mb-2">2.</p>
+      <div class="linha-copiavel"><span class="texto">O que fazer caso seja hackeado?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
       <p class="resposta">R: Procurar imediatamente um oficial.</p>
     </div>
 
     <div class="pergunta">
-      <p class="font-bold">3. Como identificar um fake?</p>
+      <p class="font-bold mb-2">3.</p>
+      <div class="linha-copiavel"><span class="texto">Como identificar um fake?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
       <p class="resposta">R: Nick, ações, data de criação da conta, nível/placar de conquistas, amigos, grafia, conduta, etc.</p>
     </div>
 
     <p class="secao-titulo">FINALIZAÇÃO</p>
 
     <div class="callout callout-verde">
-      <p class="font-bold mb-1">Se aprovado:</p>
-      <p>
-        Meus parabéns, cabo. Você foi aprovado! Acrescente <strong>[SEG]</strong> ao final de sua missão. Após
-        esta aula, você completa todos os seus cursos de cabo. Com isso você já pode se tornar um Instrutor
-        também. Caso tenha interesse procure alguém com <strong>[M.INS]</strong> na missão. Alguma dúvida?
-      </p>
+      <p class="font-bold mb-2">Se aprovado:</p>
+      <div class="linha-copiavel-clara"><span class="texto">Meus parabéns, cabo! Você foi aprovado.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel-clara"><span class="texto">Acrescente [SEG] ao final da sua missão.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel-clara"><span class="texto">Você completou todos os cursos de cabo!</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel-clara"><span class="texto">Já pode virar Instrutor também, se quiser.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel-clara"><span class="texto">Procure alguém com [M.INS] na missão.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel-clara"><span class="texto">Alguma dúvida?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     </div>
 
     <div class="callout callout-vermelho">
@@ -332,6 +361,8 @@
 
 </div>
 
+<div id="toast-copia" class="toast-copia">Copiado!</div>
+
 <script>
   // A Central de Aulas passa o nick de quem está logado via ?nick=... na URL
   // (o GitHub Pages não consegue detectar login do fórum sozinho, por ser
@@ -351,18 +382,73 @@
 </script>
 
 <script>
+  // Copiar com um clique: cada linha de fala copia o próprio texto (já com
+  // o nick real, se substituído acima) direto pra área de transferência,
+  // sem precisar selecionar nada manualmente.
+  (function () {
+    const toast = document.getElementById('toast-copia');
+    let toastTimeout;
+
+    function mostrarToast(texto) {
+      toast.textContent = texto;
+      toast.classList.add('show');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => toast.classList.remove('show'), 1400);
+    }
+
+    function copiarTexto(texto, elemento, iconeSeletor) {
+      const icone = iconeSeletor ? elemento.querySelector(iconeSeletor) : null;
+
+      function marcarCopiado() {
+        elemento.classList.add('copiado');
+        if (icone) { icone.classList.remove('fa-copy'); icone.classList.add('fa-check'); }
+        mostrarToast('Copiado!');
+        setTimeout(() => {
+          elemento.classList.remove('copiado');
+          if (icone) { icone.classList.remove('fa-check'); icone.classList.add('fa-copy'); }
+        }, 1100);
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(texto).then(marcarCopiado).catch(() => selecionarManualmente(elemento));
+      } else {
+        selecionarManualmente(elemento);
+      }
+    }
+
+    function selecionarManualmente(elemento) {
+      const alvo = elemento.querySelector('.texto') || elemento;
+      const range = document.createRange();
+      range.selectNodeContents(alvo);
+      const selecao = window.getSelection();
+      selecao.removeAllRanges();
+      selecao.addRange(range);
+      mostrarToast('Selecionado — aperte Ctrl+C');
+    }
+
+    document.querySelectorAll('.linha-copiavel, .linha-copiavel-clara').forEach(linha => {
+      linha.addEventListener('click', () => {
+        const texto = linha.querySelector('.texto').textContent.trim();
+        copiarTexto(texto, linha, '.icone-copiar i');
+      });
+    });
+
+    document.querySelectorAll('.linha-copiavel .texto, .linha-copiavel-clara .texto').forEach(el => {
+      const linha = el.closest('.linha-copiavel, .linha-copiavel-clara');
+      const contador = linha.querySelector('.contador');
+      if (!contador) return;
+      const tamanho = el.textContent.trim().length;
+      contador.textContent = tamanho;
+      contador.classList.toggle('excedido', tamanho > 75);
+    });
+  })();
+</script>
+
+<script>
   // Avisa a página que estiver embutindo esta (via iframe) qual é a altura
   // real do conteúdo, pra ela ajustar o iframe e não sobrar barra de
-  // rolagem duplicada (uma da página da aula, outra da página que embute).
-  // Usa postMessage porque são domínios diferentes (GitHub Pages x fórum).
-  //
-  // IMPORTANTE: mede o container #conteudo-aula, não document.documentElement.
-  // A altura do <html> nunca fica menor que a altura da própria janela do
-  // iframe — então se ficássemos ouvindo "resize" (que também dispara
-  // quando o PAI aumenta o iframe) e medindo o documento inteiro, cada
-  // ajuste do pai geraria uma medida maior, num loop que só cresce.
-  // Uma div normal não tem esse problema: a altura dela reflete só o
-  // próprio conteúdo.
+  // rolagem duplicada. Mede o container #conteudo-aula (não o documento
+  // inteiro) pra evitar o loop de crescimento infinito.
   (function () {
     let ultimaAltura = 0;
 
@@ -370,17 +456,13 @@
       const el = document.getElementById('conteudo-aula');
       if (!el) return;
       const altura = el.scrollHeight;
-      if (Math.abs(altura - ultimaAltura) < 3) return; // ignora variações insignificantes
+      if (Math.abs(altura - ultimaAltura) < 3) return;
       ultimaAltura = altura;
       window.parent.postMessage({ tipo: 'cia-aula-altura', altura }, '*');
     }
 
     window.addEventListener('load', enviarAltura);
 
-    // Reenvia se o conteúdo mudar de altura depois do load (fontes/ícones
-    // carregando depois, por exemplo) — sem isso a altura enviada no load
-    // pode ficar desatualizada. Observa o container de conteúdo, não o
-    // body/documento inteiro, pelo mesmo motivo explicado acima.
     const alvo = document.getElementById('conteudo-aula');
     if (window.ResizeObserver && alvo) {
       new ResizeObserver(enviarAltura).observe(alvo);

@@ -26,10 +26,7 @@
     border-radius: 999px;
     font-size: 0.85em;
   }
-  .nick-preenchido {
-    color: #1d4ed8;
-    font-weight: 700;
-  }
+  .nick-preenchido { color: #1d4ed8; font-weight: 700; }
 
   .aviso {
     display: flex;
@@ -40,6 +37,7 @@
     font-weight: 600;
     font-style: italic;
     margin-top: 10px;
+    margin-bottom: 4px;
   }
 
   .callout {
@@ -86,14 +84,11 @@
   }
   .secao-titulo:first-of-type { border-top: none; padding-top: 0; margin-top: 24px; }
 
-  .fala p { margin-bottom: 14px; line-height: 1.75; color: #1f2937; font-size: 15px; }
-  .fala strong { color: #111827; }
-
   .pergunta {
     background: #ffffff;
     border: 1px solid #e5e7eb;
     border-radius: 12px;
-    padding: 16px 18px;
+    padding: 14px 16px;
     margin-bottom: 14px;
   }
   .pergunta .resposta {
@@ -109,11 +104,15 @@
     color: #fff;
     font-weight: 700;
     letter-spacing: .03em;
-    padding: 6px 14px;
+    padding: 7px 15px;
     border-radius: 8px;
     margin: 4px 6px 4px 0;
     font-size: 14px;
+    cursor: pointer;
+    transition: background .15s ease;
   }
+  .comando:hover { background: #1f2937; }
+  .comando.copiado { background: #16a34a; }
 
   .hierarquia-card {
     background: #ffffff;
@@ -138,16 +137,96 @@
     letter-spacing: .03em;
     margin-bottom: 6px;
   }
-  .chip {
-    display: inline-block;
-    background: #eff6ff;
-    color: #1d4ed8;
-    font-weight: 600;
-    font-size: 12.5px;
-    padding: 4px 11px;
+  .linha-copiavel-mini {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background: #f9fafb;
     border-radius: 8px;
-    margin: 2px 5px 2px 0;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: background .15s ease;
+    user-select: none;
   }
+  .linha-copiavel-mini:hover { background: #eff6ff; }
+  .linha-copiavel-mini.copiado { background: #f0fdf4; }
+  .linha-copiavel-mini .texto { font-size: 13px; color: #374151; line-height: 1.5; }
+  .linha-copiavel-mini .icone-copiar { color: #9ca3af; transition: color .15s ease; }
+  .linha-copiavel-mini:hover .icone-copiar { color: #045fba; }
+  .linha-copiavel-mini.copiado .icone-copiar { color: #16a34a; }
+
+  /* ---- Linha de fala copiável (clique pra copiar) ---- */
+  .linha-copiavel, .linha-copiavel-clara {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all .15s ease;
+    user-select: none;
+  }
+  .linha-copiavel {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+  }
+  .linha-copiavel:hover { border-color: #045fba; background: #f8faff; }
+  .linha-copiavel.copiado { border-color: #16a34a; background: #f0fdf4; }
+
+  .linha-copiavel-clara {
+    background: rgba(255,255,255,0.45);
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+  .linha-copiavel-clara:hover { background: rgba(255,255,255,0.75); }
+  .linha-copiavel-clara.copiado { background: rgba(255,255,255,0.95); border-color: #16a34a; }
+
+  .linha-copiavel .texto, .linha-copiavel-clara .texto {
+    font-size: 14.5px;
+    line-height: 1.5;
+  }
+  .linha-copiavel .texto { color: #1f2937; }
+
+  .lado-direito { display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
+  .contador { font-size: 10px; color: #d1d5db; min-width: 16px; text-align: right; }
+  .contador.excedido { color: #dc2626; font-weight: 800; }
+  .icone-copiar { color: #9ca3af; transition: color .15s ease; }
+  .linha-copiavel:hover .icone-copiar, .linha-copiavel-clara:hover .icone-copiar { color: #045fba; }
+  .linha-copiavel.copiado .icone-copiar, .linha-copiavel-clara.copiado .icone-copiar { color: #16a34a; }
+
+  .dica-copia {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #eff6ff;
+    color: #1e3a8a;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+  }
+
+  .toast-copia {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #111827;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 999px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+    z-index: 100;
+  }
+  .toast-copia.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body class="min-h-screen">
@@ -184,89 +263,66 @@
     </p>
   </div>
 
-  <!-- ============ ROTEIRO ============ -->
-  <div class="fala">
+  <div class="dica-copia">
+    <i class="fa-solid fa-hand-pointer"></i>
+    Clique em qualquer frase abaixo pra copiar ela sozinha, pronta pra colar no jogo.
+  </div>
 
-    <p>Olá, soldado.</p>
-    <p>
-      Seja bem-vindo ao Curso de Formação de Soldados da CIA.
-      Sou o instrutor <span class="placeholder">{USERNAME}</span> e serei responsável pela sua formação.
-      A partir deste momento, mantenham silêncio e atenção durante a aula.
-      Falem somente quando for autorizado ou quando eu realizar uma pergunta.
-      Durante a aula, deverá dirigir-se a mim utilizando <strong>"Senhor + patente + nick"</strong>.
-      Entendido?
-    </p>
+  <!-- ============ ROTEIRO ============ -->
+  <div id="lista-falas">
+
+    <div class="linha-copiavel"><span class="texto">Olá, soldado.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Seja bem-vindo ao Curso de Formação de Soldados.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Sou o instrutor <span class="placeholder">{USERNAME}</span> e vou te acompanhar nessa aula.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">A partir de agora, mantenha silêncio e atenção.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Só fale quando eu autorizar ou perguntar algo.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Chame-me de "Senhor + patente + nick".</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Entendido?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
 
     <p class="secao-titulo">HIERARQUIA</p>
-    <p>
-      A hierarquia é a estrutura que define quem ocupa cada posto, quem possui autoridade sobre quem e quais
-      são as responsabilidades de cada patente e/ou cargo.
-    </p>
-    <p>
-      Atualmente, a hierarquia da CIA divide-se em duas: <strong>Corpo Militar (CM)</strong> e
-      <strong>Corpo Executivo (CE)</strong>.
-    </p>
+    <div class="linha-copiavel"><span class="texto">A hierarquia define quem ocupa cada posto e autoridade.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Ela mostra as responsabilidades de cada patente ou cargo.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">A hierarquia da CIA se divide em duas: Militar e Executivo.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
 
     <div class="hierarquia-card">
       <p class="titulo">Corpo Militar (CM)</p>
       <div class="subgrupo">
         <p class="sub-titulo">Corpo de Praças</p>
-        <span class="chip">Soldado</span>
-        <span class="chip">Cabo</span>
-        <span class="chip">3° Sargento</span>
-        <span class="chip">2° Sargento</span>
-        <span class="chip">1° Sargento</span>
-        <span class="chip">Subtenente</span>
+        <div class="linha-copiavel-mini"><span class="texto">Soldado, Cabo, 3° Sargento, 2° Sargento, 1° Sargento, Subtenente.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
       </div>
       <div class="subgrupo">
         <p class="sub-titulo">Corpo de Praças Especiais</p>
-        <span class="chip">Aluno</span>
-        <span class="chip">Aspirante a Oficial</span>
+        <div class="linha-copiavel-mini"><span class="texto">Aluno e Aspirante a Oficial.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
       </div>
       <div class="subgrupo">
         <p class="sub-titulo">Corpo de Oficiais</p>
-        <span class="chip">Tenente</span>
-        <span class="chip">Capitão</span>
-        <span class="chip">Coronel</span>
-        <span class="chip">General</span>
-        <span class="chip">Marechal</span>
-        <span class="chip">Comandante</span>
-        <span class="chip">Comandante-Geral</span>
+        <div class="linha-copiavel-mini"><span class="texto">Tenente, Capitão, Coronel, General, Marechal,</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+        <div class="linha-copiavel-mini"><span class="texto">Comandante e Comandante-Geral.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
       </div>
     </div>
 
     <div class="hierarquia-card">
       <p class="titulo">Corpo Executivo (CE)</p>
       <div class="subgrupo">
-        <span class="chip">Supervisor</span>
-        <span class="chip">Supervisor-Geral</span>
-        <span class="chip">Inspetor</span>
-        <span class="chip">Inspetor-Geral</span>
-        <span class="chip">Coordenador</span>
-        <span class="chip">Coordenador-Geral</span>
-        <span class="chip">Superintendente</span>
-        <span class="chip">Superintendente-Geral</span>
-        <span class="chip">VIP</span>
-        <span class="chip">Vice-Presidente</span>
-        <span class="chip">Presidente</span>
-        <span class="chip">Acionista Majoritário</span>
-        <span class="chip">Chanceler</span>
+        <div class="linha-copiavel-mini"><span class="texto">Supervisor, Supervisor-Geral, Inspetor, Inspetor-Geral,</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+        <div class="linha-copiavel-mini"><span class="texto">Coordenador, Coordenador-Geral, Superintendente,</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+        <div class="linha-copiavel-mini"><span class="texto">Superintendente-Geral, VIP, Vice-Presidente,</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+        <div class="linha-copiavel-mini"><span class="texto">Presidente, Acionista Majoritário e Chanceler.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
       </div>
     </div>
 
-    <p>
-      Os cargos do Corpo Executivo começam da equivalência de tenente, possuindo dois cargos equivalente a
-      uma patente do Corpo Militar (com exceção de Chanceler e Comandante-Geral). A patente de
-      <strong>Supremacia</strong> é a maior patente das duas hierarquia. Alguma dúvida?
-    </p>
+    <div class="linha-copiavel"><span class="texto">O Executivo começa na equivalência de Tenente.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Geralmente 2 cargos do Executivo equivalem a 1 patente Militar.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Chanceler e Comandante-Geral são exceção a essa regra.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Supremacia é a maior patente das duas hierarquias.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Alguma dúvida?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
 
     <p class="secao-titulo">TESTE TEÓRICO</p>
-    <p>
-      Agora, irei realizar algumas perguntas sobre o que foi ensinado até aqui. Para dar continuidade na sua
-      aula você precisará acertar 2 das 4 questões. Podemos começar?
-    </p>
+    <div class="linha-copiavel"><span class="texto">Agora vou fazer perguntas sobre o que foi ensinado até aqui.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Você precisa acertar 2 de 4 questões pra continuar.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Podemos começar?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
 
     <div class="callout callout-azul">
@@ -277,25 +333,29 @@
     </div>
 
     <div class="pergunta">
-      <p class="font-bold">1. Qual a hierarquia do Corpo de Praças?</p>
+      <p class="font-bold mb-2">1.</p>
+      <div class="linha-copiavel"><span class="texto">Qual a hierarquia do Corpo de Praças?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
       <p class="resposta">R: Soldado; Cabo; 3° sargento; 2° sargento; 1° sargento; Subtenente.</p>
       <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, se o usuário acertar pelo menos 3, corrija os restantes. Se ele errar mais, considere como errado.]</div>
     </div>
 
     <div class="pergunta">
-      <p class="font-bold">2. Qual a hierarquia do Corpo de Praças Especiais?</p>
+      <p class="font-bold mb-2">2.</p>
+      <div class="linha-copiavel"><span class="texto">Qual a hierarquia do Corpo de Praças Especiais?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
       <p class="resposta">R: Aluno e Aspirante a Oficial.</p>
       <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, se o usuário acertar pelo menos 1, corrija os restantes. Se ele errar mais, considere como errado.]</div>
     </div>
 
     <div class="pergunta">
-      <p class="font-bold">3. Qual a hierarquia do Corpo de Oficiais?</p>
+      <p class="font-bold mb-2">3.</p>
+      <div class="linha-copiavel"><span class="texto">Qual a hierarquia do Corpo de Oficiais?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
       <p class="resposta">R: Tenente; Capitão; Coronel; General; Marechal; Comandante; Comandante-geral.</p>
       <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, se o usuário acertar pelo menos 3, corrija os restantes. Se ele errar mais, considere como errado.]</div>
     </div>
 
     <div class="pergunta">
-      <p class="font-bold">4. Qual a maior patente das duas hierarquias?</p>
+      <p class="font-bold mb-2">4.</p>
+      <div class="linha-copiavel"><span class="texto">Qual a maior patente das duas hierarquias?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
       <p class="resposta">R: Supremacia.</p>
     </div>
 
@@ -308,43 +368,38 @@
     </div>
 
     <p class="secao-titulo">NOVOS COMANDOS</p>
-    <p>
-      Em sua instrução inicial foram apresentados alguns comandos essenciais e obrigatórios dentro da CIA,
-      sendo eles: <strong>Sentido</strong>; <strong>À vontade</strong>; <strong>Continência</strong>;
-      <strong>Apresentar armas</strong>; <strong>Marcar passos</strong>.
-    </p>
-    <p>
-      Nessa aula você aprenderá mais dois novos comandos que contribuem para o bom andamento da nossa
-      instituição. Você conhece os comandos <strong>Apresente-se</strong> e <strong>Dispensado</strong>?
-    </p>
+    <div class="linha-copiavel"><span class="texto">Na Instrução Inicial você aprendeu 5 comandos básicos.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Sentido, À Vontade, Continência, Apresentar Armas e Marcar Passos.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Hoje você vai aprender mais dois: Apresente-se e Dispensado.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Você já conhece esses dois comandos?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
 
     <div class="callout callout-verde">
-      <p class="font-bold mb-1">Se a resposta for positiva:</p>
-      <p>Podemos pular para o Teste Prático?</p>
+      <p class="font-bold mb-2">Se a resposta for positiva:</p>
+      <div class="linha-copiavel-clara"><span class="texto">Podemos pular para o Teste Prático?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
       <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela resposta. Se ele concordar pule para o TESTE PRÁTICO.]</div>
     </div>
 
-    <p>
-      <strong>Apresente-se:</strong> Comando prestado em forma de sentido para orientar, punir e/ou gratificar
-      militares. Primeiramente, será dado o comando sentido. Então, será dado o comando "apresente-se". Nesse
-      momento, vá até o quadrado bem na frente de seu superior e acene. Aguarde seu superior retribuir de forma
-      a acenar e, então, diga: <em>"Senhor, [sua patente] [seu nick] apresentando-se, senhor!"</em>.
-    </p>
-    <p>
-      <strong>Dispensado:</strong> Depois que já se apresentou, será dado o comando "dispensado". Nesse
-      momento, acene e aguarde o seu superior retribuir. Então, <strong>retorne ao mesmo lugar que estava em
-      sentido</strong> e aguarde o "à vontade". Alguma dúvida?
-    </p>
+    <div class="linha-copiavel"><span class="texto">Apresente-se: usado pra orientar, punir ou gratificar.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Primeiro vem o comando Sentido, depois "Apresente-se".</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Vá até o quadrado na frente do seu superior e acene.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Espere ele acenar de volta.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Diga: "Senhor, [patente] [nick] apresentando-se, senhor!"</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+
+    <div class="linha-copiavel"><span class="texto">Dispensado: vem depois que você já se apresentou.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Acene e espere seu superior acenar de volta.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Volte pro mesmo lugar de onde saiu, em Sentido.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Aguarde o comando À Vontade.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Alguma dúvida?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
 
     <p class="secao-titulo">TESTE PRÁTICO</p>
-    <p>
-      Agora irei repassar os comandos para que você execute como eu te expliquei. Não se preocupe se errar,
-      ensinarei novamente. Podemos começar?
-    </p>
+    <div class="linha-copiavel"><span class="texto">Agora vou repassar os comandos pra você executar.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Não se preocupe se errar, eu ensino de novo.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Podemos começar?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
 
-    <p class="my-4">
+    <p class="text-xs text-gray-400 mt-4 mb-2">Clique em cada comando abaixo, na ordem, pra colar um de cada vez:</p>
+    <p class="my-2">
       <span class="comando">APRESENTE-SE!</span>
       <span class="comando">DISPENSADO!</span>
     </p>
@@ -355,10 +410,10 @@
     </div>
 
     <p class="secao-titulo">FINALIZAÇÃO</p>
-    <p>
-      Meus parabéns, soldado. Você foi aprovado(a) no curso! Acrescente <strong>[CFSd]</strong> ao final de sua
-      missão. Após esta aula, você completa todos os seus cursos de soldado. Alguma dúvida?
-    </p>
+    <div class="linha-copiavel"><span class="texto">Meus parabéns, soldado! Você foi aprovado no curso.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Acrescente [CFSd] ao final da sua missão.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Você completou todos os cursos de soldado!</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Alguma dúvida?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
 
   </div>
 
@@ -375,6 +430,8 @@
   </div>
 
 </div>
+
+<div id="toast-copia" class="toast-copia">Copiado!</div>
 
 <script>
   // A Central de Aulas passa o nick de quem está logado via ?nick=... na URL
@@ -395,18 +452,79 @@
 </script>
 
 <script>
+  // Copiar com um clique: cada linha de fala e cada comando copia o próprio
+  // texto (já com o nick real, se substituído acima) direto pra área de
+  // transferência, sem precisar selecionar nada manualmente.
+  (function () {
+    const toast = document.getElementById('toast-copia');
+    let toastTimeout;
+
+    function mostrarToast(texto) {
+      toast.textContent = texto;
+      toast.classList.add('show');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => toast.classList.remove('show'), 1400);
+    }
+
+    function copiarTexto(texto, elemento, iconeSeletor) {
+      const icone = iconeSeletor ? elemento.querySelector(iconeSeletor) : null;
+
+      function marcarCopiado() {
+        elemento.classList.add('copiado');
+        if (icone) { icone.classList.remove('fa-copy'); icone.classList.add('fa-check'); }
+        mostrarToast('Copiado!');
+        setTimeout(() => {
+          elemento.classList.remove('copiado');
+          if (icone) { icone.classList.remove('fa-check'); icone.classList.add('fa-copy'); }
+        }, 1100);
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(texto).then(marcarCopiado).catch(() => selecionarManualmente(elemento));
+      } else {
+        selecionarManualmente(elemento);
+      }
+    }
+
+    function selecionarManualmente(elemento) {
+      const alvo = elemento.querySelector('.texto') || elemento;
+      const range = document.createRange();
+      range.selectNodeContents(alvo);
+      const selecao = window.getSelection();
+      selecao.removeAllRanges();
+      selecao.addRange(range);
+      mostrarToast('Selecionado — aperte Ctrl+C');
+    }
+
+    document.querySelectorAll('.linha-copiavel, .linha-copiavel-clara, .linha-copiavel-mini').forEach(linha => {
+      linha.addEventListener('click', () => {
+        const texto = linha.querySelector('.texto').textContent.trim();
+        copiarTexto(texto, linha, '.icone-copiar i');
+      });
+    });
+
+    document.querySelectorAll('.comando').forEach(pill => {
+      pill.addEventListener('click', () => {
+        copiarTexto(pill.textContent.trim(), pill, null);
+      });
+    });
+
+    document.querySelectorAll('.linha-copiavel .texto, .linha-copiavel-clara .texto, .linha-copiavel-mini .texto').forEach(el => {
+      const linha = el.closest('.linha-copiavel, .linha-copiavel-clara, .linha-copiavel-mini');
+      const contador = linha.querySelector('.contador');
+      if (!contador) return;
+      const tamanho = el.textContent.trim().length;
+      contador.textContent = tamanho;
+      contador.classList.toggle('excedido', tamanho > 75);
+    });
+  })();
+</script>
+
+<script>
   // Avisa a página que estiver embutindo esta (via iframe) qual é a altura
   // real do conteúdo, pra ela ajustar o iframe e não sobrar barra de
-  // rolagem duplicada (uma da página da aula, outra da página que embute).
-  // Usa postMessage porque são domínios diferentes (GitHub Pages x fórum).
-  //
-  // IMPORTANTE: mede o container #conteudo-aula, não document.documentElement.
-  // A altura do <html> nunca fica menor que a altura da própria janela do
-  // iframe — então se ficássemos ouvindo "resize" (que também dispara
-  // quando o PAI aumenta o iframe) e medindo o documento inteiro, cada
-  // ajuste do pai geraria uma medida maior, num loop que só cresce.
-  // Uma div normal não tem esse problema: a altura dela reflete só o
-  // próprio conteúdo.
+  // rolagem duplicada. Mede o container #conteudo-aula (não o documento
+  // inteiro) pra evitar o loop de crescimento infinito.
   (function () {
     let ultimaAltura = 0;
 
@@ -414,17 +532,13 @@
       const el = document.getElementById('conteudo-aula');
       if (!el) return;
       const altura = el.scrollHeight;
-      if (Math.abs(altura - ultimaAltura) < 3) return; // ignora variações insignificantes
+      if (Math.abs(altura - ultimaAltura) < 3) return;
       ultimaAltura = altura;
       window.parent.postMessage({ tipo: 'cia-aula-altura', altura }, '*');
     }
 
     window.addEventListener('load', enviarAltura);
 
-    // Reenvia se o conteúdo mudar de altura depois do load (fontes/ícones
-    // carregando depois, por exemplo) — sem isso a altura enviada no load
-    // pode ficar desatualizada. Observa o container de conteúdo, não o
-    // body/documento inteiro, pelo mesmo motivo explicado acima.
     const alvo = document.getElementById('conteudo-aula');
     if (window.ResizeObserver && alvo) {
       new ResizeObserver(enviarAltura).observe(alvo);

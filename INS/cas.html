@@ -26,10 +26,7 @@
     border-radius: 999px;
     font-size: 0.85em;
   }
-  .nick-preenchido {
-    color: #1d4ed8;
-    font-weight: 700;
-  }
+  .nick-preenchido { color: #1d4ed8; font-weight: 700; }
 
   .aviso {
     display: flex;
@@ -40,6 +37,7 @@
     font-weight: 600;
     font-style: italic;
     margin-top: 10px;
+    margin-bottom: 4px;
   }
 
   .callout {
@@ -86,14 +84,11 @@
   }
   .secao-titulo:first-of-type { border-top: none; padding-top: 0; margin-top: 24px; }
 
-  .fala p { margin-bottom: 14px; line-height: 1.75; color: #1f2937; font-size: 15px; }
-  .fala strong { color: #111827; }
-
   .pergunta {
     background: #ffffff;
     border: 1px solid #e5e7eb;
     border-radius: 12px;
-    padding: 16px 18px;
+    padding: 14px 16px;
     margin-bottom: 14px;
   }
   .pergunta .resposta {
@@ -103,50 +98,76 @@
     font-weight: 600;
   }
 
-  .comando {
-    display: inline-block;
-    background: #111827;
-    color: #fff;
-    font-weight: 700;
-    letter-spacing: .03em;
-    padding: 6px 14px;
-    border-radius: 8px;
-    margin: 4px 6px 4px 0;
-    font-size: 14px;
+  /* ---- Linha de fala copiável (clique pra copiar) ---- */
+  .linha-copiavel, .linha-copiavel-clara {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all .15s ease;
+    user-select: none;
   }
-
-  .setor-card, .funcao-card {
+  .linha-copiavel {
     background: #ffffff;
     border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 14px 16px;
-    margin-bottom: 10px;
   }
-  .setor-card .nome, .funcao-card .nome {
-    font-weight: 700;
-    color: #111827;
+  .linha-copiavel:hover { border-color: #045fba; background: #f8faff; }
+  .linha-copiavel.copiado { border-color: #16a34a; background: #f0fdf4; }
+
+  .linha-copiavel-clara {
+    background: rgba(255,255,255,0.45);
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+  .linha-copiavel-clara:hover { background: rgba(255,255,255,0.75); }
+  .linha-copiavel-clara.copiado { background: rgba(255,255,255,0.95); border-color: #16a34a; }
+
+  .linha-copiavel .texto, .linha-copiavel-clara .texto {
     font-size: 14.5px;
-    margin-bottom: 2px;
+    line-height: 1.5;
   }
-  .setor-card .desc, .funcao-card .desc {
-    font-size: 13.5px;
-    color: #4b5563;
-    line-height: 1.55;
-  }
-  .balao {
-    display: inline-flex;
+  .linha-copiavel .texto { color: #1f2937; }
+
+  .lado-direito { display: flex; align-items: center; gap: 9px; flex-shrink: 0; }
+  .contador { font-size: 10px; color: #d1d5db; min-width: 16px; text-align: right; }
+  .contador.excedido { color: #dc2626; font-weight: 800; }
+  .icone-copiar { color: #9ca3af; transition: color .15s ease; }
+  .linha-copiavel:hover .icone-copiar, .linha-copiavel-clara:hover .icone-copiar { color: #045fba; }
+  .linha-copiavel.copiado .icone-copiar, .linha-copiavel-clara.copiado .icone-copiar { color: #16a34a; }
+
+  .dica-copia {
+    display: flex;
     align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 2px 9px;
-    border-radius: 999px;
-    margin-left: 8px;
-    vertical-align: middle;
+    gap: 8px;
+    background: #eff6ff;
+    color: #1e3a8a;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 18px;
   }
-  .balao-cinza    { background: #f3f4f6; color: #4b5563; }
-  .balao-vermelho { background: #fef2f2; color: #b91c1c; }
-  .balao-amarelo  { background: #fefce8; color: #a16207; }
+
+  .toast-copia {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #111827;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: 999px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+    z-index: 100;
+  }
+  .toast-copia.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body class="min-h-screen">
@@ -183,121 +204,83 @@
     </p>
   </div>
 
-  <!-- ============ ROTEIRO ============ -->
-  <div class="fala">
+  <div class="dica-copia">
+    <i class="fa-solid fa-hand-pointer"></i>
+    Clique em qualquer frase abaixo pra copiar ela sozinha, pronta pra colar no jogo.
+  </div>
 
-    <p>Olá, soldado.</p>
-    <p>
-      Seja bem-vindo ao Curso de Aprimoramento de Soldados da CIA.
-      Sou o instrutor <span class="placeholder">{USERNAME}</span> e serei responsável pela sua formação.
-      A partir deste momento, mantenham silêncio e atenção durante a aula.
-      Falem somente quando for autorizado ou quando eu realizar uma pergunta.
-      Durante a aula, deverá dirigir-se a mim utilizando <strong>"Senhor + patente + nick"</strong>.
-      Entendido?
-    </p>
+  <!-- ============ ROTEIRO ============ -->
+  <div id="lista-falas">
+
+    <div class="linha-copiavel"><span class="texto">Olá, soldado.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Seja bem-vindo ao Curso de Aprimoramento de Soldados.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Sou o instrutor <span class="placeholder">{USERNAME}</span> e vou te acompanhar nessa aula.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">A partir de agora, mantenha silêncio e atenção.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Só fale quando eu autorizar ou perguntar algo.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Chame-me de "Senhor + patente + nick".</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Entendido?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
 
     <p class="secao-titulo">DO BATALHÃO</p>
-    <p>Na base, como você já deve ter percebido, temos diferentes funções e setores.</p>
-    <p>Ao todo são <strong>7 setores</strong>: recepção, sala de controle, sala de estado, sala de ausências, centro de instrução, área de recrutas e o saguão.</p>
+    <div class="linha-copiavel"><span class="texto">Na base temos diferentes funções e setores.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Ao todo são 7 setores.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Recepção: alistamento e primeiro contato com novos membros.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Sala de Controle: fiscaliza e controla o acesso ao batalhão.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Sala de Estado: policiais presentes, sem função designada.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Sala de Ausências: afastamento temporário dos militares.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Centro de Instrução: promoções, punições e orientações.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Área de Recrutas: acolhimento e preparação inicial.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Saguão: área externa das dependências do batalhão.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Alguma dúvida?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
 
-    <div class="setor-card">
-      <p class="nome">Recepção</p>
-      <p class="desc">Responsável pelo alistamento de novos policiais. Sendo o primeiro contato com novos membros.</p>
-    </div>
-    <div class="setor-card">
-      <p class="nome">Sala de Controle (SC)</p>
-      <p class="desc">Responsável pela execução dos procedimentos de fiscalização e controle de acesso ao batalhão.</p>
-    </div>
-    <div class="setor-card">
-      <p class="nome">Sala de Estado</p>
-      <p class="desc">Destina-se aos policiais presentes, ativos e não designados para qualquer função.</p>
-    </div>
-    <div class="setor-card">
-      <p class="nome">Sala de Ausências</p>
-      <p class="desc">Destina-se ao afastamento temporário dos militares.</p>
-    </div>
-    <div class="setor-card">
-      <p class="nome">Centro de Instrução (CI)</p>
-      <p class="desc">Destina-se para a realização de atos disciplinares e educativos, podendo ser promoções, punições, orientações ou outras atividades.</p>
-    </div>
-    <div class="setor-card">
-      <p class="nome">Área de Recrutas</p>
-      <p class="desc">Destina-se ao acolhimento e à preparação inicial dos recrutas.</p>
-    </div>
-    <div class="setor-card">
-      <p class="nome">Saguão</p>
-      <p class="desc">Corresponde à área externa das dependências internas do batalhão.</p>
-    </div>
-
-    <p>Alguma dúvida?</p>
-
-    <p>Nos setores temos <strong>6 funções</strong>: recepcionistas, sentinela, operadores, Auxiliar Operacional (AO), Cabo da Guarda (CG) e Oficial da Guarda (OG).</p>
-
-    <div class="funcao-card">
-      <p class="nome">Recepcionista</p>
-      <p class="desc">Responsável pela execução dos procedimentos de alistamento e ingresso de novos policiais.</p>
-    </div>
-    <div class="funcao-card">
-      <p class="nome">Sentinela <span class="balao balao-cinza"><i class="fa-solid fa-comment"></i> balão cinza</span></p>
-      <p class="desc">Responsável pela condução da instrução dos recrutas.</p>
-    </div>
-    <div class="funcao-card">
-      <p class="nome">Operadores da Sala de Controle</p>
-      <p class="desc">Responsáveis pela fiscalização, verificação, triagem e autorização de acesso dos policiais.</p>
-    </div>
-    <div class="funcao-card">
-      <p class="nome">Auxiliar Operacional (AO) <span class="balao balao-cinza"><i class="fa-solid fa-comment"></i> balão cinza</span></p>
-      <p class="desc">Responsável pela coordenação imediata da Sala de Controle.</p>
-    </div>
-    <div class="funcao-card">
-      <p class="nome">Cabo da Guarda (CG) <span class="balao balao-vermelho"><i class="fa-solid fa-comment"></i> balão vermelho</span></p>
-      <p class="desc">Responsável pela coordenação da recepção do batalhão.</p>
-    </div>
-    <div class="funcao-card">
-      <p class="nome">Oficial da Guarda (OG) <span class="balao balao-amarelo"><i class="fa-solid fa-comment"></i> balão amarelo</span></p>
-      <p class="desc">Responsável pela direção, coordenação e fiscalização de todas as atividades do batalhão.</p>
-    </div>
-
-    <p>Alguma dúvida?</p>
+    <div class="linha-copiavel"><span class="texto">Nos setores temos 6 funções.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Recepcionista: alistamento e ingresso de novos policiais.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Sentinela: conduz a instrução dos recrutas.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Operadores: fiscalizam e autorizam o acesso dos policiais.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Auxiliar Operacional (AO): coordena a Sala de Controle.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Cabo da Guarda (CG): coordena a recepção do batalhão.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Oficial da Guarda (OG): dirige e fiscaliza o batalhão todo.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Alguma dúvida?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
 
     <p class="secao-titulo">TESTE TEÓRICO</p>
-    <p>
-      Agora, irei realizar algumas perguntas de modo a saber se absorveu todo o conteúdo.
-      É necessário acertar pelo menos 2 questões para ser aprovado.
-      Podemos começar?
-    </p>
+    <div class="linha-copiavel"><span class="texto">Agora vou fazer perguntas pra ver se você absorveu o conteúdo.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Precisa acertar 2 de 4 questões pra ser aprovado.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+    <div class="linha-copiavel"><span class="texto">Podemos começar?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     <div class="aviso"><i class="fa-duotone fa-circle-exclamation"></i> [<span class="placeholder">{USERNAME}</span>, aguarde pela confirmação.]</div>
 
     <div class="pergunta">
-      <p class="font-bold">1. Quantas e quais são os setores da base?</p>
+      <p class="font-bold mb-2">1.</p>
+      <div class="linha-copiavel"><span class="texto">Quantas e quais são os setores da base?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
       <p class="resposta">R: 7 setores, sendo: recepção, sala de controle, sala de estado, sala de ausências, centro de instrução, área de recrutas e o saguão.</p>
     </div>
 
     <div class="pergunta">
-      <p class="font-bold">2. Quantas e quais são as funções da base?</p>
+      <p class="font-bold mb-2">2.</p>
+      <div class="linha-copiavel"><span class="texto">Quantas e quais são as funções da base?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
       <p class="resposta">R: 6 funções, sendo: recepcionistas, sentinela, operadores, Auxiliar Operacional (AO), Cabo da Guarda (CG) e Oficial da Guarda (OG).</p>
     </div>
 
     <div class="pergunta">
-      <p class="font-bold">3. Qual a função dos recepcionistas?</p>
+      <p class="font-bold mb-2">3.</p>
+      <div class="linha-copiavel"><span class="texto">Qual a função dos recepcionistas?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
       <p class="resposta">R: Execução dos procedimentos de alistamento e ingresso de novos policiais.</p>
     </div>
 
     <div class="pergunta">
-      <p class="font-bold">4. Para que serve o Centro de Instrução?</p>
+      <p class="font-bold mb-2">4.</p>
+      <div class="linha-copiavel"><span class="texto">Para que serve o Centro de Instrução?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
       <p class="resposta">R: Realização de atos disciplinares e educativos, podendo ser promoções, punições, orientações ou outras atividades.</p>
     </div>
 
     <p class="secao-titulo">FINALIZAÇÃO</p>
 
     <div class="callout callout-verde">
-      <p class="font-bold mb-1">Se aprovado:</p>
-      <p>
-        Meus parabéns, soldado. Você foi aprovado(a) no curso! Acrescente <strong>[CAS]</strong> ao final de sua missão.
-        Após esta supervisão, você deverá procurar um instrutor (brevê azul) para receber o Curso de Formação de
-        Soldados (CFSd). Alguma dúvida?
-      </p>
+      <p class="font-bold mb-2">Se aprovado:</p>
+      <div class="linha-copiavel-clara"><span class="texto">Meus parabéns, soldado! Você foi aprovado no curso.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel-clara"><span class="texto">Acrescente [CAS] ao final da sua missão.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel-clara"><span class="texto">Procure um instrutor (brevê azul) pra sua próxima aula.</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel-clara"><span class="texto">Sua próxima aula é o Curso de Formação de Soldados (CFSd).</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
+      <div class="linha-copiavel-clara"><span class="texto">Alguma dúvida?</span><span class="lado-direito"><span class="contador"></span><span class="icone-copiar"><i class="fa-solid fa-copy"></i></span></span></div>
     </div>
 
     <div class="callout callout-vermelho">
@@ -324,6 +307,8 @@
 
 </div>
 
+<div id="toast-copia" class="toast-copia">Copiado!</div>
+
 <script>
   // A Central de Aulas passa o nick de quem está logado via ?nick=... na URL
   // (o GitHub Pages não consegue detectar login do fórum sozinho, por ser
@@ -343,18 +328,73 @@
 </script>
 
 <script>
+  // Copiar com um clique: cada linha de fala copia o próprio texto (já com
+  // o nick real, se substituído acima) direto pra área de transferência,
+  // sem precisar selecionar nada manualmente.
+  (function () {
+    const toast = document.getElementById('toast-copia');
+    let toastTimeout;
+
+    function mostrarToast(texto) {
+      toast.textContent = texto;
+      toast.classList.add('show');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => toast.classList.remove('show'), 1400);
+    }
+
+    function copiarTexto(texto, elemento, iconeSeletor) {
+      const icone = iconeSeletor ? elemento.querySelector(iconeSeletor) : null;
+
+      function marcarCopiado() {
+        elemento.classList.add('copiado');
+        if (icone) { icone.classList.remove('fa-copy'); icone.classList.add('fa-check'); }
+        mostrarToast('Copiado!');
+        setTimeout(() => {
+          elemento.classList.remove('copiado');
+          if (icone) { icone.classList.remove('fa-check'); icone.classList.add('fa-copy'); }
+        }, 1100);
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(texto).then(marcarCopiado).catch(() => selecionarManualmente(elemento));
+      } else {
+        selecionarManualmente(elemento);
+      }
+    }
+
+    function selecionarManualmente(elemento) {
+      const alvo = elemento.querySelector('.texto') || elemento;
+      const range = document.createRange();
+      range.selectNodeContents(alvo);
+      const selecao = window.getSelection();
+      selecao.removeAllRanges();
+      selecao.addRange(range);
+      mostrarToast('Selecionado — aperte Ctrl+C');
+    }
+
+    document.querySelectorAll('.linha-copiavel, .linha-copiavel-clara').forEach(linha => {
+      linha.addEventListener('click', () => {
+        const texto = linha.querySelector('.texto').textContent.trim();
+        copiarTexto(texto, linha, '.icone-copiar i');
+      });
+    });
+
+    document.querySelectorAll('.linha-copiavel .texto, .linha-copiavel-clara .texto').forEach(el => {
+      const linha = el.closest('.linha-copiavel, .linha-copiavel-clara');
+      const contador = linha.querySelector('.contador');
+      if (!contador) return;
+      const tamanho = el.textContent.trim().length;
+      contador.textContent = tamanho;
+      contador.classList.toggle('excedido', tamanho > 75);
+    });
+  })();
+</script>
+
+<script>
   // Avisa a página que estiver embutindo esta (via iframe) qual é a altura
   // real do conteúdo, pra ela ajustar o iframe e não sobrar barra de
-  // rolagem duplicada (uma da página da aula, outra da página que embute).
-  // Usa postMessage porque são domínios diferentes (GitHub Pages x fórum).
-  //
-  // IMPORTANTE: mede o container #conteudo-aula, não document.documentElement.
-  // A altura do <html> nunca fica menor que a altura da própria janela do
-  // iframe — então se ficássemos ouvindo "resize" (que também dispara
-  // quando o PAI aumenta o iframe) e medindo o documento inteiro, cada
-  // ajuste do pai geraria uma medida maior, num loop que só cresce.
-  // Uma div normal não tem esse problema: a altura dela reflete só o
-  // próprio conteúdo.
+  // rolagem duplicada. Mede o container #conteudo-aula (não o documento
+  // inteiro) pra evitar o loop de crescimento infinito.
   (function () {
     let ultimaAltura = 0;
 
@@ -362,17 +402,13 @@
       const el = document.getElementById('conteudo-aula');
       if (!el) return;
       const altura = el.scrollHeight;
-      if (Math.abs(altura - ultimaAltura) < 3) return; // ignora variações insignificantes
+      if (Math.abs(altura - ultimaAltura) < 3) return;
       ultimaAltura = altura;
       window.parent.postMessage({ tipo: 'cia-aula-altura', altura }, '*');
     }
 
     window.addEventListener('load', enviarAltura);
 
-    // Reenvia se o conteúdo mudar de altura depois do load (fontes/ícones
-    // carregando depois, por exemplo) — sem isso a altura enviada no load
-    // pode ficar desatualizada. Observa o container de conteúdo, não o
-    // body/documento inteiro, pelo mesmo motivo explicado acima.
     const alvo = document.getElementById('conteudo-aula');
     if (window.ResizeObserver && alvo) {
       new ResizeObserver(enviarAltura).observe(alvo);

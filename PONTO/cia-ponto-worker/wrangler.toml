@@ -1,0 +1,10 @@
+name = "cia-controle-ponto"
+main = "src/index.js"
+compatibility_date = "2024-09-01"
+
+# Depois de rodar `npx wrangler d1 create cia_ponto`, cole aqui o
+# database_id que aparecer no terminal.
+[[d1_databases]]
+binding = "DB"
+database_name = "cia_ponto"
+database_id = "0828f7f2-1b0a-449f-a46f-0b3d58661df6"

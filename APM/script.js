@@ -46,14 +46,14 @@
 
   /* ===== Slides do carrossel ===== */
   var SLIDES = [
-    { src: 'slides/slide1.png', label: 'Slide 1' },
-    { src: 'slides/slide2.png', label: 'Slide 2' },
-    { src: 'slides/slide3.png', label: 'Slide 3' },
-    { src: 'slides/slide4.png', label: 'Slide 4' },
-    { src: 'slides/slide5.png', label: 'Slide 5' },
-    { src: 'slides/slide6.png', label: 'Slide 6' },
-    { src: 'slides/slide7.png', label: 'Slide 7' },
-    { src: 'slides/slide8.png', label: 'Slide 8' },
+    { src: 'https://thiiagomrochaa.github.io/CIAHBT/APM/slides/slide1.png', label: 'Slide 1' },
+    { src: 'https://thiiagomrochaa.github.io/CIAHBT/APM/slides/slide2.png', label: 'Slide 2' },
+    { src: 'https://thiiagomrochaa.github.io/CIAHBT/APM/slides/slide3.png', label: 'Slide 3' },
+    { src: 'https://thiiagomrochaa.github.io/CIAHBT/APM/slides/slide4.png', label: 'Slide 4' },
+    { src: 'https://thiiagomrochaa.github.io/CIAHBT/APM/slides/slide5.png', label: 'Slide 5' },
+    { src: 'https://thiiagomrochaa.github.io/CIAHBT/APM/slides/slide6.png', label: 'Slide 6' },
+    { src: 'https://thiiagomrochaa.github.io/CIAHBT/APM/slides/slide7.png', label: 'Slide 7' },
+    { src: 'https://thiiagomrochaa.github.io/CIAHBT/APM/slides/slide8.png', label: 'Slide 8' },
   ];
 
   /* ===== Metadados das seções ===== */

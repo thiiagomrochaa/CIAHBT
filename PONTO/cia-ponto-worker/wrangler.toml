@@ -9,5 +9,5 @@ binding = "DB"
 database_name = "cia_ponto"
 database_id = "0828f7f2-1b0a-449f-a46f-0b3d58661df6"
 
-[vars]
+[[vars]]
 ADMINS = "MrThiiagoM,vcapelli"

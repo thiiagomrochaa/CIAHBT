@@ -12,7 +12,7 @@
   body { background:#f3f4f6; font-family:'Plus Jakarta Sans',sans-serif; color:#1f2937; margin:0; line-height:1.5; }
   .glass-card { background:#fff; border-radius:24px; border:1px solid #e5e7eb; box-shadow:0 4px 6px -1px rgb(0 0 0 / .05); }
   .category-title { font-size:.6rem; font-weight:900; text-transform:uppercase; letter-spacing:.15em; color:#d1d5db; margin:0 0 1rem; }
-  .avatar-head { width:52px; height:52px; border-radius:9999px; overflow:hidden; background:#00000038; flex-shrink:0; position:relative; display:flex; align-items:center; justify-content:center; }
+  .avatar-head { width:52px; height:52px; border-radius:9999px; overflow:hidden; flex-shrink:0; position:relative; display:flex; align-items:center; justify-content:center; top:-8px;}
   .avatar-head img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top; display:none; transform:scale(2); transform-origin:center 25%; top:-18px; }
   .avatar-head img.pronto { display:block; }
   .avatar-head .avatar-inicial { color:#fff; font-weight:700; font-size:14px; }
@@ -30,7 +30,7 @@
 <body class="min-h-screen">
 
 <nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-20 items-center">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center h-20 items-center">
     <div class="flex items-center gap-2">
       <div class="bg-[#8f6f3d] p-2 rounded-xl shadow-lg flex items-center justify-center">
         <img src="https://imaging.habblet.city/badge/b0913s02154s01134s19114s17118" alt="">
@@ -40,16 +40,11 @@
         <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Militar da Semana</span>
       </div>
     </div>
-    <div class="text-right leading-none">
-      <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Semana de</div>
-      <div id="semana" class="text-sm font-extrabold text-gray-800 mt-1">--/--/----</div>
-    </div>
+    
   </div>
-</nav>
+</nav><div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-16 space-y-6">
 
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-16 space-y-6">
-
-  <section class="glass-card p-6 md:p-8">
+  <section class="glass-card p-6 md:p-8" style="height: 78px;padding: 15px;">
     <div id="id_carregando" class="flex items-center gap-2 text-gray-400">
       <i class="fas fa-spinner fa-spin text-sm"></i><span class="text-xs font-bold">Identificando...</span>
     </div>
@@ -57,15 +52,17 @@
       <div class="avatar-head"><img id="autor_avatar" data-nick="" alt=""><span id="autor_inicial" class="avatar-inicial"></span></div>
       <div>
         <p class="text-lg font-extrabold text-gray-800 leading-tight">Olá, <span id="autor_nick">---</span>.</p>
-        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Escolha o militar da semana. Você tem 1 voto e pode trocá-lo até domingo.</p>
+        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Escolha o militar da semana. Você tem 1 voto e pode trocá-lo ou retirá-lo.</p>
       </div>
     </div>
-    <div id="id_manual" class="hidden">
-      <label class="input-label">Confirme seu nickname</label>
-      <input id="nick_manual" list="lista_nicks" class="modern-input" placeholder="Comece a digitar" autocomplete="off">
-      <datalist id="lista_nicks"></datalist>
-      <p class="text-[10px] text-gray-400 mt-1">Não conseguimos identificar você pela sessão do fórum.</p>
+    <div id="id_deslogado" class="hidden items-center gap-3">
+      <div class="w-[52px] h-[52px] rounded-full bg-rose-50 flex items-center justify-center text-rose-500 flex-shrink-0"><i class="fas fa-lock"></i></div>
+      <div>
+        <p class="text-lg font-extrabold text-gray-800 leading-tight">Você não está logado no fórum.</p>
+        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Faça login no fórum e recarregue esta página para votar.</p>
+      </div>
     </div>
+    <datalist id="lista_nicks"></datalist>
     <p id="feedback" class="text-xs font-semibold text-gray-400 mt-3 min-h-[16px]"></p>
   </section>
 
@@ -79,8 +76,7 @@
 
   <details id="painel_admin" class="hidden glass-card p-6">
     <summary class="cursor-pointer text-xs font-bold text-gray-400 uppercase tracking-widest">Administração</summary>
-    <div class="mt-4 grid gap-4 sm:grid-cols-2">
-      <div><label class="input-label">Chave de administrador</label><input id="chave" type="password" class="modern-input"></div>
+    <div class="mt-4">
       <div><label class="input-label">Adicionar candidato</label><input id="novo_nick" list="lista_nicks" class="modern-input" placeholder="Nickname" autocomplete="off"></div>
     </div>
     <button id="btn_add" class="btn-tipo mt-4 px-5 py-3 rounded-2xl bg-blue-500 text-white text-sm font-bold">Adicionar</button>
@@ -102,7 +98,7 @@
   var $ = function (id) { return document.getElementById(id); };
   var autor = null, dados = { candidatos: [], meuVoto: null }, patentes = {}, cacheFig = {};
 
-  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function esc(t) { return String(t).replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '&quot;'); }
   function inicial(n) { return (n || '?').trim().charAt(0).toUpperCase(); }
   function timeout(url, opts, ms) {
     var c = new AbortController(), t = setTimeout(function () { c.abort(); }, ms || 6000);
@@ -157,7 +153,7 @@
   function definirAutor(nick) {
     var reg = patentes[nick.toLowerCase()];
     autor = { nick: reg ? reg.nick : nick };
-    $('id_carregando').classList.add('hidden'); $('id_manual').classList.add('hidden');
+    $('id_carregando').classList.add('hidden'); $('id_deslogado').classList.add('hidden');
     $('id_ok').classList.remove('hidden'); $('id_ok').classList.add('flex');
     $('autor_nick').textContent = autor.nick;
     $('autor_inicial').textContent = inicial(autor.nick);
@@ -183,7 +179,7 @@
     var cs = dados.candidatos, total = cs.reduce(function (s, c) { return s + c.votos; }, 0);
     $('total').textContent = total + (total === 1 ? ' voto' : ' votos');
     if (!cs.length) { $('lista').innerHTML = '<div class="py-12 text-center text-gray-400 font-bold text-sm">Nenhum candidato nesta semana ainda.</div>'; return; }
-    var admin = dados.admin && $('chave').value !== '';
+    var admin = !!dados.admin;
     $('lista').innerHTML = cs.map(function (c) {
       var meu = dados.meuVoto && dados.meuVoto.toLowerCase() === c.nick.toLowerCase();
       var pat = patentes[c.nick.toLowerCase()];
@@ -195,7 +191,8 @@
           '<p class="text-xs text-gray-400 font-semibold">' + (pat ? esc(pat.patente) + ' · ' : '') + c.votos + ' (' + pct + '%)</p></div>' +
         '</div>' +
         '<div class="flex items-center gap-2">' +
-          (admin ? '<button data-rem="' + esc(c.nick) + '" class="text-gray-300 hover:text-rose-500" title="Remover"><i class="fas fa-trash"></i></button>' : '') +
+          (admin ? '<button data-rem="' + esc(c.nick) + '" class="btn-tipo px-3 py-2 rounded-xl text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200" title="Remover candidato"><i class="fas fa-trash"></i> Remover</button>' : '') +
+          (meu ? '<button data-retirar="1" class="btn-tipo px-3 py-2 rounded-xl text-xs font-bold bg-white text-gray-600 border border-gray-300" title="Retirar meu voto"><i class="fa-solid fa-xmark"></i> Retirar voto</button>' : '') +
           '<button data-votar="' + esc(c.nick) + '" ' + (!autor ? 'disabled ' : '') + 'class="btn-tipo px-4 py-2 rounded-xl text-xs font-bold ' +
             (meu ? 'bg-emerald-500 text-white' : 'bg-gray-800 text-white') + '">' +
             (meu ? '<i class="fa-solid fa-check"></i> Seu voto' : (dados.meuVoto ? 'Trocar voto' : 'Votar')) + '</button>' +
@@ -204,14 +201,14 @@
     carregarAvatares(cs.map(function (c) { return c.nick; }));
   }
 
-  function post(rota, corpo, cab) {
-    var headers = Object.assign({ 'X-Admin-Nick': autor ? autor.nick : '' }, cab || {});
+  function post(rota, corpo) {
+    var headers = { 'X-Admin-Nick': autor ? autor.nick : '' };
     return fetch(WORKER_URL + rota, { method: 'POST', headers: headers, body: JSON.stringify(corpo) })
       .then(function (r) { return r.json(); });
   }
 
   $('lista').addEventListener('click', function (e) {
-    var v = e.target.closest('[data-votar]'), r = e.target.closest('[data-rem]');
+    var v = e.target.closest('[data-votar]'), r = e.target.closest('[data-rem]'), t = e.target.closest('[data-retirar]');
     if (v && autor) {
       msg($('feedback'), 'Registrando voto...');
       post('/api/semana/votar', { votante: autor.nick, candidato: v.dataset.votar }).then(function (d) {
@@ -219,26 +216,31 @@
         else msg($('feedback'), d.erro || 'Erro ao votar.', 'text-rose-500');
       }).catch(function () { msg($('feedback'), 'Erro ao votar.', 'text-rose-500'); });
     }
+    if (t && autor && confirm('Retirar seu voto desta semana?')) {
+      post('/api/semana/retirar-voto', { votante: autor.nick }).then(function (d) {
+        if (d.ok) { msg($('feedback'), 'Seu voto foi retirado.', 'text-emerald-600'); carregar(); }
+        else msg($('feedback'), d.erro || 'Erro ao retirar o voto.', 'text-rose-500');
+      }).catch(function () { msg($('feedback'), 'Erro ao retirar o voto.', 'text-rose-500'); });
+    }
     if (r && confirm('Remover ' + r.dataset.rem + ' e os votos dele nesta semana?')) {
-      post('/api/semana/remover', { nick: r.dataset.rem }, { 'X-Admin-Key': $('chave').value })
-        .then(function (d) { if (d.ok) carregar(); else msg($('admin_msg'), d.erro, 'text-rose-500'); });
+      post('/api/semana/remover', { nick: r.dataset.rem })
+        .then(function (d) { if (d.ok) carregar(); else msg($('feedback'), d.erro || 'Erro ao remover.', 'text-rose-500'); })
+        .catch(function () { msg($('feedback'), 'Erro ao remover.', 'text-rose-500'); });
     }
   });
 
-  $('chave').addEventListener('input', desenhar);
   $('btn_add').addEventListener('click', function () {
-    post('/api/semana/candidato', { nick: $('novo_nick').value }, { 'X-Admin-Key': $('chave').value }).then(function (d) {
+    post('/api/semana/candidato', { nick: $('novo_nick').value }).then(function (d) {
       if (d.ok) { $('novo_nick').value = ''; msg($('admin_msg'), 'Candidato adicionado.', 'text-emerald-600'); carregar(); }
       else msg($('admin_msg'), d.erro || 'Erro.', 'text-rose-500');
     });
   });
-  $('nick_manual').addEventListener('change', function () { if (this.value.trim()) definirAutor(this.value.trim()); });
 
   document.addEventListener('DOMContentLoaded', function () {
     carregar();
     carregarPlanilhas().then(detectarSessao).then(function (nick) {
       if (nick) definirAutor(nick);
-      else { $('id_carregando').classList.add('hidden'); $('id_manual').classList.remove('hidden'); }
+      else { $('id_carregando').classList.add('hidden'); $('id_deslogado').classList.remove('hidden'); $('id_deslogado').classList.add('flex'); }
     });
   });
 })();

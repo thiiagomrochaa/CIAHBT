@@ -1,1 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POLÍCIA CIA: Militar da Semana</title>
+<link rel="icon" href="https://imaging.habblet.city/badge/b0913s02154s01134s19114s17118">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  body { background:#f3f4f6; font-family:'Plus Jakarta Sans',sans-serif; color:#1f2937; margin:0; line-height:1.5; }
+  .glass-card { background:#fff; border-radius:24px; border:1px solid #e5e7eb; box-shadow:0 4px 6px -1px rgb(0 0 0 / .05); }
+  .category-title { font-size:.6rem; font-weight:900; text-transform:uppercase; letter-spacing:.15em; color:#d1d5db; margin:0 0 1rem; }
+  .avatar-head { width:52px; height:52px; border-radius:9999px; overflow:hidden; background:#00000038; flex-shrink:0; position:relative; display:flex; align-items:center; justify-content:center; }
+  .avatar-head img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center top; display:none; transform:scale(2); transform-origin:center 25%; top:-18px; }
+  .avatar-head img.pronto { display:block; }
+  .avatar-head .avatar-inicial { color:#fff; font-weight:700; font-size:14px; }
+  .avatar-head img.pronto ~ .avatar-inicial { display:none; }
+  .btn-tipo { transition:all .15s ease; }
+  .btn-tipo:hover { filter:brightness(1.08); transform:translateY(-1px); }
+  .btn-tipo:disabled { opacity:.5; pointer-events:none; }
+  .cand { transition:background .15s ease; border:2px solid transparent; }
+  .cand.meu { background:#ecfdf5; border-color:#a7f3d0; }
+  .modern-input { width:100%; padding:10px 0; border-bottom:2px solid #e5e7eb; background:transparent; outline:none; font-weight:600; font-size:.95rem; font-family:inherit; }
+  .modern-input:focus { border-bottom-color:#3b82f6; }
+  .input-label { font-size:.65rem; font-weight:800; text-transform:uppercase; letter-spacing:.1em; color:#9ca3af; display:block; margin-bottom:2px; }
+</style>
+</head>
+<body class="min-h-screen">
 
+<nav class="bg-white border-b border-gray-200 sticky top-0 z-50">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-20 items-center">
+    <div class="flex items-center gap-2">
+      <div class="bg-[#8f6f3d] p-2 rounded-xl shadow-lg flex items-center justify-center">
+        <img src="https://imaging.habblet.city/badge/b0913s02154s01134s19114s17118" alt="">
+      </div>
+      <div class="leading-none">
+        <span class="text-xl font-black tracking-tighter text-gray-900 uppercase block">Polícia CIA</span>
+        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Militar da Semana</span>
+      </div>
+    </div>
+    <div class="text-right leading-none">
+      <div class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Semana de</div>
+      <div id="semana" class="text-sm font-extrabold text-gray-800 mt-1">--/--/----</div>
+    </div>
+  </div>
+</nav>
+
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 pb-16 space-y-6">
+
+  <section class="glass-card p-6 md:p-8">
+    <div id="id_carregando" class="flex items-center gap-2 text-gray-400">
+      <i class="fas fa-spinner fa-spin text-sm"></i><span class="text-xs font-bold">Identificando...</span>
+    </div>
+    <div id="id_ok" class="hidden items-center gap-3">
+      <div class="avatar-head"><img id="autor_avatar" data-nick="" alt=""><span id="autor_inicial" class="avatar-inicial"></span></div>
+      <div>
+        <p class="text-lg font-extrabold text-gray-800 leading-tight">Olá, <span id="autor_nick">---</span>.</p>
+        <p class="text-xs font-bold text-gray-400 uppercase tracking-widest">Escolha o militar da semana. Você tem 1 voto e pode trocá-lo até domingo.</p>
+      </div>
+    </div>
+    <div id="id_manual" class="hidden">
+      <label class="input-label">Confirme seu nickname</label>
+      <input id="nick_manual" list="lista_nicks" class="modern-input" placeholder="Comece a digitar" autocomplete="off">
+      <datalist id="lista_nicks"></datalist>
+      <p class="text-[10px] text-gray-400 mt-1">Não conseguimos identificar você pela sessão do fórum.</p>
+    </div>
+    <p id="feedback" class="text-xs font-semibold text-gray-400 mt-3 min-h-[16px]"></p>
+  </section>
+
+  <section class="glass-card p-6 md:p-8">
+    <div class="flex items-center justify-between mb-2">
+      <p class="category-title mb-0">Candidatos</p>
+      <span id="total" class="text-[10px] font-black text-gray-300 uppercase tracking-widest"></span>
+    </div>
+    <div id="lista" class="space-y-2"></div>
+  </section>
+
+  <details id="painel_admin" class="hidden glass-card p-6">
+    <summary class="cursor-pointer text-xs font-bold text-gray-400 uppercase tracking-widest">Administração</summary>
+    <div class="mt-4 grid gap-4 sm:grid-cols-2">
+      <div><label class="input-label">Chave de administrador</label><input id="chave" type="password" class="modern-input"></div>
+      <div><label class="input-label">Adicionar candidato</label><input id="novo_nick" list="lista_nicks" class="modern-input" placeholder="Nickname" autocomplete="off"></div>
+    </div>
+    <button id="btn_add" class="btn-tipo mt-4 px-5 py-3 rounded-2xl bg-blue-500 text-white text-sm font-bold">Adicionar</button>
+    <p id="admin_msg" class="text-xs font-semibold text-gray-400 mt-3 min-h-[16px]"></p>
+  </details>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var WORKER_URL = "https://cia-controle-ponto.thiagomrochaa.workers.dev";
+  var HABBLET_API = 'https://api.habblet.city';
+  var HABBLET_IMAGING = 'https://imaging.habblet.city/avatarimage';
+  var SHEET_ID = '1eiyugYk_lTFAIAQW4Zgm9TDZg5m3f5chLX8Zmlqa76U';
+  var URLS = ['Corpo+de+Praças', 'Corpo+de+Oficiais', 'Corpo+Executivo'].map(function (a) {
+    return 'https://opensheet.elk.sh/' + SHEET_ID + '/' + a;
+  });
+
+  var $ = function (id) { return document.getElementById(id); };
+  var autor = null, dados = { candidatos: [], meuVoto: null }, patentes = {}, cacheFig = {};
+
+  function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function inicial(n) { return (n || '?').trim().charAt(0).toUpperCase(); }
+  function timeout(url, opts, ms) {
+    var c = new AbortController(), t = setTimeout(function () { c.abort(); }, ms || 6000);
+    return fetch(url, Object.assign({}, opts, { signal: c.signal })).finally(function () { clearTimeout(t); });
+  }
+  function msg(el, txt, cor) { el.textContent = txt; el.className = 'text-xs font-semibold mt-3 min-h-[16px] ' + (cor || 'text-gray-400'); }
+
+  /* ---------- Avatar (cabeça do boneco) ---------- */
+  function figura(nick) {
+    var k = nick.toLowerCase();
+    if (k in cacheFig) return Promise.resolve(cacheFig[k]);
+    return timeout(HABBLET_API + '/player/' + encodeURIComponent(nick))
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) { return cacheFig[k] = (d && d.figure) || null; })
+      .catch(function () { return null; });
+  }
+  function carregarAvatares(nicks) {
+    Array.from(new Set(nicks)).forEach(function (nick) {
+      figura(nick).then(function (f) {
+        if (!f) return;
+        var url = HABBLET_IMAGING + '?figure=' + encodeURIComponent(f) + '&headonly=1&direction=2&head_direction=2&size=m&img_format=png';
+        document.querySelectorAll('img[data-nick="' + nick.replace(/"/g, '\\"') + '"]').forEach(function (img) {
+          img.onload = function () { img.classList.add('pronto'); };
+          img.src = url;
+        });
+      });
+    });
+  }
+
+  /* ---------- Planilha (patentes) e sessão do fórum ---------- */
+  function capitalizar(t) { return t.toLowerCase().replace(/(^|[\s\-\/])\S/g, function (c) { return c.toUpperCase(); }); }
+  function carregarPlanilhas() {
+    return Promise.all(URLS.map(function (u) {
+      return timeout(u).then(function (r) { return r.json(); }).then(function (linhas) {
+        linhas.forEach(function (l) {
+          Object.keys(l).forEach(function (pat) {
+            var m = (l[pat] || '').match(/^(.*)\s\[([^\]]+)\]\s.+$/);
+            if (m) patentes[m[1].trim().toLowerCase()] = { nick: m[1].trim(), patente: capitalizar(pat.trim()) };
+          });
+        });
+      }).catch(function () {});
+    })).then(function () {
+      $('lista_nicks').innerHTML = Object.keys(patentes).map(function (k) { return '<option value="' + esc(patentes[k].nick) + '">'; }).join('');
+    });
+  }
+  function detectarSessao() {
+    return timeout('/forum').then(function (r) { return r.text(); }).then(function (html) {
+      var m = html.match(/_userdata\["username"\]\s*=\s*"([^"]+)"/);
+      return (m && m[1].toLowerCase() !== 'anonymous') ? m[1] : null;
+    }).catch(function () { return null; });
+  }
+  function definirAutor(nick) {
+    var reg = patentes[nick.toLowerCase()];
+    autor = { nick: reg ? reg.nick : nick };
+    $('id_carregando').classList.add('hidden'); $('id_manual').classList.add('hidden');
+    $('id_ok').classList.remove('hidden'); $('id_ok').classList.add('flex');
+    $('autor_nick').textContent = autor.nick;
+    $('autor_inicial').textContent = inicial(autor.nick);
+    $('autor_avatar').dataset.nick = autor.nick;
+    carregarAvatares([autor.nick]);
+    carregar();
+  }
+
+  /* ---------- Votação ---------- */
+  function carregar() {
+    var q = autor ? '?votante=' + encodeURIComponent(autor.nick) : '';
+    return fetch(WORKER_URL + '/api/semana' + q).then(function (r) { return r.json(); }).then(function (d) {
+      dados = d;
+      $('painel_admin').classList.toggle('hidden', !d.admin);
+      var p = d.semana.split('-'); $('semana').textContent = p[2] + '/' + p[1] + '/' + p[0];
+      desenhar();
+    }).catch(function () {
+      $('lista').innerHTML = '<div class="py-12 text-center text-rose-500 font-bold text-sm">Não foi possível carregar os candidatos agora.</div>';
+    });
+  }
+
+  function desenhar() {
+    var cs = dados.candidatos, total = cs.reduce(function (s, c) { return s + c.votos; }, 0);
+    $('total').textContent = total + (total === 1 ? ' voto' : ' votos');
+    if (!cs.length) { $('lista').innerHTML = '<div class="py-12 text-center text-gray-400 font-bold text-sm">Nenhum candidato nesta semana ainda.</div>'; return; }
+    var admin = dados.admin && $('chave').value !== '';
+    $('lista').innerHTML = cs.map(function (c) {
+      var meu = dados.meuVoto && dados.meuVoto.toLowerCase() === c.nick.toLowerCase();
+      var pat = patentes[c.nick.toLowerCase()];
+      var pct = total ? Math.round(c.votos / total * 100) : 0;
+      return '<div class="cand ' + (meu ? 'meu ' : '') + 'flex items-center justify-between gap-3 p-3 rounded-2xl">' +
+        '<div class="flex items-center gap-3 min-w-0">' +
+          '<div class="avatar-head"><img data-nick="' + esc(c.nick) + '" alt=""><span class="avatar-inicial">' + inicial(c.nick) + '</span></div>' +
+          '<div class="min-w-0"><p class="font-bold text-gray-800 text-sm truncate">' + esc(c.nick) + '</p>' +
+          '<p class="text-xs text-gray-400 font-semibold">' + (pat ? esc(pat.patente) + ' · ' : '') + c.votos + ' (' + pct + '%)</p></div>' +
+        '</div>' +
+        '<div class="flex items-center gap-2">' +
+          (admin ? '<button data-rem="' + esc(c.nick) + '" class="text-gray-300 hover:text-rose-500" title="Remover"><i class="fas fa-trash"></i></button>' : '') +
+          '<button data-votar="' + esc(c.nick) + '" ' + (!autor ? 'disabled ' : '') + 'class="btn-tipo px-4 py-2 rounded-xl text-xs font-bold ' +
+            (meu ? 'bg-emerald-500 text-white' : 'bg-gray-800 text-white') + '">' +
+            (meu ? '<i class="fa-solid fa-check"></i> Seu voto' : (dados.meuVoto ? 'Trocar voto' : 'Votar')) + '</button>' +
+        '</div></div>';
+    }).join('');
+    carregarAvatares(cs.map(function (c) { return c.nick; }));
+  }
+
+  function post(rota, corpo, cab) {
+    var headers = Object.assign({ 'X-Admin-Nick': autor ? autor.nick : '' }, cab || {});
+    return fetch(WORKER_URL + rota, { method: 'POST', headers: headers, body: JSON.stringify(corpo) })
+      .then(function (r) { return r.json(); });
+  }
+
+  $('lista').addEventListener('click', function (e) {
+    var v = e.target.closest('[data-votar]'), r = e.target.closest('[data-rem]');
+    if (v && autor) {
+      msg($('feedback'), 'Registrando voto...');
+      post('/api/semana/votar', { votante: autor.nick, candidato: v.dataset.votar }).then(function (d) {
+        if (d.ok) { msg($('feedback'), 'Voto registrado em ' + v.dataset.votar + '.', 'text-emerald-600'); carregar(); }
+        else msg($('feedback'), d.erro || 'Erro ao votar.', 'text-rose-500');
+      }).catch(function () { msg($('feedback'), 'Erro ao votar.', 'text-rose-500'); });
+    }
+    if (r && confirm('Remover ' + r.dataset.rem + ' e os votos dele nesta semana?')) {
+      post('/api/semana/remover', { nick: r.dataset.rem }, { 'X-Admin-Key': $('chave').value })
+        .then(function (d) { if (d.ok) carregar(); else msg($('admin_msg'), d.erro, 'text-rose-500'); });
+    }
+  });
+
+  $('chave').addEventListener('input', desenhar);
+  $('btn_add').addEventListener('click', function () {
+    post('/api/semana/candidato', { nick: $('novo_nick').value }, { 'X-Admin-Key': $('chave').value }).then(function (d) {
+      if (d.ok) { $('novo_nick').value = ''; msg($('admin_msg'), 'Candidato adicionado.', 'text-emerald-600'); carregar(); }
+      else msg($('admin_msg'), d.erro || 'Erro.', 'text-rose-500');
+    });
+  });
+  $('nick_manual').addEventListener('change', function () { if (this.value.trim()) definirAutor(this.value.trim()); });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    carregar();
+    carregarPlanilhas().then(detectarSessao).then(function (nick) {
+      if (nick) definirAutor(nick);
+      else { $('id_carregando').classList.add('hidden'); $('id_manual').classList.remove('hidden'); }
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 const H = {
   "Content-Type": "application/json",
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "Content-Type, X-Admin-Key, X-Admin-Nick",
+  "Access-Control-Allow-Headers": "Content-Type, X-Admin-Nick",
   "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
 };
 const json = (d, s = 200) => new Response(JSON.stringify(d), { status: s, headers: H });
@@ -55,12 +55,18 @@ export async function handleSemana(request, env) {
     return json({ ok: true });
   }
 
-  // Admin
+  // POST /api/semana/retirar-voto { votante } — o militar retira o próprio voto
+  if (url.pathname === "/api/semana/retirar-voto") {
+    const votante = nickOk(body.votante);
+    if (!votante) return json({ erro: "Identifique-se antes de retirar o voto." }, 400);
+    await db.prepare("DELETE FROM semana_votos WHERE semana = ? AND votante = ?").bind(semana, votante).run();
+    return json({ ok: true });
+  }
+
+  // Admin — autorizado apenas pelo nickname (lista ADMINS), sem senha
   const adminNick = nickOk(request.headers.get("X-Admin-Nick")).toLowerCase();
   if (!admins.includes(adminNick))
     return json({ erro: "Seu nickname não está na lista de administradores." }, 403);
-  if (!env.ADMIN_KEY || request.headers.get("X-Admin-Key") !== env.ADMIN_KEY)
-    return json({ erro: "Chave de administrador inválida." }, 403);
   const nick = nickOk(body.nick);
   if (!nick) return json({ erro: "Informe o nickname." }, 400);
 

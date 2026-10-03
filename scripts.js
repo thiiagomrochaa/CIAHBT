@@ -1,4 +1,4 @@
-(function () {
+/*(function () {
   // ===== CONFIGURAÇÃO =====
   var TITULO = "Fórum temporariamente bloqueado";
   var MENSAGEM = "A navegação está indisponível no momento. Volte mais tarde.";

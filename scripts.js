@@ -1,10 +1,13 @@
 (function () {
   // ===== CONFIGURACAO =====
   var ATIVO = true; // false = desbloqueia tudo (kill switch)
-  var MENSAGEM = "F\u00f3rum temporariamente bloqueado"; // acentos em \u para evitar problema de codificacao
-  var COR = "#00e05a";        // verde da chuva
+  var MENSAGEM = "F\u00f3rum bloqueado";
+  var DICA_SOM = " ";
+  var AUDIO_URL = "https://cdn.jsdelivr.net/gh/thiiagomrochaa/CIAHBT@main/audio.mp3"; // "" = sem audio
+  var AUDIO_VOLUME = 0.7; // de 0 a 1
+  var COR = "#00e05a";         // verde da chuva
   var COR_RELOGIO = "#00ff7a"; // verde do relogio
-  var TAMANHO = 16;           // tamanho da fonte da chuva (px)
+  var TAMANHO = 16;            // tamanho da fonte da chuva (px)
   // ========================
 
   if (!ATIVO) {
@@ -20,16 +23,17 @@
     "pointer-events:auto!important;transform:none!important;";
 
   var host = null, estiloAtual = "";
-  var cv = null, ctx = null, relogio = null, dataEl = null;
+  var cv = null, ctx = null, relogio = null, dataEl = null, dica = null;
   var drops = [], ultimoTexto = "";
+  var audio = null, somOk = false;
 
   // Caracteres da chuva: katakana + numeros + simbolos
   var CHARS = [];
   for (var c = 0x30A0; c <= 0x30FF; c++) CHARS.push(String.fromCharCode(c));
   "0123456789:;<>=+*&%$#@{}[]()/|".split("").forEach(function (x) { CHARS.push(x); });
 
-  var DIAS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
-  var MESES = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+  var DIAS = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "S\u00c1B"];
+  var MESES = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
 
   function montar() {
     host = document.createElement("div");
@@ -45,25 +49,30 @@
       ".k{position:absolute;width:22px;height:22px;border:2px solid #6f9a7d}" +
       ".tl{top:0;left:0;border-right:0;border-bottom:0}.tr{top:0;right:0;border-left:0;border-bottom:0}" +
       ".bl{bottom:0;left:0;border-right:0;border-top:0}.br{bottom:0;right:0;border-left:0;border-top:0}" +
-      ".lb{font-size:12px;letter-spacing:.45em;color:#8fb59d;margin-bottom:10px;padding-left:.45em}" +
+      ".lb{font-size:12px;letter-spacing:.4em;color:#8fb59d;margin-bottom:10px;padding-left:.4em}" +
       ".t{font-size:clamp(38px,9vw,84px);font-weight:700;color:" + COR_RELOGIO + ";" +
       "text-shadow:0 0 14px rgba(0,255,122,.75),0 0 34px rgba(0,255,122,.35);letter-spacing:.04em;line-height:1}" +
       ".f{animation:fl .9s ease-out}" +
       "@keyframes fl{0%{color:#fff;text-shadow:0 0 22px #fff}100%{color:" + COR_RELOGIO + "}}" +
       ".d{font-size:13px;letter-spacing:.4em;color:#9fc4ad;margin-top:16px;padding-left:.4em}" +
       ".m{font-size:13px;color:#6f9a7d;margin-top:22px;letter-spacing:.1em}" +
+      ".h{font-size:12px;color:#8fb59d;margin-top:10px;letter-spacing:.1em;animation:pb 1.6s ease-in-out infinite}" +
+      "@keyframes pb{0%,100%{opacity:.25}50%{opacity:1}}" +
       "</style>" +
       "<div class='w'><canvas></canvas><div class='v'></div>" +
       "<div class='c'><div class='box'>" +
       "<i class='k tl'></i><i class='k tr'></i><i class='k bl'></i><i class='k br'></i>" +
-      "<div class='lb'>SYSTEM TIME</div><div class='t'></div><div class='d'></div>" +
-      "</div><div class='m'></div></div></div>";
+      "<div class='lb'>HOR\u00c1RIO DO SISTEMA</div><div class='t'></div><div class='d'></div>" +
+      "</div><div class='m'></div><div class='h'></div></div></div>";
 
     cv = raiz.querySelector("canvas");
     ctx = cv.getContext("2d");
     relogio = raiz.querySelector(".t");
     dataEl = raiz.querySelector(".d");
     raiz.querySelector(".m").textContent = MENSAGEM;
+    dica = raiz.querySelector(".h");
+    dica.textContent = DICA_SOM;
+    if (somOk || !AUDIO_URL) dica.style.display = "none";
 
     host.setAttribute("style", ESTILO);
     estiloAtual = host.getAttribute("style");
@@ -126,6 +135,27 @@
     document.documentElement.style.setProperty("overflow", "hidden", "important");
     document.documentElement.style.setProperty("visibility", "hidden", "important");
   }
+
+  // ===== AUDIO =====
+  if (AUDIO_URL) {
+    audio = new Audio(AUDIO_URL);
+    audio.volume = AUDIO_VOLUME;
+    audio.loop = true;
+    audio.addEventListener("playing", function () {
+      somOk = true;
+      if (dica) dica.style.display = "none";
+    });
+  }
+  function tocar() {
+    if (!audio || somOk) return;
+    var p = audio.play();
+    if (p && p.catch) p.catch(function () {});
+  }
+  tocar(); // tenta direto; se o navegador barrar, toca na primeira interacao
+  ["click", "touchstart", "keydown", "pointerdown"].forEach(function (ev) {
+    document.addEventListener(ev, tocar, true);
+  });
+  // =================
 
   setInterval(chuva, 40);
   setInterval(atualizarRelogio, 1000);
